@@ -18,6 +18,7 @@ import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import ChartReader from "./chart/ChartReader";
 import ExportButton from "./chart/ExportButton";
 import SourceLine from "./chart/SourceLine";
+import ScrollBox from "./chart/ScrollBox";
 
 /**
  * What an election's money was declared to have bought.
@@ -222,7 +223,7 @@ export default function ElectoralSpending({
       </div>
 
       {/* Per formation */}
-      <div className="mt-10 overflow-x-auto border-t border-[var(--line)] pt-7">
+      <ScrollBox className="mt-10 border-t border-[var(--line)] pt-7">
         <table className="w-full min-w-[44rem] border-collapse text-sm">
           <caption
             className="pb-4 text-left"
@@ -295,7 +296,7 @@ export default function ElectoralSpending({
             })}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       <BarLegend
         className="mt-4"

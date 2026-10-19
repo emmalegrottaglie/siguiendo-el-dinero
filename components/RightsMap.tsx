@@ -21,6 +21,7 @@ import {
   type ExportShape,
 } from "@/lib/chart-export";
 import type { Dict } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 type LayerId = "gov" | "hate";
 
@@ -49,8 +50,8 @@ interface Cell {
 }
 
 /** The two investiture hatches, as the page's SVG patterns draw them. */
-const HATCH_DECISIVE: ExportHatch = { ink: "color-mix(in srgb, var(--ink) 34%, transparent)", line: 2, period: 6 };
-const HATCH_SHORT: ExportHatch = { ink: "color-mix(in srgb, var(--ink) 22%, transparent)", line: 1.5, period: 10 };
+const HATCH_DECISIVE: ExportHatch = { ink: "var(--map-hatch)", line: 2, period: 6 };
+const HATCH_SHORT: ExportHatch = { ink: "var(--map-hatch)", line: 1.5, period: 10 };
 
 /**
  * Rows for the ARIA grid over the map.
@@ -532,12 +533,12 @@ export default function RightsMap({
             {
               label: M.hatchDecisive,
               bg:
-                "repeating-linear-gradient(45deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 2px, transparent 2px 6px)",
+                "repeating-linear-gradient(45deg, var(--map-hatch) 0 2px, transparent 2px 6px)",
             },
             {
               label: M.hatchShort,
               bg:
-                "repeating-linear-gradient(45deg, color-mix(in srgb, var(--ink) 22%, transparent) 0 1.5px, transparent 1.5px 10px)",
+                "repeating-linear-gradient(45deg, var(--map-hatch) 0 1.5px, transparent 1.5px 10px)",
             },
           ].map((h) => (
             <li key={h.label} className="flex items-center gap-2">
@@ -589,12 +590,14 @@ export default function RightsMap({
                     the winning total needed; the sparse one marks a community
                     where only the seat arithmetic is verified here. Drawing
                     both the same would present the weaker claim as the
-                    stronger one. */}
+                    stronger one. The two differ in density only: both are
+                    --map-hatch, which clears 3:1 against the fill under it
+                    in both themes (app/globals.css). */}
                 <pattern id="hatch-decisive" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                  <rect width="2" height="6" fill="var(--ink)" opacity="0.34" />
+                  <rect width="2" height="6" fill="var(--map-hatch)" />
                 </pattern>
                 <pattern id="hatch-short" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                  <rect width="1.5" height="10" fill="var(--ink)" opacity="0.22" />
+                  <rect width="1.5" height="10" fill="var(--map-hatch)" />
                 </pattern>
               </defs>
 
@@ -851,7 +854,7 @@ export default function RightsMap({
       {/* Every value as text, in the order the active layer is read in. This is
           not a fallback for the map: a choropleth cannot be read to the
           precision of a number, and nineteen figures are worth having. */}
-      <div className="mt-6 overflow-x-auto">
+      <ScrollBox className="mt-6">
         <table className="w-full min-w-[40rem] border-collapse text-sm">
           <caption
             className="pb-3 text-left"
@@ -943,7 +946,7 @@ export default function RightsMap({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       <ExportButton className="mt-4" spec={image} {...exportLabels(C, layerLabel)} />
 

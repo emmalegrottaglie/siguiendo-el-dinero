@@ -6,6 +6,7 @@ import { fillEdge, TRANCHE_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict, Locale } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 /**
  * Private donations declared for 2020, by party and by tranche.
@@ -54,7 +55,7 @@ export default function DonationsTable({
         </p>
       </div>
 
-      <div className="mt-5 overflow-x-auto">
+      <ScrollBox className="mt-5">
         <table className="min-w-[44rem] w-full border-collapse text-sm">
           <caption className="sr-only">{F.caption}</caption>
           <thead>
@@ -123,7 +124,7 @@ export default function DonationsTable({
             })}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       <BarLegend
         className="mt-4"

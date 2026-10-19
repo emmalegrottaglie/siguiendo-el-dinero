@@ -148,6 +148,21 @@ The rules:
   L* 80. The hatch over no is `--hatch-inverse`, which turns dark for that reason. The stance pair
   is 3.05:1 in dark (3.08:1 in light), and stays apart in lightness under simulated deuteranopia
   (ΔL* 37.6) and protanopia (ΔL* 30.8).
+- **A hatch's lines need 3:1 against the fill they sit on, in both themes,** measured as the lines
+  composited over that fill. A hatch is the non-colour cue, so a hatch that cannot be seen is a
+  chart that relies on colour after all. Pick the hatch by what the fill does across themes, not
+  by how it looks in one: `striped: "light"` (`--hatch-inverse`) is for a fill that is dark in
+  the light theme and light in the dark one — votó No (3.70:1 light, 4.04:1 dark) and security
+  costs on `--ink-2` (3.59:1, 3.83:1). The security hatch used the dark `--hatch` until
+  2026-10-19 and measured 1.12:1, invisible. The map's two investiture hatches are `--map-hatch`
+  over the PP's fill (3.34:1, 3.12:1) and differ by density, not by colour. The exported image
+  draws the same tokens, so it measures the same.
+- **A translucent mark still needs a 3:1 boundary.** The flow diagram's ribbons are drawn at 42%
+  so crossings stay readable, which leaves every ribbon fill under 3:1 against the page in both
+  themes (1.32–2.46:1). Each ribbon therefore carries a 1px edge in its party colour mixed 45%
+  with `--ink` (6.08:1 light and 8.68:1 dark at worst against the page, 4.62:1 against its own
+  fill). Where an edge crosses another ribbon's fill it drops to 3.29:1 light and 2.67:1 dark;
+  that is the one place the diagram still falls short.
 - **Party colours are data and are never adjusted.** Where one falls under 3:1 against a dark
   ground it gets an edge instead: `fillEdge()` / `svgFillEdge()` in `lib/chart-colors.ts` draw a
   1px `--fill-edge` inside the fill (transparent in the light theme). `Bar` and `BarLegend` apply
@@ -161,10 +176,17 @@ Two further traps, both of which have cost time here:
 - **A localised percentage is not a CSS length.** `es-ES` renders 0.545 as "54,5", and a bar
   given `width: 54,5%` collapses to nothing rather than erroring. Use `cssPercent()` for layout
   and `percent()` for display, and never one for the other.
-- **`.eyebrow` and `.label-mono` must stay in `@layer base`.** They set colour and size, which
-  Tailwind utilities routinely override; authored unlayered they beat every utility regardless of
-  specificity, because unlayered styles win over every cascade layer. `:where()` does not fix it —
-  the problem is layer order, not specificity.
+- **Base styles go in `@layer base`, never unlayered.** That covers `.eyebrow` and `.label-mono`,
+  which set colour and size that Tailwind utilities routinely override, and the element defaults
+  (`*`, `html`, `body`, `a`). Authored unlayered, a rule beats every utility regardless of
+  specificity, because unlayered styles win over every cascade layer; `:where()` does not fix it —
+  the problem is layer order, not specificity. This has bitten twice: in September 62 call sites
+  of the two classes rendered the wrong colour, and until 2026-10-19 an unlayered
+  `a { color: inherit }` made every link ignore its `text-[…]` class (the party filter counts on
+  `/politicos` measured 4.21:1 because of it). Moving that rule changed the colour of exactly the
+  links whose class asked for a different one — the skip link, the back links, the chips, a few
+  inline links — and nothing else. The one deliberate exception is the global `:focus-visible`
+  ring, which stays unlayered so that `outline-none` on the two search inputs cannot remove it.
 
 ## The court record's status is a type, not a string
 
@@ -340,7 +362,12 @@ ones that do, and how this site meets them:
   the plot ("Nº DE CARGOS EN CADA TRAMO"), and a non-linear axis says so on the chart.
 - **Bars start at zero.** They all do: `Bar` has no baseline option.
 - **No horizontal page scroll at 375px.** A chart wider than that (`VoteFlow`) scrolls inside its
-  own focusable box and says so above it.
+  own focusable box and says so above it. A table wider than that goes in `ScrollBox`
+  (`components/chart/ScrollBox.tsx`), which scrolls it inside its own box and, only while the
+  table actually overflows, makes the box a tab stop and a region named by the table's caption, so
+  a keyboard user can scroll it with the arrow keys. `DataTable` uses it; so does every long table
+  on the site (map, group breakdown, electoral spending, declarations, donations, foundations,
+  methodology).
 - **No label is truncated.** Names wrap.
 - **Every new chart with discrete values is readable from the keyboard.** Wrap its marks in
   `ChartReader` (`components/chart/ChartReader.tsx`): give each mark `data-chart-item={index}` and
@@ -350,9 +377,14 @@ ones that do, and how this site meets them:
   ends, and a polite live region announces the value with its context ("PSOE · 83.852.842,14 € ·
   27,9 % del total · 2 de 28"). The cursor is an outline set as an attribute, so nothing is
   redrawn under the reader. A chart laid out in rows and columns passes `rows` and gets the ARIA
-  grid pattern (`BallotGrid`, and `RightsMap`, whose rows are banded from the centroids). Real
-  tables (`GroupBreakdown`, `DonationsTable`, the per-formation and per-territory tables) are left
-  to table navigation and do not get a reader.
+  grid pattern (`BallotGrid`, and `RightsMap`, whose rows are banded from the centroids). In grid
+  mode a cell must be announced once: `aria-activedescendant` already makes a screen reader speak
+  the cell's name, so `ChartReader` renames each cell with the full announcement and keeps the live
+  region quiet for keyboard moves (it still speaks for list charts and for pointer hover). Before
+  2026-10-19 a cell was spoken twice, its short name and then the live region. The visible readout
+  under the chart is `aria-hidden` for the same reason. Real tables (`GroupBreakdown`,
+  `DonationsTable`, the per-formation and per-territory tables) are left to table navigation and
+  do not get a reader; their sortable headers are `<button>`s inside a `<th aria-sort>`.
 - **Every main chart has a "Descargar imagen" button, and the image carries its source and date.**
   Describe the chart as data (`ChartExport` in `lib/chart-export.ts`: `bars`, `grid` or `shapes`,
   the last taking SVG path data) and render `ExportButton`. Always build the frame with
@@ -363,9 +395,13 @@ ones that do, and how this site meets them:
   Pass rows in the order the page shows them and "—" for an unknown value: the image may not rank
   or compare anything the page does not. The main charts with an export today: the subsidy
   ranking, electoral spending by formation and by line, the money-and-vote flow, the map (either
-  layer), a profile's pay distribution and ballot grid, the three `/contexto` charts and the
-  coverage chart. The front-page summaries, `StanceByGroup` and the small single-bar readouts have
-  keyboard reading but no export; they summarise charts that have one.
+  layer), a profile's pay distribution and ballot grid, the three `/contexto` charts, the
+  coverage chart, and the three front-page summaries (the nine divisions' tallies, the donor
+  tranches, which appear nowhere else, and spending by formation). `StanceByGroup`, each division's
+  result bar on `/votaciones` and the small single bars on party and comunidad pages have keyboard
+  reading but no export: each is one bar or one list inside a card, read in place rather than
+  shared, and its figures are printed beside it as text. A value too wide for its column wraps at its " · "
+  separators in the image rather than running over the bar.
 - **Fonts are on `<html>`.** `--font-heading` and `--font-body` are declared on `:root` and refer to
   the next/font variables, so those variables must be set on `<html>` too; set on `<body>`, both
   resolved as invalid and the site and the exported images fell back to the system sans.

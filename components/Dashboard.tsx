@@ -27,7 +27,7 @@ type KindFilter = SubsidyKind | "all";
  * It used to be hand-written, and it was wrong: the header legend said
  * ordinary funding was gold and security costs red, while the bars drew
  * ordinary funding in each party's own colour and security costs as a hatched
- * dark ink.
+ * dark ink (light ink in the dark theme).
  */
 function subsidySegments(
   byKind: Record<SubsidyKind, number>,
@@ -40,7 +40,11 @@ function subsidySegments(
       value: byKind.seguridad,
       color: SUBSIDY_COLORS.seguridad,
       label: labels.seguridad,
-      striped: true,
+      // The fill is --ink-2, dark in the light theme and light in the dark
+      // one, the same flip as votó No, so it takes the same inverse hatch.
+      // It used to take the dark hatch, which on a dark fill measured 1.12:1
+      // and could not be seen.
+      striped: "light",
     },
     { value: byKind.otra, color: SUBSIDY_COLORS.otra, label: labels.otra },
   ];

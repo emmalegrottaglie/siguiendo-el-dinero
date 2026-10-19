@@ -6,6 +6,7 @@ import { declarationTotals } from "@/lib/declaration-totals.mjs";
 import { entitySlug } from "@/lib/foundations";
 import { euro, euroExact, fill, formatDate } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 /**
  * What a sitting deputy declared to Congress: the Bienes y Rentas filing made on taking the seat,
@@ -120,7 +121,7 @@ export default function Declarations({
           {declaration.income.length === 0 ? (
             <p className="mt-4 text-sm text-[var(--ink-3)]">{t.none}</p>
           ) : (
-            <div className="mt-4 overflow-x-auto">
+            <ScrollBox className="mt-4">
               <table className="w-full min-w-[30rem] border-collapse text-sm">
                 <caption className="sr-only">{t.income}</caption>
                 <thead>
@@ -144,7 +145,7 @@ export default function Declarations({
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </ScrollBox>
           )}
           <p className="mt-4 text-sm text-[var(--ink-2)]">
             {t.irpf}: <span className="mono text-[var(--ink)]">{amount(totals.irpf, "irpf")}</span>
@@ -156,7 +157,7 @@ export default function Declarations({
           {declaration.realEstate.length === 0 ? (
             <p className="mt-4 text-sm text-[var(--ink-3)]">{t.none}</p>
           ) : (
-            <div className="mt-4 overflow-x-auto">
+            <ScrollBox className="mt-4">
               <table className="w-full min-w-[40rem] border-collapse text-sm">
                 <caption className="sr-only">{t.realEstate}</caption>
                 <thead>
@@ -181,7 +182,7 @@ export default function Declarations({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollBox>
           )}
 
           {/* Depósitos y otros bienes */}
@@ -190,7 +191,7 @@ export default function Declarations({
           {declaration.deposits.length + declaration.otherAssets.length === 0 ? (
             <p className="mt-4 text-sm text-[var(--ink-3)]">{t.none}</p>
           ) : (
-            <div className="mt-4 overflow-x-auto">
+            <ScrollBox className="mt-4">
               <table className="w-full min-w-[30rem] border-collapse text-sm">
                 <caption className="sr-only">{t.financial}</caption>
                 <thead>
@@ -221,7 +222,7 @@ export default function Declarations({
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </ScrollBox>
           )}
           {declaration.holdingsOver5pct && (
             <p className="mt-4 text-sm text-[var(--ink-2)]">
@@ -251,7 +252,7 @@ export default function Declarations({
             <p className="mt-4 text-sm text-[var(--ink-3)]">{t.none}</p>
           ) : (
             declaration.loans.length > 0 && (
-              <div className="mt-4 overflow-x-auto">
+              <ScrollBox className="mt-4">
                 <table className="w-full min-w-[36rem] border-collapse text-sm">
                   <caption className="sr-only">{t.debts}</caption>
                   <thead>
@@ -277,7 +278,7 @@ export default function Declarations({
                     </tr>
                   </tbody>
                 </table>
-              </div>
+              </ScrollBox>
             )
           )}
           {declaration.otherDebts && (

@@ -147,6 +147,33 @@ function wrap(ctx: Ctx, text: string, width: number): string[] {
 }
 
 /**
+ * Wraps a figure line at its " · " separators where it can, so a figure and its
+ * label stay on one line ("En contra 169"), and falls back to word wrap for a
+ * part that is wider than the line on its own.
+ */
+function wrapValue(ctx: Ctx, text: string, width: number): string[] {
+  const lines: string[] = [];
+  let line = "";
+  for (const part of text.split(" · ")) {
+    const next = line ? `${line} · ${part}` : part;
+    if (ctx.measureText(next).width <= width) {
+      line = next;
+      continue;
+    }
+    if (line) lines.push(line);
+    if (ctx.measureText(part).width <= width) {
+      line = part;
+    } else {
+      const words = wrap(ctx, part, width);
+      lines.push(...words.slice(0, -1));
+      line = words[words.length - 1];
+    }
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [""];
+}
+
+/**
  * The largest of `sizes` at which `text` wraps into `maxLines`; failing that,
  * the smallest, with as many lines as it needs. Never truncates.
  */
@@ -369,6 +396,7 @@ function drawBars(ctx: Ctx, t: Theme, rows: ExportBarRow[], axis: string | undef
     labelW: number;
     valueW: number;
     labels: string[][];
+    values: string[][];
     heights: number[];
   };
   const measure = (cols: number, s: number): Layout => {
@@ -383,8 +411,15 @@ function drawBars(ctx: Ctx, t: Theme, rows: ExportBarRow[], axis: string | undef
       setFont(ctx, t, s, r.marked ? 600 : 400);
       return wrap(ctx, r.label, labelW);
     });
-    const heights = labels.map((l) => Math.max(l.length * lineH, barH) + gap);
-    return { cols, size: s, perCol: Math.ceil(rows.length / cols), colW, labelW, valueW, labels, heights };
+    // A value wider than its column wraps, like a label, rather than running
+    // left over the bar: the front-page division summary prints four figures
+    // and a result per row.
+    setFont(ctx, t, s);
+    const values = rows.map((r) => wrapValue(ctx, r.value, valueW));
+    const heights = labels.map(
+      (l, i) => Math.max(l.length * lineH, values[i].length * lineH, barH) + gap,
+    );
+    return { cols, size: s, perCol: Math.ceil(rows.length / cols), colW, labelW, valueW, labels, values, heights };
   };
   const fits = (l: Layout) => {
     for (let c = 0; c < l.cols; c++) {
@@ -410,7 +445,7 @@ function drawBars(ctx: Ctx, t: Theme, rows: ExportBarRow[], axis: string | undef
   }
   layout ??= measure(3, 9);
 
-  const { size, labels, heights, colW, labelW, valueW, perCol } = layout;
+  const { size, labels, values, heights, colW, labelW, valueW, perCol } = layout;
   const lineH = size * 1.25;
   const barH = Math.max(6, Math.min(14, Math.round(size * 0.75)));
 
@@ -435,7 +470,7 @@ function drawBars(ctx: Ctx, t: Theme, rows: ExportBarRow[], axis: string | undef
     setFont(ctx, t, size);
     ctx.fillStyle = t.ink;
     ctx.textAlign = "right";
-    ctx.fillText(r.value, x + colW, y);
+    values[i].forEach((v, k) => ctx.fillText(v, x + colW, y + k * lineH));
     ctx.textAlign = "left";
     y += heights[i];
   });

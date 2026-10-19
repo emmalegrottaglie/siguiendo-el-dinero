@@ -133,7 +133,12 @@ export default async function PoliticosPage({
                   : "border-[var(--line)] text-[var(--ink-3)] hover:text-[var(--ink)]"
               }`}
             >
-              {p.short} <span className="opacity-60">{p.count}</span>
+              {/* The count is set apart by weight, not by fading it: at 60%
+                  opacity it measured 4.21:1, under the 4.5:1 text needs. It
+                  takes the chip's own colour (--ink-3, or --gold-deep when
+                  active), which now applies because the base `a` rule sits in
+                  @layer base. */}
+              {p.short} <span className="font-normal">{p.count}</span>
             </Link>
           ))}
         </div>

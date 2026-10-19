@@ -29,6 +29,28 @@ const STANCE_COLOUR: Record<Stance, string> = {
   ab: STANCE_SWATCH.abstention,
 };
 
+/**
+ * A ribbon's fill and its edge.
+ *
+ * The fill stays at 42% so that where ribbons cross, the one underneath still
+ * shows through. At that strength no party colour reaches the 3:1 a graphic
+ * needs against the page, in either theme (measured on this diagram: 1.32 to
+ * 1.76:1 in the light theme, 1.67 to 2.46:1 in the dark), so each ribbon also
+ * carries a 1px edge: its own party colour mixed 45% with --ink, which darkens
+ * it in the light theme and lightens it in the dark one, so the edge keeps the
+ * party's hue and a ribbon is still matched to its node by colour as well as
+ * by position.
+ *
+ * Measured against the page, the weakest edge is 6.08:1 in the light theme and
+ * 8.68:1 in the dark for the parties drawn today, and 4.75:1 and 7.00:1 across
+ * every colour in lib/parties.ts on --bg, --surface and --card. Against its own
+ * fill it is at least 4.62:1. Where one ribbon crosses another the edge sits on
+ * the other ribbon's fill; there the weakest case is 3.29:1 in the light theme
+ * and 2.67:1 in the dark.
+ */
+const RIBBON_FILL_OPACITY = 0.42;
+const ribbonEdge = (colour: string) => `color-mix(in oklab, ${colour} 45%, var(--ink))`;
+
 /** One page shows one flow diagram, so a fixed pattern id cannot collide. */
 const HATCH_NO = "voteflow-hatch-no";
 
@@ -205,8 +227,8 @@ export default function VoteFlow({
   const shapes: ExportShape[] = [
     { d: rectPath(SOURCE_X, TOP, SOURCE_W, band), fill: "var(--ink)" },
     ...ribbons.flatMap((r) => [
-      { d: r.ribbonIn, fill: r.colour, opacity: 0.42 },
-      { d: r.ribbonOut, fill: r.colour, opacity: 0.42 },
+      { d: r.ribbonIn, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
+      { d: r.ribbonOut, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
       { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour, ...svgFillEdge(r.colour) },
     ]),
     ...outs.map((o) => ({
@@ -293,8 +315,22 @@ export default function VoteFlow({
 
             {ribbons.map(({ n, colour, ribbonIn, ribbonOut }) => (
               <g key={n.d.nif}>
-                <path d={ribbonIn} fill={colour} opacity={0.42} />
-                <path d={ribbonOut} fill={colour} opacity={0.42} />
+                {/* fillOpacity, not opacity, so the edge is drawn at full
+                    strength while the fill stays see-through. */}
+                <path
+                  d={ribbonIn}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
+                <path
+                  d={ribbonOut}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
                 <rect
                   x={PARTY_X}
                   y={n.y}

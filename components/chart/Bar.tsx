@@ -40,12 +40,14 @@ export interface Segment {
    * would not guess from position — and never without the legend, since a
    * hatch that is not explained reads as a warning.
    *
-   * `true` draws dark lines (`--hatch`), for a light or mid fill. `"light"`
-   * draws `--hatch-inverse`, for the votó No fill, where the hatch is what
-   * separates it from sí without relying on colour. The name is the light
-   * theme's: there No is dark and the lines are light. The dark theme makes No
-   * the light fill and turns the same token dark, so the lines always contrast
-   * with the fill they sit on.
+   * `true` draws dark lines (`--hatch`), for a light or mid fill; nothing uses
+   * it today. `"light"` draws `--hatch-inverse`, for the two fills that flip
+   * between themes: the votó No fill, where the hatch is what separates it
+   * from sí without relying on colour, and the security-costs fill (`--ink-2`).
+   * The name is the light theme's: there both fills are dark and the lines are
+   * light. The dark theme makes both fills light and turns the same token
+   * dark, so the lines clear 3:1 against the fill they sit on in both themes
+   * (measured in app/globals.css).
    */
   striped?: Stripe;
 }
