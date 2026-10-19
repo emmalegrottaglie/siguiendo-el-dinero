@@ -2,7 +2,7 @@ import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { euroExact, fill, formatDate, integer } from "@/lib/format";
 import { stancesByParty, voteDateISO, type Stance, type KeyVote } from "@/lib/votes";
 import { PARTIES } from "@/lib/parties";
-import { STANCE_SWATCH } from "@/lib/chart-colors";
+import { STANCE_SWATCH, svgFillEdge } from "@/lib/chart-colors";
 import type { Dict } from "@/lib/i18n";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
@@ -207,13 +207,13 @@ export default function VoteFlow({
     ...ribbons.flatMap((r) => [
       { d: r.ribbonIn, fill: r.colour, opacity: 0.42 },
       { d: r.ribbonOut, fill: r.colour, opacity: 0.42 },
-      { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour },
+      { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour, ...svgFillEdge(r.colour) },
     ]),
     ...outs.map((o) => ({
       d: rectPath(OUT_X, o.y, NODE_W, o.h),
       fill: STANCE_COLOUR[o.s],
       // The same light hatch as the page's pattern: No is never colour alone.
-      hatch: o.s === "no" ? { ink: "rgba(243,242,242,0.5)", line: 3, period: 6 } : undefined,
+      hatch: o.s === "no" ? { ink: "var(--hatch-inverse)", line: 3, period: 6 } : undefined,
     })),
   ];
   const labels: ExportLabel[] = [
@@ -285,7 +285,7 @@ export default function VoteFlow({
                 patternTransform="rotate(45)"
               >
                 <rect width={6} height={6} fill={STANCE_COLOUR.no} />
-                <rect width={3} height={6} fill="rgba(243,242,242,0.5)" />
+                <rect width={3} height={6} fill="var(--hatch-inverse)" />
               </pattern>
             </defs>
             {/* Source: all declared donations, as one bar */}
@@ -295,7 +295,14 @@ export default function VoteFlow({
               <g key={n.d.nif}>
                 <path d={ribbonIn} fill={colour} opacity={0.42} />
                 <path d={ribbonOut} fill={colour} opacity={0.42} />
-                <rect x={PARTY_X} y={n.y} width={NODE_W} height={n.h} fill={colour} />
+                <rect
+                  x={PARTY_X}
+                  y={n.y}
+                  width={NODE_W}
+                  height={n.h}
+                  fill={colour}
+                  {...svgFillEdge(colour)}
+                />
               </g>
             ))}
 

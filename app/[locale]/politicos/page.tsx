@@ -104,7 +104,7 @@ export default async function PoliticosPage({
           />
           <button
             type="submit"
-            className="label-mono inline-flex min-h-11 items-center rounded border border-[var(--gold)] bg-[var(--gold)] px-4 text-[var(--ink)]"
+            className="label-mono inline-flex min-h-11 items-center rounded border border-[var(--gold)] bg-[var(--gold)] px-4 text-[var(--on-gold)]"
           >
             {S.search}
           </button>

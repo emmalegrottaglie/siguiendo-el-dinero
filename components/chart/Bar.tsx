@@ -1,4 +1,5 @@
 import { cssPercent } from "@/lib/format";
+import { fillEdge } from "@/lib/chart-colors";
 
 /**
  * The one bar on this site.
@@ -39,10 +40,12 @@ export interface Segment {
    * would not guess from position — and never without the legend, since a
    * hatch that is not explained reads as a warning.
    *
-   * `true` draws dark lines, for a light or mid fill. `"light"` draws lines in
-   * the page colour, for a fill too dark for dark lines to show — the votó No
-   * fill, where the hatch is what separates it from sí without relying on
-   * colour.
+   * `true` draws dark lines (`--hatch`), for a light or mid fill. `"light"`
+   * draws `--hatch-inverse`, for the votó No fill, where the hatch is what
+   * separates it from sí without relying on colour. The name is the light
+   * theme's: there No is dark and the lines are light. The dark theme makes No
+   * the light fill and turns the same token dark, so the lines always contrast
+   * with the fill they sit on.
    */
   striped?: Stripe;
 }
@@ -63,9 +66,13 @@ export function stripeImage(striped: Stripe | undefined, period = 6): string | u
   return `repeating-linear-gradient(45deg, ${ink} 0 ${line}px, transparent ${line}px ${period}px)`;
 }
 
-/** The hatch's line colour, shared with the exported image so the two match. */
+/**
+ * The hatch's line colour, shared with the exported image so the two match.
+ * Both are theme tokens: the exporter resolves them against the page at export
+ * time, so the image takes whichever theme the reader is in.
+ */
 export function stripeInk(striped: Stripe): string {
-  return striped === "light" ? "rgba(243,242,242,0.5)" : "rgba(32,31,29,0.22)";
+  return striped === "light" ? "var(--hatch-inverse)" : "var(--hatch)";
 }
 
 /** Named heights, so a bar's weight is a decision and not an accident. */
@@ -126,6 +133,7 @@ export default function Bar({
               minWidth: MIN_VISIBLE_PX,
               background: s.color,
               backgroundImage: stripeImage(s.striped),
+              ...fillEdge(s.color),
             }}
           />
         ),
@@ -174,6 +182,7 @@ export function BarLegend({
               flex: "none",
               background: s.color,
               backgroundImage: stripeImage(s.striped, 4),
+              ...fillEdge(s.color),
             }}
           />
           <span className="label-mono">

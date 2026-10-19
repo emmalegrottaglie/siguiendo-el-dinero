@@ -8,6 +8,7 @@ import type {
   ExportLegendItem,
 } from "@/lib/chart-export";
 import { stripeInk, type Stripe } from "./Bar";
+import { needsDarkEdge } from "@/lib/chart-colors";
 
 /**
  * Draws a chart's export description (`lib/chart-export.ts`) to a PNG.
@@ -268,10 +269,25 @@ function draw(ctx: Ctx, t: Theme, spec: ChartExport, address: string) {
   ctx.restore();
 }
 
+/**
+ * The 1px inner edge `fillEdge()` draws on the page around a party colour
+ * that is under 3:1 against the dark grounds. `--fill-edge` is transparent in
+ * the light theme, so this draws nothing there, exactly as on the page.
+ */
+function fillEdge(ctx: Ctx, t: Theme, color: string | null | undefined, x: number, y: number, w: number, h: number) {
+  if (!color || !needsDarkEdge(color) || w < 2 || h < 2) return;
+  ctx.save();
+  ctx.strokeStyle = t.color("var(--fill-edge)");
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  ctx.restore();
+}
+
 function swatch(ctx: Ctx, t: Theme, item: ExportLegendItem, x: number, y: number, s: number) {
   if (item.color) {
     ctx.fillStyle = t.color(item.color);
     ctx.fillRect(x, y, s, s);
+    fillEdge(ctx, t, item.color, x, y, s, s);
   }
   const hatch = item.hatch ?? stripeHatch(item.striped, 4);
   if (hatch) {
@@ -444,6 +460,7 @@ function drawBar(ctx: Ctx, t: Theme, x: number, y: number, w: number, h: number,
     const sw = Math.max(2, denominator > 0 ? (s.value / denominator) * rowShare * w : 0);
     ctx.fillStyle = t.color(s.color);
     ctx.fillRect(cx, y, sw, h);
+    fillEdge(ctx, t, s.color, cx, y, sw, h);
     const hatch = stripeHatch(s.striped);
     if (hatch) {
       ctx.save();

@@ -66,6 +66,88 @@ the small bars on party and comunidad pages have keyboard reading but no export;
 charts that have one. The light hatch inks are still literals and will need tokens when dark mode
 lands.
 
+## 2026-10-19 — A dark theme, measured, that follows the system until the reader chooses
+
+The site now has a dark theme. It follows the reader's system setting (`prefers-color-scheme`),
+live, until the reader picks one with a new toggle in the masthead: three buttons, light, dark and
+"match the system", each a 44px target with `aria-pressed` and a label in all three languages. A
+pick is kept in `localStorage` and applied by a short inline script in `<head>` before the page
+first paints, so a reader who chose dark never sees a light frame first; the script is wrapped in
+`try/catch`, and if storage is blocked the system setting decides.
+
+**Why the dark theme is built the way it is.** This project's first visual system was dark, and it
+was replaced partly because of how it failed: its muted text token measured 3.48:1 against the
+ground, its chip borders 1.77:1, and an aura, a vignette, panel shadows and a tint over photographs
+each lowered contrast somewhere no-one had measured. The new dark theme has none of those layers.
+It is the same set of tokens with dark values, every one measured and recorded in
+`app/globals.css`:
+
+- **Text, against the page, panels and cards** (4.5:1 needed): `--ink` 13.28–14.65, `--ink-2`
+  9.37–10.34, `--ink-3` 6.03–6.65, the gold text colour 7.26–8.02, verdigris text 6.90–7.62, red
+  5.53–6.11. The worst text ratio anywhere in the palette is **6.03:1** (`--ink-3` on a panel).
+- **Graphics** (3:1 needed): gold 4.82–5.31 (the same hex as the light theme), verdigris
+  4.79–5.29, `--grey-500` 3.07–3.39, votó Sí 3.48–3.84, votó No 10.61–11.71. The worst graphic
+  ratio is **3.48:1** (votó Sí on a panel).
+- Each accent keeps its hue and changes only in lightness.
+
+**Sí and No swap ends.** In the light theme No is the dark fill; in the dark theme it is the light
+one (`#f6c6bd`) and Sí the mid one (`#32807b`). With both fills at 3:1 against a dark ground and 3:1
+against each other, one of them has to sit near L* 80, and the light end is the heavier mark on a
+dark page. The pair measures **3.05:1** against each other (3.08:1 in the light theme). Simulated
+with the Machado (2009) full-severity matrices they stay apart in lightness: deuteranopia ΔL* 37.6
+(ΔE2000 34.7), protanopia ΔL* 30.8 (ΔE2000 26.1). The hatch over No turns dark, because the fill
+turned light, and abstention (`#4a4745`) measures 6.03:1 against the No segment it sits beside.
+
+**Every hard-coded colour now goes through a token.** They were: the hatch over
+bars, the vote-flow pattern and the map legend; the map's ramp, which mixed gold towards a fixed
+`#f4f2ee`; the stroke between communities; hover tints on the tabs and the party switcher; the
+underline on source links; the background hatch behind article images; the front page's large
+decorative numeral; text on the gold filter chips, which was `--ink` and would have turned light on
+gold in the dark theme (now `--on-gold`, 5.31:1); and `::selection`. In the light theme each new
+token reproduces the old value exactly, so nothing there moved, with one exception: the initials
+avatar without a party wrote `var(--ink-3)26` as its tint, which is not a colour and painted
+nothing; it is now a valid `color-mix()` and shows the faint ring and tint it was meant to.
+
+**Party colours are kept as they are.** They are the parties' own, and they are data. Measured
+against the dark page, panels, cards and the bar track, three fall under 3:1: **IU** `#b5343a`
+(2.46–3.00), and **UPN** and **Foro**, which share `#3a6ea5` (2.76 against the track). Those get a
+1px edge inside the fill wherever they are a bar segment, a legend swatch, a dot or a vote-flow
+node; the edge is transparent in the light theme. The check is a function (`fillEdge()` in
+`lib/chart-colors.ts`), not a list, so a party added later is checked too. On the map every
+community takes a mid-grey stroke in the dark theme instead, because the regions meet the page as
+well as each other.
+
+**Photographs** are not inverted or filtered; portrait rings mix the party colour towards a mid
+grey in the dark theme so the frame stays visible.
+
+**Verified.** Typecheck and production build clean. In the browser, an audit composited every
+visible text element against its real background on 13 routes (the portada, funding, politicians, a
+deputy's profile, votes, map, context, rights, foundations, methodology, data, a party page and
+search), in the dark theme following the system, in the light theme chosen explicitly over a dark
+system, and in the dark theme chosen explicitly over a light system, at 1280px and 375px, across
+`es`, `en` and `ca`. No text fails in the dark theme. The only element under its threshold is the
+front page's 250px decorative numeral, which is `aria-hidden` ornament behind the headline and is
+the same in the light theme. No page scrolls sideways at 375px. A choice survives a reload and a
+change of language, "match the system" follows a system switch without a reload, and there are no
+hydration warnings.
+
+**Left out, or found and not fixed:**
+
+- The vote-flow ribbons are drawn at 42% opacity, so in either theme they are lighter than 3:1
+  against the page. They connect the solid party and outcome bars, which do pass, and every figure
+  is in the table under the diagram, so they were left as they are.
+- `/politicos/declaraciones` does not exist on this branch, so it was not checked.
+- Found while auditing, in the light theme and not caused by this change: the party filter chips on
+  `/politicos` print their counts at 60% opacity, which measures **4.21:1**. The chips render in
+  `--ink` rather than the `--ink-3` their class asks for, because the unlayered `a { color: inherit }`
+  rule in `app/globals.css` beats every Tailwind colour utility on a link — the same cascade trap
+  recorded for `.label-mono` on 2026-09-01. Fixing that rule changes the colour of links site-wide,
+  so it is left for its own change. In the dark theme the counts pass.
+- Fixed while there: the map's unsorted column arrows were raised from 55% to 70% opacity, so they
+  clear 3:1 as graphics in both themes (from 2.33:1 to 3.08:1 in light, and from 2.90:1 to 3.90:1 in
+  dark).
+- There is no favicon, so pages log a 404 for `/favicon.ico`, as before.
+
 ---
 
 ## 2026-10-19 — Every chart says where it came from, and none relies on colour alone

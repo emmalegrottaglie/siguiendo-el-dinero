@@ -97,8 +97,9 @@ dossier — the absence is a finding, because apartado Seis requires publication
 
 ## The design system, and the two accents that are not text colours
 
-The visual system is light newsprint: ground `#f3f2f2`, ink `#201f1d`, Cormorant Garamond for
-every heading and display figure and Lora for everything else. Two structural rules run through
+The visual system is newsprint, light by default with a measured dark theme (below). In the light
+theme the ground is `#f3f2f2` and the ink `#201f1d`; Cormorant Garamond sets every heading and
+display figure and Lora everything else. Two structural rules run through
 it and both are load-bearing rather than stylistic: **no shadows anywhere** — structure is
 carried entirely by hairlines, so a panel that needs to read as separate gets a rule, not
 elevation — and **radius is 2px**, except dots at 50%.
@@ -113,6 +114,47 @@ the masthead wordmark and the `h1` emphasis spans.
 
 The design handoff's own contrast table asserts that verdigris passes AA and that `#605d5d` is
 7.0:1. Neither is true (4.38:1 and 5.83:1). Measure; do not read.
+
+### Two themes, and the rule for every new colour
+
+There is a light theme and a dark one, and both are the same tokens with different values. The
+dark values live in `app/globals.css` twice: under `@media (prefers-color-scheme: dark)` guarded
+by `:root:not([data-theme="light"])`, and under `:root[data-theme="dark"]`. Change one, change
+both. The comment block above them records every measured ratio.
+
+**How the choice works.** The site follows the reader's system setting until the reader picks a
+theme with the masthead toggle (`components/ThemeToggle.tsx`: three buttons, light / dark /
+system, each with `aria-pressed`). A pick is stored in `localStorage` under `theme` and set as
+`data-theme` on `<html>`; "system" removes both, so the media query takes over and follows the
+system live, without a reload. An inline script in `<head>` (`app/[locale]/layout.tsx`) applies a
+stored pick before first paint, so there is no flash of the wrong theme. `suppressHydrationWarning`
+sits on `<html>` only, because that is the one element the script changes before React hydrates.
+
+**The dark theme exists once already in this project's history, and failed.** The first visual
+system was dark. Its muted text token measured 3.48:1, its chip borders 1.77:1, and it stacked an
+aura, a vignette, panel shadows and a tint over photographs, each lowering contrast somewhere
+nobody had measured. The current dark theme has no overlays, glows or shadows, and its lightest
+text token is 6.03:1 at worst. Keep it that way.
+
+The rules:
+
+- **Every new colour needs a dark value with a measured contrast**, recorded in the comment block,
+  before it ships: text 4.5:1 and graphics 3:1 against `--bg`, `--surface` and `--card` in *both*
+  themes. A colour written as a literal in a component does not change with the theme, so it does
+  not get written as a literal: add a token, or derive one with
+  `color-mix(in srgb, var(--token) N%, transparent)` where the old code used an `rgba()`.
+- **Sí and no swap ends in the dark theme.** No is the light fill there and sí the mid one, because
+  with both fills at 3:1 against a dark ground and 3:1 against each other one of them must sit near
+  L* 80. The hatch over no is `--hatch-inverse`, which turns dark for that reason. The stance pair
+  is 3.05:1 in dark (3.08:1 in light), and stays apart in lightness under simulated deuteranopia
+  (ΔL* 37.6) and protanopia (ΔL* 30.8).
+- **Party colours are data and are never adjusted.** Where one falls under 3:1 against a dark
+  ground it gets an edge instead: `fillEdge()` / `svgFillEdge()` in `lib/chart-colors.ts` draw a
+  1px `--fill-edge` inside the fill (transparent in the light theme). `Bar` and `BarLegend` apply
+  it to every segment; any other party-coloured swatch, dot or node must call it. Today that is IU
+  and the colour UPN and Foro share. The map gives every community a `--map-edge` stroke instead.
+- **Text on a gold fill takes `--on-gold`,** never `--ink`, which is light in the dark theme.
+- **Photographs are never inverted or filtered for the theme.** Their frames keep a visible edge.
 
 Two further traps, both of which have cost time here:
 
@@ -286,8 +328,8 @@ ones that do, and how this site meets them:
   drawn. Build stance bars with `stanceSegments()` from `lib/chart-colors.ts`, which applies both.
   Legends say what each colour is in words; where a category has no single colour (ordinary
   subsidies use each party's own), the legend says so.
-- **Text 4.5:1, graphics 3:1,** measured on `--bg`, `--surface` and `--card`. Record the measured
-  ratio in the comment beside the token in `app/globals.css`.
+- **Text 4.5:1, graphics 3:1,** measured on `--bg`, `--surface` and `--card`, in both themes.
+  Record the measured ratio in the comment beside the token in `app/globals.css`.
 - **Every `aria-hidden` chart has its numbers somewhere a screen reader can reach.** Either the
   figures are printed beside the marks as text (most `Bar` rows), or a full table is on the page
   (`GroupBreakdown`, the per-formation table in `ElectoralSpending`, `RightsMap`), or the chart gets
@@ -330,9 +372,9 @@ ones that do, and how this site meets them:
 
 Not applicable here, because nothing on this site is a time series or a before-and-after study:
 the index-chart, event-marker, chance-band, control-group, smoothing, fixed-y-range-while-zooming,
-gap-detection and complete-period items. Still open: dark mode (in progress separately; the hatch
-inks in `stripeInk()` and the map's hatch constants are still light-theme literals and will need
-tokens).
+gap-detection and complete-period items. Dark mode is done; see "Two themes" above. Charts read
+every colour from a CSS variable, so a theme change needs no redraw, and the exported image resolves
+the same variables at export time, so it takes the reader's theme — keep it that way.
 
 ## Architecture / where things live
 
@@ -448,8 +490,8 @@ and the section stat strips, one component because the anatomy is identical), `S
 `DonationsTable`, `ElectoralSpending`, `VoteFlow` (the money→party→vote ribbons), `RightsMap`
 (the only client-side chart), `CourtRecords`, `PartySwitcher`, `FoundationChannel` +
 `FoundationGovernance`, `Dashboard` (party funding, client), `StanceByGroup`, `ArticleCard`,
-`Avatar` + `PhotoCredit`, `NewsFeed`, `BlueskyFeed`, `CountUp`, `LocaleToggle`, `Caveat` (a
-`<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
+`Avatar` + `PhotoCredit`, `NewsFeed`, `BlueskyFeed`, `CountUp`, `LocaleToggle`, `ThemeToggle`,
+`Caveat` (a `<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
 it is the standard way to collapse a limitation without deleting it; see the "Every caveat is
 still there" entry in `CHANGELOG.md` for which caveats were and were not converted, and why).
 `components/chart/` holds the chart primitives: `Bar` + `BarLegend`, `SourceLine`, and `DataTable`
