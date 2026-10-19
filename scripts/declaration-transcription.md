@@ -122,6 +122,9 @@ The form is identical for every deputy.
   - Keep a row that has text in its first cell even if its other cells are empty, with null in
     those cells.
   - Keep a row whose amount is filled even if its first cell is empty, with null in that cell.
+  - When one amount cell holds several figures stacked on separate lines beside a single
+    description, transcribe each figure as its own row, in order: the first with the description,
+    the rest with null. Do not add them up.
 - **Never infer, compute or fill in** anything that is not written on the form.
   - If a cell is genuinely illegible, write null and add its path (for example `loans[0].pending`)
     to `illegible`.

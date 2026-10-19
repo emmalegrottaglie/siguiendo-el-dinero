@@ -202,15 +202,15 @@ sourced proceedings, with status and outcome stated, are the defensible form.
 transcribed and checked, so each profile shows what the deputy declared rather than only a link to
 the scan.
 
-**Where it stands (2026-10-06).** 44 of the 349 filings are published: 31 checked against RTVE and
-13 by a second reading. None is waiting for a second reading. The method, the checks and what they
+**Where it stands (2026-10-19).** 64 of the 349 filings are published: 43 checked against RTVE and
+21 by a second reading. None is waiting for a second reading. The method, the checks and what they
 do not cover are in `AGENTS.md` ("The deputies' declarations are transcribed, and nothing is
 published unchecked"); the reader instructions are in `scripts/declaration-transcription.md`.
 
-Remaining: 305 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
+Remaining: 285 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
 and `data/_declaraciones/<cod>.pdf` holds each scan (`npm run build:deputies` downloads them again
 if the cache is gone). The batches take them in Congreso's surname order; the next starts after
-Francisco Aranda Vargas.
+Félix Bolaños García.
 
 **Procedure.** The second batch settled the settings: a little under one point of the five-hour
 usage window per reading, against two per declaration in the pilot. Run the rest in batches of
@@ -235,7 +235,9 @@ about 20 filings, each its own pull request:
   is a thousands separator, since euro amounts never carry three decimals, and an apostrophe is a
   decimal mark. Each such cell is noted and shown as written beneath its figure. A figure the rules
   still do not settle is illegible, so its declaration waits.
-- **Income in the form's last block** (open). "Otros bienes, rentas o derechos…" holds rents as
+- **Items in the "wrong" block** (open). Deputies put income in the assets block (a rent in
+  "otros bienes, rentas o derechos") and assets in the income block (savings funds in "OTRAS
+  rentas"). Both are transcribed where the deputy put them. "Otros bienes, rentas o derechos…" holds rents as
   well as assets, and its items all count towards the "deposits and other assets" total. Splitting
   them would mean judging each item; if that is ever done, it needs a written rule a second reader
   can apply the same way.

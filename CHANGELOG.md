@@ -5,6 +5,48 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-19 — Asset declarations, third batch: 64 published
+
+**Two earlier changes reach the site with this one.** The "Declared assets" tab under Politicians
+(`/politicos/declaraciones`) and the second batch of declarations were merged into the branch of an
+earlier pull request after that pull request had already been merged, so neither reached `main`.
+This branch merges them in. Their entries below describe them; nothing in them changed.
+
+**What was read.** The next 20 first filings in Congreso's surname order, from Trinidad Carmen
+Argota Castro to Félix Bolaños García; second readings, in the same pass, of the four of them who
+took their seats after RTVE's snapshot (Evarist Aznar Teruel, Carmelo Barrio Baroja, Juan Andrés
+Bayón Rolo, Gabriel Blanco Arrúe); and second readings of the four whose first reading did not
+match RTVE: 28 readings in all.
+
+**Result: 64 published, up from 44**, 43 checked against RTVE and 21 by an independent second
+reading. None is waiting for a second reading; 285 filings are not yet transcribed. Of the 16 new
+filings RTVE covers, 12 matched it on the first reading.
+
+**Where two readings agree and RTVE does not.** Four, each checked against the scan or explained by
+it:
+
+- Enrique Belda Pérez-Pedrero lists three savings and investment products (a fund, a savings plan
+  "acumulado desde 2013" and a rural fund, 121,190 € together) in the form's income block, "OTRAS
+  rentas o percepciones". The readings transcribe them where he put them, so they count as income;
+  RTVE moved them to financial assets. The scan was checked: they are in the income block. This is
+  the reverse of the case recorded for the second batch, where income appeared in the assets block,
+  and the same open question in `NEXT-STEPS.md` covers both.
+- Patricia Blanquer Alcaraz declares two mortgages with Banco Sabadell, 20.693,31 € and 73.325,71 €
+  outstanding; RTVE lists no debts for her. The scan was checked and shows both.
+- Rafael Benigno Belmonte Gómez and Elías Bendodo Benasayag: financial assets 6,000 € apart from
+  RTVE, in opposite directions.
+
+**A new transcription rule.** Gabriel Blanco Arrúe's deposits block has one description and two
+figures stacked in the balance cell, 1.086,86 and 28.330,35. The first reader marked the cell
+illegible, since no rule covered it; the second gave each figure its own row. The scan was checked,
+the first reading was corrected to the same layout, and `scripts/declaration-transcription.md` now
+says it: each stacked figure is its own row, the first with the description, the rest with null,
+never added together.
+
+**Verified.** `check:declarations`, `check:deputies`, `npx tsc --noEmit` and `npm run build` pass.
+
+---
+
 ## 2026-10-06 — Asset declarations, second batch: 44 published
 
 The second batch of transcriptions of the deputies' *Declaración de Bienes y Rentas*, run with the
