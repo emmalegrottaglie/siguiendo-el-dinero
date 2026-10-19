@@ -13,7 +13,8 @@ export type IncomeGroup = "salary" | "dividends" | "interest" | "other";
 
 export interface IncomeLine {
   group: IncomeGroup;
-  concept: string;
+  /** Null where the deputy filled in the amount but left the concept blank. */
+  concept: string | null;
   amount: number | null;
 }
 
@@ -32,7 +33,8 @@ export interface Property {
 }
 
 export interface ValuedItem {
-  description: string;
+  /** Null where the deputy filled in the amount but left the description blank. */
+  description: string | null;
   amount: number | null;
 }
 

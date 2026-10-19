@@ -92,7 +92,7 @@ function invalid(t) {
   if (errors.length) return errors;
   t.income.forEach((l, i) => {
     need(GROUPS.has(l.group), `income[${i}].group`);
-    need(typeof l.concept === "string", `income[${i}].concept`);
+    need(isText(l.concept), `income[${i}].concept`);
     need(isAmount(l.amount), `income[${i}].amount`);
   });
   t.realEstate.forEach((p, i) => {
@@ -100,9 +100,9 @@ function invalid(t) {
     need(typeof p.description === "string", `realEstate[${i}].description`);
     for (const k of ["location", "acquired", "title"]) need(isText(p[k]), `realEstate[${i}].${k}`);
   });
-  t.deposits.forEach((d, i) => need(typeof d.description === "string" && isAmount(d.amount), `deposits[${i}]`));
+  t.deposits.forEach((d, i) => need(isText(d.description) && isAmount(d.amount), `deposits[${i}]`));
   t.otherAssets.forEach((a, i) =>
-    need(ASSET_KINDS.has(a.kind) && typeof a.description === "string" && isAmount(a.amount), `otherAssets[${i}]`),
+    need(ASSET_KINDS.has(a.kind) && isText(a.description) && isAmount(a.amount), `otherAssets[${i}]`),
   );
   t.vehicles.forEach((v, i) => need(typeof v.description === "string" && isText(v.acquired), `vehicles[${i}]`));
   t.loans.forEach((l, i) =>
