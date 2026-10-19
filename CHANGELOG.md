@@ -325,6 +325,30 @@ cite their report once per section rather than inside each chart.
 
 ---
 
+## 2026-10-20 — Asset declarations, fifth batch: 104 published
+
+**What was read.** The next 20 first filings in Congreso's surname order, from Ana Cobo Carmona to
+Fernando De Rosa Torner; second readings, in the same pass, of the two of them who took their seats
+after RTVE's snapshot (Raúl Cuevas Larrosa, Olvido De la Rosa Baena); and a second reading of the
+one whose first reading did not match RTVE. A third deputy, María Cuesta Rodríguez, was also given a
+second reading in the same pass because the batch's selection wrongly listed her as missing from
+RTVE's listing; she is in it, her first reading matched it, and the second reading, which agrees
+with the first on all four totals, is not used. 24 readings in all.
+
+**Result: 104 published, up from 84**, 74 checked against RTVE and 30 by an independent second
+reading. None is waiting for a second reading; 245 filings are not yet transcribed. Of the 18 new
+filings RTVE covers, 17 matched it on the first reading.
+
+**Where two readings agree and RTVE does not.** One, checked against the scan. Mario Cortés
+Carballo: financial assets 28,753.40 € against RTVE's 23,159.45 €. RTVE's figure is his pension
+plan alone; the scan shows 5.593,95 € in current accounts in the deposits block, which is the
+whole difference. This is the second time RTVE has left out a deputy's current accounts (Javier
+Celaya Brey, fourth batch).
+
+**Verified.** `check:declarations`, `check:deputies`, `npx tsc --noEmit` and `npm run build` pass.
+
+---
+
 ## 2026-10-20 — Asset declarations, fourth batch: 84 published
 
 **What was read.** The next 20 first filings in Congreso's surname order, from Isabel María Borrego

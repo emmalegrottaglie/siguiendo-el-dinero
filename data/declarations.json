@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T23:12:21.117Z",
+  "generatedAt": "2026-10-19T23:35:00.899Z",
   "source": {
     "name": "Congreso de los Diputados — Declaraciones de Bienes y Rentas, XV Legislatura (transcripción propia)",
     "url": "https://www.congreso.es/es/busqueda-de-diputados"
@@ -8,7 +8,7 @@
     "name": "RTVE",
     "url": "https://www.rtve.es/noticias/2023/declaracion-bienes-diputados-congreso/"
   },
-  "count": 84,
+  "count": 104,
   "declarations": [
     {
       "deputy": "Abades Martínez, Cristina",
@@ -4948,6 +4948,530 @@
       }
     },
     {
+      "deputy": "Cobo Carmona, Ana",
+      "cod": 75,
+      "filed": "2023-08-03",
+      "url": "https://www.congreso.es/docbienes/leg15/000063/000063_000_e_0000278_20230803.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Rendimiento del trabajo",
+          "amount": 72869.17
+        },
+        {
+          "group": "other",
+          "concept": "Rentas derivadas de bienes inmuebles no afectos a actividades económicas",
+          "amount": 1486.89
+        }
+      ],
+      "irpf": 19608.34,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Vivienda, casa",
+          "location": "Jaén",
+          "acquired": "26/07/2003",
+          "title": "Pleno dominio compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Piso, 2º residencia",
+          "location": "Almería",
+          "acquired": "01/09/2011",
+          "title": "½ Pleno dominio compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Plaza garaje",
+          "location": "Almería",
+          "acquired": "01/09/2011",
+          "title": "½ Pleno dominio compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Jaén",
+          "acquired": "08/08/2020",
+          "title": "¼ nuda propiedad Herencia"
+        },
+        {
+          "kind": "urban",
+          "description": "Plaza garaje",
+          "location": "Jaén",
+          "acquired": "08/08/2020",
+          "title": "¼ nuda propiedad Herencia"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Saldos cuentas",
+          "amount": 12000
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2005",
+          "description": "Mercedes Benz A 140"
+        },
+        {
+          "acquired": "2018",
+          "description": "Peugeot 3008"
+        },
+        {
+          "acquired": "2004",
+          "description": "Vespa 125"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Hipoteca Bankinter",
+          "granted": "2011",
+          "amount": 72415.03,
+          "pending": 58806
+        },
+        {
+          "description": "Préstamo empleados CAJARURAL JAÉN",
+          "granted": "2020",
+          "amount": 32000,
+          "pending": 10486.24
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cobo Pérez, Noelia",
+      "cod": 321,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000315/000315_000_e_0001321_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Salario Parlamento de Cantabria",
+          "amount": 55306.18
+        },
+        {
+          "group": "salary",
+          "concept": "Indemnización Parlamento de Cantabria",
+          "amount": 13692.36
+        },
+        {
+          "group": "interest",
+          "concept": "Banco Santander",
+          "amount": 43.86
+        }
+      ],
+      "irpf": 13291.06,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Cantabria",
+          "acquired": "2022",
+          "title": "Ganancial Compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Garaje",
+          "location": "Cantabria",
+          "acquired": "2011",
+          "title": "Ganancial Compraventa"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Cuenta Corriente",
+          "amount": 108944
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "Acciones Banco Santander",
+          "amount": 2568
+        },
+        {
+          "kind": "securities",
+          "description": "Acciones Unicaja",
+          "amount": 24988
+        },
+        {
+          "kind": "securities",
+          "description": "Fondos Banco Santander",
+          "amount": 23100
+        },
+        {
+          "kind": "securities",
+          "description": "Fondos Unicaja",
+          "amount": 40000
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2020",
+          "description": "Peugeot 5008"
+        },
+        {
+          "acquired": "2012",
+          "description": "Nissan QASHQAI"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Financiera vehículo/ PSA FINANCE SERVICE",
+          "granted": "30-06-2020",
+          "amount": 39956,
+          "pending": 23583
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "income[0].amount",
+          "written": "55.306'18"
+        },
+        {
+          "path": "income[1].amount",
+          "written": "13.692'36"
+        },
+        {
+          "path": "income[2].amount",
+          "written": "43'86"
+        },
+        {
+          "path": "irpf",
+          "written": "13.291'06"
+        }
+      ],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cobo Vega, Manuel",
+      "cod": 324,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000314/000314_000_e_0001314_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "GERENTE GRUCOVE S.A.",
+          "amount": 31069
+        },
+        {
+          "group": "salary",
+          "concept": "COLABORADOR TV. 6&M PRODUCCIONES Y CONTENIDOS AUDIOVISUALES S.L.U.",
+          "amount": 11400
+        },
+        {
+          "group": "salary",
+          "concept": "ARTICULISTA DIARIO AS S.L.",
+          "amount": 2658
+        },
+        {
+          "group": "dividends",
+          "concept": "DIVIDENDOS GRUCOCA INMOBILIARIA S.L.",
+          "amount": 73333.3
+        },
+        {
+          "group": "dividends",
+          "concept": "DIVIDENDOS ESTACIONES Y ARRENDAMIENTOS S.A.",
+          "amount": 24444.45
+        },
+        {
+          "group": "interest",
+          "concept": "INTERESES BANCOS",
+          "amount": 135.61
+        },
+        {
+          "group": "interest",
+          "concept": "BENEFICIO VENTA FONDOS",
+          "amount": 535.3
+        },
+        {
+          "group": "other",
+          "concept": "RENDIMIENTOS INMOBILIARIOS 25% HERMANOS COBO VEGA C.B.",
+          "amount": 30135
+        },
+        {
+          "group": "other",
+          "concept": "ARRENDAMIENTO VIVIENDA (25% PROPIEDAD)",
+          "amount": 6300
+        },
+        {
+          "group": "other",
+          "concept": "GANANCIA PATRIMONIAL. INTERESES DEMORA AGENCIA TRIBUTARIA",
+          "amount": 144779
+        }
+      ],
+      "irpf": 99407.68,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA PLAZA DE GARAJE",
+          "location": "MADRID MADRID",
+          "acquired": "2017 2017",
+          "title": "50% PLENO DOMINIO 50% PLENO DOMINIO"
+        },
+        {
+          "kind": "urban",
+          "description": "PLAZA DE GARAJE NAVE INDUSTRIAL",
+          "location": "MADRID MADRID",
+          "acquired": "2021 2021",
+          "title": "50% PLENO DOMINIO 25% PLENO DOMINIO (HERENCIA)"
+        },
+        {
+          "kind": "urban",
+          "description": "VIVIENDA VIVIENDA",
+          "location": "MADRID ALMERIA",
+          "acquired": "2011 2011",
+          "title": "25% PLENO DOMINIO 50% PLENO DOMINIO"
+        },
+        {
+          "kind": "urban",
+          "description": "CASA LOCAL",
+          "location": "LEON MADRID",
+          "acquired": "2008 2021",
+          "title": "25% PLENO DOMINIO 25% PLENO DOMINIO (AMBAS HERENCIA)"
+        },
+        {
+          "kind": "urban",
+          "description": "2 PLAZAS DE GARAJE",
+          "location": "ALMERIA",
+          "acquired": "2012",
+          "title": "50% PLENO DOMINIO"
+        },
+        {
+          "kind": "urban",
+          "description": "4 FINCAS URBANAS",
+          "location": "LEON",
+          "acquired": "2021",
+          "title": "25% PLENO DOMINIO (HERENCIA)"
+        },
+        {
+          "kind": "rustic",
+          "description": "13 FINCAS RUSTICAS",
+          "location": "LEON",
+          "acquired": "2021",
+          "title": "25% PLENO DOMINIO (HERENCIA)"
+        },
+        {
+          "kind": "rustic",
+          "description": "5 FINCAS RUSTICAS",
+          "location": "MADRID",
+          "acquired": "2021",
+          "title": "25% PLENO DOMINIO (HERENCIA)"
+        },
+        {
+          "kind": "company",
+          "description": "3 LOCALES OFICINAS EN POLIGONO INDUSTRIAL",
+          "location": "MADRID",
+          "acquired": "2008",
+          "title": "12,48% HERENCIA. GRUCOCA INMOBILIARIA S.L."
+        },
+        {
+          "kind": "company",
+          "description": "LOCAL GAREJE EN POLIGONO INDUSTRIAL LOCAL COMERCIAL POLIGONO INDUSTRIAL",
+          "location": "MADRID MADRID",
+          "acquired": "2008 2008",
+          "title": "12,48% HERENCIA. GRUCOCA INMOBILIARIA S.L."
+        },
+        {
+          "kind": "company",
+          "description": "2 VIVIENDAS EN POLIGONO INDUSTRIAL NAVE INDUSTRIAL / 8 FINCAS RUSTICAS",
+          "location": "MADRID MADRID / MADRID",
+          "acquired": "2008 2008 /2008",
+          "title": "12,48% HERENCIA. GRUCOCA INMOBILIARIA S.L."
+        },
+        {
+          "kind": "company",
+          "description": "2 NAVES INDUSTRIALES",
+          "location": "MADRID",
+          "acquired": "2008",
+          "title": "12,5% ESTACIONES Y ARENDAMIENTOS S.A."
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTAS CORRIENTES, CUENTAS DE AHORRO A PLAZO, FONDOS Y SEGUROS DE AHORRO Y DE RENTA. SALDO DE TODOS LOS DEPOSITOS A 09/08/2023",
+          "amount": 1944473
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "LETRAS DEL TESORO A 09/08/2023",
+          "amount": 97860
+        },
+        {
+          "kind": "securities",
+          "description": "PARTICIPACIONES 12,48% DEL CAPITAL SOCIAL GRUCOCA INMOBILIARIA S.L. A 31/12/2022",
+          "amount": 304711
+        },
+        {
+          "kind": "securities",
+          "description": "ACCIONES 12,50% DEL CAPITAL SOCIAL ESTACIONES Y ARRENDAMIENTOS S.A. A 31/12/2022",
+          "amount": 142554
+        },
+        {
+          "kind": "securities",
+          "description": "PARTICIPACIONES 0,39% DEL CAPITAL SOCIAL DE BCLEVER S.L.A 31/12/2022",
+          "amount": 6269
+        },
+        {
+          "kind": "securities",
+          "description": "50% 1.437 ACCIONES TELEFONICA A 09/08/2023",
+          "amount": 2526
+        },
+        {
+          "kind": "other",
+          "description": "PLANES DE PENSIONES A 09/08/2023",
+          "amount": 163727
+        },
+        {
+          "kind": "other",
+          "description": "PLAN PREVISION PROFESIONAL MUTUALIDAD ABOGACIA A 31/12/2022",
+          "amount": 94722
+        }
+      ],
+      "holdingsOver5pct": "GRUCOVE S.A. PARTICIPADA EN UN 90% POR ESTACIONES Y ARRENDAMIENTOS S.A Y EN UN 10% POR GRUCOCA INMOBILIARIA S.L. VALOR YA INCLUIDO EN AMBAS SOCIEDADES.",
+      "vehicles": [
+        {
+          "acquired": "DICIEMBRE 2019",
+          "description": "50% AUDI Q3"
+        },
+        {
+          "acquired": "SEPTIEMBRE 2017",
+          "description": "50% AUDI Q2"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cofiño Fernández, Rafael",
+      "cod": 122,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000114/000114_000_e_0001215_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Salario Servicio de Salud del Principado de Asturias",
+          "amount": 42626.87
+        },
+        {
+          "group": "salary",
+          "concept": "Profesor asociado Escuela Andaluza de Salud Pública",
+          "amount": 8458.14
+        },
+        {
+          "group": "salary",
+          "concept": "Conferencias Salud Pública durante 2022",
+          "amount": 348.5
+        }
+      ],
+      "irpf": 19614.43,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Asturias",
+          "acquired": "2016",
+          "title": "Propietario 50% Compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Asturias",
+          "acquired": "2018",
+          "title": "33,33% como propietario (recibida por herencia) 16,66% nuda propiedad (por donación)."
+        },
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Asturias",
+          "acquired": "2023",
+          "title": "50% en nuda propiedad (por donación)."
+        },
+        {
+          "kind": "urban",
+          "description": "Vivienda",
+          "location": "Asturias",
+          "acquired": "2023",
+          "title": "Propietario 50% (por herencia)."
+        },
+        {
+          "kind": "rustic",
+          "description": "Vivienda",
+          "location": "Asturias",
+          "acquired": "2023",
+          "title": "33,33% como propietario (recibida por herencia) 16,66% nuda propiedad (por donación)."
+        },
+        {
+          "kind": "rustic",
+          "description": "Seis parcelas de uso agrario (con una superficie total de 13.465 m2)",
+          "location": "Asturias",
+          "acquired": "2023",
+          "title": "33,33% como propietario (recibida por herencia) 16,66% nuda propiedad (por donación)."
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Cuenta bancaria con fecha 14 de agosto 2023",
+          "amount": 46012.25
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2017",
+          "description": "Hyundai Tucson"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Préstamo hipotecario",
+          "granted": "2016",
+          "amount": 192330.65,
+          "pending": 162780.56
+        },
+        {
+          "description": "Préstamo coche",
+          "granted": "2017",
+          "amount": 14500,
+          "pending": 9563.38
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
       "deputy": "Conde Bajén, Agustín",
       "cod": 7,
       "filed": "2023-08-01",
@@ -5049,6 +5573,1128 @@
       "otherDebts": null,
       "observations": null,
       "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Conde López, Francisco José",
+      "cod": 349,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000340/000340_000_e_0001415_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "RETRIBUCIÓN BRUTA COMO CONSEJERO DE LA XUNTA DE GALICIA",
+          "amount": 70806.48
+        },
+        {
+          "group": "salary",
+          "concept": "DIETAS POR ASISTENCIA AL CONSEJO DE DIRECCIÓN DEL INSTITUTO GALEGO DE PROMOCIÓN ECONÓMICA",
+          "amount": 5445.83
+        },
+        {
+          "group": "salary",
+          "concept": "DIETAS POR ASISTENCIA AL CONSEJO DE ADMINISTRACIÓN DE XES GALICIA",
+          "amount": 5180.11
+        }
+      ],
+      "irpf": 23379.56,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "MADRID",
+          "acquired": "2015",
+          "title": "50% PROPIEDAD COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "DOS CUENTAS CORRIENTES EN ENTIDADES BANCARIAS (EN SOCIEDAD DE GANANCIALES) SALDO A 16 DE AGOSTO DE 2023",
+          "amount": 8491.43
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "other",
+          "description": "PLAN DE PENSIONES",
+          "amount": 25096.61
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2009",
+          "description": "VOLKSWAGEN TOURAN"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRÉSTAMO HIPOTECARIO EVO",
+          "granted": "2015",
+          "amount": 260000,
+          "pending": 198175.09
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Conesa Coma, Ignasi",
+      "cod": 352,
+      "filed": "2023-09-19",
+      "url": "https://www.congreso.es/docbienes/leg15/000350/000350_000_e_0001781_20230919.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Salario",
+          "amount": 60907.51
+        },
+        {
+          "group": "salary",
+          "concept": "Trienios",
+          "amount": 247.95
+        }
+      ],
+      "irpf": 14762.56,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "piso",
+          "location": "Barcelona",
+          "acquired": "1992",
+          "title": "separacion de bienes/compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "piso",
+          "location": "Tarragona",
+          "acquired": "2014",
+          "title": "separacion de bienes/compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "plaza aparcamiento",
+          "location": "Barcelona",
+          "acquired": "1992",
+          "title": "separacion de bienes/compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "plaza aparcamiento",
+          "location": "Barcelona",
+          "acquired": "2007",
+          "title": "separacion de bienes/compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "plaza aparcamiento",
+          "location": "Tarragona",
+          "acquired": "2014",
+          "title": "separacion de bienes/compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "Trastero",
+          "location": "Tarragona",
+          "acquired": "2014",
+          "title": "separacion de bienes/compraventa"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "cuentas corrientes y fondo inversion",
+          "amount": 61769.29
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "other",
+          "description": "Microcrédito al PSOE",
+          "amount": 5000
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2021",
+          "description": "Mercedes GLA200D"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Crédito hipotecario Caixa Bank",
+          "granted": "2014",
+          "amount": 120000,
+          "pending": 83089.52
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cortés Carballo, Mario",
+      "cod": 85,
+      "filed": "2023-08-03",
+      "url": "https://www.congreso.es/docbienes/leg15/000077/000077_000_e_0000339_20230803.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "TRABAJO POR CUENTA AJENA",
+          "amount": 58590.28
+        },
+        {
+          "group": "other",
+          "concept": "ARRENDAMIENTO INMUEBLE",
+          "amount": 1468.16
+        }
+      ],
+      "irpf": 15584.94,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA HABITUAL",
+          "location": "MALAGA",
+          "acquired": "12/06/2017",
+          "title": "50% PLENO DOMINIO EN PROINDIVISO"
+        },
+        {
+          "kind": "urban",
+          "description": "APARTAMENTO",
+          "location": "MALAGA",
+          "acquired": "9/05/2007",
+          "title": "100% PLENO DOMINIO EN PROINDIVISO"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "SALDO CUENTAS CORRIENTES",
+          "amount": 5593.95
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "other",
+          "description": "PLAN PENSIONES",
+          "amount": 23159.45
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "8/02/2007",
+          "description": "VEHÍCULO LEXUS IS220"
+        },
+        {
+          "acquired": "17/05/2005",
+          "description": "MOTOCICLETA BMW F650GS"
+        }
+      ],
+      "loans": [
+        {
+          "description": "HIPOTECA VIVIENDA HABITUAL",
+          "granted": "12/06/2017",
+          "amount": 128500,
+          "pending": 105278.4
+        },
+        {
+          "description": "HIPOTECA APARTAMENTO",
+          "granted": "20/04/2007",
+          "amount": 126700,
+          "pending": 67957.25
+        },
+        {
+          "description": "PRÉSTAMO REFORMA VIVIENDA",
+          "granted": "09/12/2020",
+          "amount": 35303.29,
+          "pending": 16844.18
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Corujo Berriel, María Dolores",
+      "cod": 187,
+      "filed": "2023-08-09",
+      "url": "https://www.congreso.es/docbienes/leg15/000178/000178_000_e_0000759_20230809.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "RENDIMIENTOS DEL TRABAJO",
+          "amount": 73002.54
+        }
+      ],
+      "irpf": 21277.84,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE O DE AHORRO",
+          "amount": 23304.66
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Crespín Rubio, Rafaela",
+      "cod": 154,
+      "filed": "2023-08-08",
+      "url": "https://www.congreso.es/docbienes/leg15/000149/000149_000_e_0000645_20230808.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 19549.8,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA",
+          "location": "CÓRDOBA",
+          "acquired": "2008",
+          "title": "PLENO DOMINIO-COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA BANCARIA",
+          "amount": 13359.6
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [
+        {
+          "description": "PRÉSTAMO HIPOTECARIO",
+          "granted": "2008",
+          "amount": 280000,
+          "pending": 213739.7
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cruset Domènech, Josep Maria",
+      "cod": 244,
+      "filed": "2023-08-10",
+      "url": "https://www.congreso.es/docbienes/leg15/000232/000232_000_e_0000990_20230810.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "AUTORITAT PORTUÀRIA DE TARRAGONA",
+          "amount": 87546.43
+        },
+        {
+          "group": "salary",
+          "concept": "DIPUTACIÓ DE TARRAGONA",
+          "amount": 4132.99
+        }
+      ],
+      "irpf": 28040.13,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": null,
+          "amount": 107053.72
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "other",
+          "description": "CRUSET DOMÈNECH AGRICOLES (B43677152) - 0,622%",
+          "amount": 11930.55
+        },
+        {
+          "kind": "other",
+          "description": "PLANES DE PENSIONES",
+          "amount": 98482.28
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cruz Santana, Gabriel",
+      "cod": 168,
+      "filed": "2023-08-08",
+      "url": "https://www.congreso.es/docbienes/leg15/000154/000154_000_e_0000667_20230808.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "PERCEPCIONES SALARIALES ALCALDE HUELVA",
+          "amount": 71385.1
+        }
+      ],
+      "irpf": 18291.98,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO Vivienda habitual",
+          "location": "HUELVA",
+          "acquired": "2004",
+          "title": "PLENO DOMINIO COMPRA-VENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA AHORRO",
+          "amount": 10391.58
+        },
+        {
+          "description": "PLAN MUTUALIDAD ABOGA´CIA",
+          "amount": 72409.66
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2011",
+          "description": "CITROEN C3"
+        },
+        {
+          "acquired": "2013",
+          "description": "CITROEN DS4"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRÉSTAMO HIPOTECARIO BANCO SANTANDER",
+          "granted": "12/07/2004",
+          "amount": 141700,
+          "pending": 65698.64
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "income[0].amount",
+          "written": "71385.1"
+        },
+        {
+          "path": "irpf",
+          "written": "18291.98"
+        },
+        {
+          "path": "deposits[0].amount",
+          "written": "10391.58"
+        },
+        {
+          "path": "deposits[1].amount",
+          "written": "72409.66"
+        },
+        {
+          "path": "loans[0].pending",
+          "written": "65698.64"
+        }
+      ],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cruz-Guzmán García, María Soledad",
+      "cod": 319,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000306/000306_000_e_0001289_20230816.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 15060,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA EN EDIFICIO PLURIFAMILIAR",
+          "location": "SEVILLA",
+          "acquired": "2017",
+          "title": "NUDA PROPIEDAD (33%) DONACIÓN"
+        },
+        {
+          "kind": "urban",
+          "description": "VIVIENDA EN EDIFICIO PLURIFAMILIAR",
+          "location": "PUERTO SANTA MARIA (CÁDIZ)",
+          "acquired": "2022",
+          "title": "NUDA PROPIEDAD 100% DONACIÓN"
+        },
+        {
+          "kind": "company",
+          "description": "VIVIENDA UNIFAMILIAR",
+          "location": "SEVILLA",
+          "acquired": "2009",
+          "title": "25%PROPIEDAD COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Cuenta Corriente",
+          "amount": 47300
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2003",
+          "description": "JAGUAR S TYPE ( PROPIEDAD DE SLP CASA SOLARANA)"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cuesta Rodríguez, María",
+      "cod": 44,
+      "filed": "2023-08-02",
+      "url": "https://www.congreso.es/docbienes/leg15/000044/000044_000_e_0000190_20230802.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Nómina en empresa familiar P.S.C.R.,S.L.",
+          "amount": 32398.24
+        }
+      ],
+      "irpf": 4884.29,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA HABITUAL",
+          "location": "ESPIRDO (SEGOVIA)",
+          "acquired": "1999",
+          "title": "PLENA PROPIEDAD 50%"
+        },
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "BENAVENTE (ZAMORA)",
+          "acquired": "1997",
+          "title": "PLENA PROPIEDAD 100%"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "BENAVENTE (ZAMORA)",
+          "acquired": "1997",
+          "title": "PLENA PROPIEDAD 100%"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTAS CORRIENTES",
+          "amount": 60000
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "ACCIONES EN EMPRESA FAMILIAR P.S.C.R.,S.L. 1439 PARTICIPACIONES",
+          "amount": 86483.9
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2013",
+          "description": "TURISMO OPEL ZAFIRA"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "Cuevas Larrosa, Raúl",
+      "cod": 395,
+      "filed": "2025-01-09",
+      "url": "https://www.congreso.es/docbienes/leg15/000393/000393_000_e_0053437_20250109.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "DIPUTADO PROVINCIAL JULIO 2023- DICIEMBRE 2023 BOMBERO ENERO 2023- JULIO 2023 ASISTENCIA ALCALDE",
+          "amount": 36486
+        }
+      ],
+      "irpf": 7538,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "ZARAGOZA",
+          "acquired": "2024",
+          "title": "100% PLENO DOMINIO COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "ZARAGOZA",
+          "acquired": "2024",
+          "title": "100% PLENO DOMINIO COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "ZARAGOZA",
+          "acquired": "2024",
+          "title": "100% PLENO DOMINIO COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "2 TERRENOS URBANIZABLES",
+          "location": "CODO (ZARAGOZA)",
+          "acquired": "2024",
+          "title": "100% PLENO DOMINIO COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTAS CORRIENTES",
+          "amount": 14300
+        },
+        {
+          "description": "MUTUALIDAD DE ARQUITECTOS",
+          "amount": 15700
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2017",
+          "description": "CITROEN C4"
+        }
+      ],
+      "loans": [
+        {
+          "description": "HIPOTECA CAJA RURAL",
+          "granted": "2024",
+          "amount": 120000,
+          "pending": 118800
+        },
+        {
+          "description": "PRÉSTAMO PERSONAL FAMILIAR",
+          "granted": "2024",
+          "amount": 20000,
+          "pending": 20000
+        },
+        {
+          "description": "PRÉSTAMO PERSONAL FAMILIAR",
+          "granted": "2024",
+          "amount": 25000,
+          "pending": 25000
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De la Rosa Baena, Olvido",
+      "cod": 376,
+      "filed": "2024-02-20",
+      "url": "https://www.congreso.es/docbienes/leg15/000376/000376_000_e_0012168_20240220.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "NÓMINA COMO DIRECTORA RESIDENCIA EL BALCÓN DE LA ZUBIA",
+          "amount": 2200
+        },
+        {
+          "group": "salary",
+          "concept": "NÓMINA COMO VICEPRESIDENTA E LA EXCMA DIPUTACIÓN DE GRANADA",
+          "amount": 68427.32
+        },
+        {
+          "group": "other",
+          "concept": "ALQUILER ATICO TRASTERO MENSUAL",
+          "amount": 450
+        },
+        {
+          "group": "other",
+          "concept": "ALQUILER PISO MENSUAL 50% DE LA CANTIDAD APORTADA",
+          "amount": 470
+        }
+      ],
+      "irpf": 16849.44,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "ATICO TRASTERO",
+          "location": "GRANADA",
+          "acquired": "10/2018",
+          "title": "PLENO DOMINIO HERENCIA"
+        },
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "GRANADA",
+          "acquired": "03/2009",
+          "title": "PLENO DOMINIO COMPRAVENTA 50 %"
+        },
+        {
+          "kind": "urban",
+          "description": "CASA PAREADA",
+          "location": "GRANADA",
+          "acquired": "11/2018",
+          "title": "PLENO DOMINIO COMPRAVENTA 50 %"
+        },
+        {
+          "kind": "urban",
+          "description": "SOLAR DE 251 METROS",
+          "location": "GRANADA",
+          "acquired": "10/2018",
+          "title": "PLENO DOMINIO HERENCIA 16,66%"
+        },
+        {
+          "kind": "rustic",
+          "description": "HAZA DE TIERRA DE RIEGO,",
+          "location": "GRANADA",
+          "acquired": "10/2018",
+          "title": "PLENO DOMINIO HERENCIA(16.66%)"
+        },
+        {
+          "kind": "rustic",
+          "description": "HAZA DE TIERRA DE RIEGO",
+          "location": "GRANADA",
+          "acquired": "10/2018",
+          "title": "PLENO DOMINIO HERENCIA(16.66%)"
+        },
+        {
+          "kind": "rustic",
+          "description": "HAZA DE TIERRA DE RIEGO",
+          "location": "GRANADA",
+          "acquired": "10/2018",
+          "title": "PLENO DOMINIO HERENCIA(16.66%)"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTAS CORRIENTES",
+          "amount": 46269.46
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "PHARMAMEL S-L PARTICIPACIONES",
+          "amount": 1000
+        },
+        {
+          "kind": "other",
+          "description": "SEGURO DE VIDA",
+          "amount": 4904.7
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2018",
+          "description": "TOYOTA VERSO 130 ADVANCE 7P"
+        }
+      ],
+      "loans": [
+        {
+          "description": "HIPOTECA PISO 50% CAIXA",
+          "granted": "2009",
+          "amount": 105000,
+          "pending": 57814.42
+        },
+        {
+          "description": "HIPOTECA VIVIENDA 50% CAIXA",
+          "granted": "2018",
+          "amount": 193000,
+          "pending": 111569.82
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "irpf",
+          "written": "16.849.44"
+        },
+        {
+          "path": "deposits[0].amount",
+          "written": "46.269.46€"
+        },
+        {
+          "path": "loans[1].pending",
+          "written": "111.569.82 €"
+        }
+      ],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De las Cuevas Cortés, Félix",
+      "cod": 107,
+      "filed": "2023-08-04",
+      "url": "https://www.congreso.es/docbienes/leg15/000101/000101_000_e_0000429_20230804.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "dividends",
+          "concept": null,
+          "amount": 9034.07
+        }
+      ],
+      "irpf": 16990.35,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "CUENTAS AHORRO",
+          "amount": 9786.85
+        },
+        {
+          "description": "CUENTAS GESTIONADAS POR BBVA Y ATL CAPITAL",
+          "amount": 734869.65
+        },
+        {
+          "description": "FONDO DE INVERSIÓN",
+          "amount": 18901.17
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "IBEX 35: 43.573 SANTANDER, 4.436 BBVA - CAC 40:1675 SAINT-GOBAIN MERCADO CONTINUO: 2.700 ORYZON GENOMICS - 182 ATRESMEDIA",
+          "amount": 302986.2
+        },
+        {
+          "kind": "securities",
+          "description": "(*) Valoración según mercado a 27 de julio de 2023",
+          "amount": null
+        },
+        {
+          "kind": "other",
+          "description": "PLANES DE PENSIONES",
+          "amount": 204869.43
+        },
+        {
+          "kind": "other",
+          "description": "PLAN DE JUBILACIÓN (SAINT-GOBAIN)",
+          "amount": 38166.33
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2021",
+          "description": "YAMAHA XMAX"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De los Santos González, Jaime Miguel",
+      "cod": 270,
+      "filed": "2023-08-14",
+      "url": "https://www.congreso.es/docbienes/leg15/000258/000258_000_e_0001085_20230814.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "DIPUTADO EN LA ASAMBLEA DE MADRID Y SENADOR",
+          "amount": 83050.92
+        }
+      ],
+      "irpf": 26047.98,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE",
+          "amount": 122978.11
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De Luna Tobarra, Llanos",
+      "cod": 174,
+      "filed": "2023-08-08",
+      "url": "https://www.congreso.es/docbienes/leg15/000165/000165_000_e_0000704_20230808.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Antigüedad- Trienios Tesorería General de la Seguridad Social",
+          "amount": 7683.36
+        },
+        {
+          "group": "other",
+          "concept": "alquiler piso",
+          "amount": 12000
+        }
+      ],
+      "irpf": 19325.35,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "piso",
+          "location": "Barcelona",
+          "acquired": "14-03-2003",
+          "title": "50% propiedad compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "piso",
+          "location": "Barcelona",
+          "acquired": "24-01-2012",
+          "title": "50% propiedad compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "piso",
+          "location": "Murcia",
+          "acquired": null,
+          "title": "12.5% 17propiedad herencia"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CC Depósito",
+          "amount": 170000
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De Meer Méndez, Rocío",
+      "cod": 284,
+      "filed": "2023-08-14",
+      "url": "https://www.congreso.es/docbienes/leg15/000278/000278_000_e_0001171_20230814.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 21021.79,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA UNIFAMILIAR CON GARAJE",
+          "location": "ALMERIA",
+          "acquired": "2018",
+          "title": "PROPIEDAD COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTAS CORRIENTES",
+          "amount": 17612.45
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [
+        {
+          "description": "HIPOTECA PARA COMPRA VIVIENDA",
+          "granted": "2018",
+          "amount": 50000,
+          "pending": 30460.38
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-10-19"
+      }
+    },
+    {
+      "deputy": "De Rosa Torner, Fernando",
+      "cod": 248,
+      "filed": "2023-08-10",
+      "url": "https://www.congreso.es/docbienes/leg15/000230/000230_000_e_0000979_20230810.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Secretaria General de la Adminstracion de Justicia CONCEPTO TRIENIO",
+          "amount": 12600
+        },
+        {
+          "group": "dividends",
+          "concept": "Dividendos Acciones Banco Santander",
+          "amount": 2.78
+        },
+        {
+          "group": "interest",
+          "concept": "Rendimiento cuenta Banco Santander",
+          "amount": 20.48
+        },
+        {
+          "group": "other",
+          "concept": "Alquiler 2 oficinas en Valencia",
+          "amount": 15552
+        },
+        {
+          "group": "other",
+          "concept": "Cdad. de Propietarios Barón de Carcer - Valencia",
+          "amount": 325.86
+        }
+      ],
+      "irpf": 25184.86,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "INMUEBLE",
+          "location": "VALENCIA",
+          "acquired": "2009",
+          "title": "PLENO DOMINIO - HERENCIA"
+        },
+        {
+          "kind": "urban",
+          "description": "INMUEBLE",
+          "location": "VALENCIA",
+          "acquired": "2009",
+          "title": "PLENO DOMINIO- HERENCIA"
+        },
+        {
+          "kind": "urban",
+          "description": "25% INMBUEBLE",
+          "location": "DENIA (ALICANTE)",
+          "acquired": "1980",
+          "title": "PLENO DOMINIO - HERENCIA"
+        },
+        {
+          "kind": "urban",
+          "description": "50% INMUEBLE",
+          "location": "NAQUERA (VALENCIA)",
+          "acquired": "1996",
+          "title": "PLENO DOMINIO - COMPRA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA IBERCAJA",
+          "amount": 6000
+        },
+        {
+          "description": "Cuenta Corriente en Banco Santander",
+          "amount": 4000
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "2 Acciones Banco Santander",
+          "amount": 8.7
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "JUNIO 2006",
+          "description": "Mercedes C-180 Kompresor"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Hipoteca Banco Santander sobre Inmueble en Naquera ( Valencia)",
+          "granted": "1996",
+          "amount": 300000,
+          "pending": 120000
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "income[0].amount",
+          "written": "12,600"
+        }
+      ],
       "verified": {
         "method": "rtve",
         "checkedAt": "2026-10-19"
@@ -6436,106 +8082,6 @@
     }
   ],
   "unresolved": [
-    {
-      "deputy": "Cobo Carmona, Ana",
-      "cod": 75,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cobo Pérez, Noelia",
-      "cod": 321,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cobo Vega, Manuel",
-      "cod": 324,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cofiño Fernández, Rafael",
-      "cod": 122,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Conde López, Francisco José",
-      "cod": 349,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Conesa Coma, Ignasi",
-      "cod": 352,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cortés Carballo, Mario",
-      "cod": 85,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Corujo Berriel, María Dolores",
-      "cod": 187,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Crespín Rubio, Rafaela",
-      "cod": 154,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cruset Domènech, Josep Maria",
-      "cod": 244,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cruz Santana, Gabriel",
-      "cod": 168,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cruz-Guzmán García, María Soledad",
-      "cod": 319,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cuesta Rodríguez, María",
-      "cod": 44,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Cuevas Larrosa, Raúl",
-      "cod": 395,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De la Rosa Baena, Olvido",
-      "cod": 376,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De las Cuevas Cortés, Félix",
-      "cod": 107,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De los Santos González, Jaime Miguel",
-      "cod": 270,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De Luna Tobarra, Llanos",
-      "cod": 174,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De Meer Méndez, Rocío",
-      "cod": 284,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "De Rosa Torner, Fernando",
-      "cod": 248,
-      "reason": "not-transcribed"
-    },
     {
       "deputy": "Del Valle Rodríguez, Emilio Jesús",
       "cod": 124,
