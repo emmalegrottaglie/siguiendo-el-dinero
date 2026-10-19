@@ -198,6 +198,7 @@ A healthy response reports `"storage":{"configured":"kv","writtenTo":"kv"}`.
 | `/[locale]` | Portal: headline figures, how each group voted, rights and housing news |
 | `/[locale]/financiacion` | Money: subsidies dashboard and the party-linked foundations layer |
 | `/[locale]/politicos` | Every officeholder and sitting deputy: search, party facets, paging |
+| `/[locale]/politicos/declaraciones` | What each sitting deputy declared to Congress, side by side, in alphabetical order |
 | `/[locale]/politico/[slug]` | One person: pay, party funding, declarations to Congress, recorded ballots, social, news |
 | `/[locale]/party/[nif]` | One party: public and private money, faces, ledger, news |
 | `/[locale]/votaciones` | Key votes: result, per-group breakdown, deputy search |

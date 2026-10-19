@@ -259,6 +259,7 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
     [t.nav.votes, "/votaciones"],
     [t.nav.map, "/mapa"],
     [t.nav.people, "/politicos"],
+    [t.assets.tabs.declarations, "/politicos/declaraciones"],
     [t.nav.context, "/contexto"],
     [t.nav.methodology, "/metodologia"],
   ];

@@ -124,7 +124,7 @@ const es = {
       "Alguna cifra de esta declaración no está escrita en el formato numérico español: debajo de ella figura tal como aparece en el escaneo, y conviene comprobarla en el PDF oficial.",
     writtenAs: "escrito «{text}»",
     noInterests: "El fichero de datos abiertos del Congreso no recoge ninguna fila con este nombre.",
-    assetKinds: { securities: "Valores y participaciones", other: "Otros bienes y derechos" },
+    assetKinds: { securities: "Valores y participaciones", other: "Otros bienes, rentas o derechos" },
     holdings: "Sociedades participadas en más de un 5 %",
     vehicles: "Vehículos",
     debts: "Deudas",
@@ -156,6 +156,35 @@ const es = {
     interestObservations: "Observaciones",
     caveat:
       "Todo lo que figura aquí es una declaración propia: el Congreso la publica «sin corrección alguna», según su propio formulario. La declaración de bienes y rentas sólo existe como escaneo, sin texto legible por máquina, así que la transcribe este sitio, y cada transcripción se publica únicamente si sus totales coinciden con la transcripción independiente de {check} o con una segunda lectura independiente del escaneo. El listado de {check} no incluye el IRPF, así que en las declaraciones cotejadas con él esa cifra procede de una sola lectura, y los textos no se cotejan en ningún caso. Se omiten las matrículas que alguna declaración incluye, porque el propio formulario pide no indicarlas. Ante cualquier diferencia, manda el PDF oficial.",
+  },
+  assets: {
+    title: "Lo que declararon",
+    intro:
+      "La declaración de bienes y rentas que cada diputado presentó al tomar posesión en 2023, con las rentas de 2022. Este sitio la transcribe del escaneo oficial y sólo la publica cuando sus totales se han comprobado. Junto a cada nombre, los totales por apartado; el detalle completo está en su perfil.",
+    tabs: { label: "Secciones de Políticos", directory: "Directorio", declarations: "Bienes declarados" },
+    coverage:
+      "{done} de {total} declaraciones transcritas y comprobadas. El resto enlaza al PDF oficial mientras se transcribe.",
+    all: "Todos",
+    tableCaption: "Totales declarados por apartado, en orden alfabético",
+    columns: {
+      name: "Nombre",
+      filed: "Presentada",
+      income: "Rentas",
+      financial: "Depósitos y otros bienes",
+      realEstate: "Inmuebles",
+      vehicles: "Vehículos",
+      debts: "Deudas pendientes",
+    },
+    legend:
+      "— : nada declarado en ese apartado. Inmuebles y vehículos se cuentan, porque el formulario no les da valor.",
+    noRanking:
+      "En orden alfabético. Este sitio no ordena a los diputados por nada de lo declarado ni suma un patrimonio total.",
+    download: "Todas las partidas declaradas, en CSV ↓",
+    noneForParty: "Ningún diputado de este partido tiene aún la declaración transcrita.",
+    pending: "Pendientes de transcribir: {count}",
+    pendingNote: "Cada nombre lleva a su perfil, que enlaza la declaración oficial.",
+    noFiling: "Sin declaración de bienes en su ficha del Congreso: {names}.",
+    source: "Fuente",
   },
   ballotGrid: {
     noBallot: "Sin voto registrado",
@@ -1100,7 +1129,7 @@ const en: Dict = {
       "Some figures in this declaration are not written in Spanish number format: each is shown beneath as it appears in the scan, and is worth checking against the official PDF.",
     writtenAs: "written “{text}”",
     noInterests: "Congreso's open-data file has no rows under this name.",
-    assetKinds: { securities: "Securities and holdings", other: "Other goods and rights" },
+    assetKinds: { securities: "Securities and holdings", other: "Other goods, income or rights" },
     holdings: "Companies more than 5 % owned",
     vehicles: "Vehicles",
     debts: "Debts",
@@ -1132,6 +1161,35 @@ const en: Dict = {
     interestObservations: "Remarks",
     caveat:
       "Everything here is self-declared: the Congreso publishes it \"sin corrección alguna\" (without any correction), as its own form says. The asset declaration exists only as a scan with no machine-readable text, so this site transcribes it, and each transcription is published only when its totals equal the independent transcription by {check} or a second, independent reading of the scan. {check}'s listing has no IRPF figure, so in declarations checked against it that line rests on a single reading, and text is never cross-checked. Licence plates that a few declarations include are left out, as the form itself asks. Wherever they differ, the official PDF prevails.",
+  },
+  assets: {
+    title: "What they declared",
+    intro:
+      "The asset and income declaration each deputy filed on taking their seat in 2023, with their income for 2022. This site transcribes it from the official scan and publishes it only once its totals have been checked. Each name shows the totals by section; the full detail is on their profile.",
+    tabs: { label: "Politicians sections", directory: "Directory", declarations: "Declared assets" },
+    coverage:
+      "{done} of {total} declarations transcribed and checked. The rest link the official PDF until they are transcribed.",
+    all: "All",
+    tableCaption: "Totals declared by section, in alphabetical order",
+    columns: {
+      name: "Name",
+      filed: "Filed",
+      income: "Income",
+      financial: "Deposits and other assets",
+      realEstate: "Properties",
+      vehicles: "Vehicles",
+      debts: "Debts outstanding",
+    },
+    legend:
+      "— : nothing declared in that section. Properties and vehicles are counted, because the form gives them no value.",
+    noRanking:
+      "Alphabetical order. This site does not rank deputies by anything they declared, and does not add up a total net worth.",
+    download: "Every declared item, as CSV ↓",
+    noneForParty: "No deputy of this party has a transcribed declaration yet.",
+    pending: "Not yet transcribed: {count}",
+    pendingNote: "Each name leads to the deputy's profile, which links the official declaration.",
+    noFiling: "No asset declaration on their Congreso page: {names}.",
+    source: "Source",
   },
   ballotGrid: {
     noBallot: "No ballot recorded",
@@ -2074,7 +2132,7 @@ const ca: Dict = {
       "Alguna xifra d’aquesta declaració no està escrita en el format numèric espanyol: a sota hi figura tal com apareix a l’escaneig, i convé comprovar-la al PDF oficial.",
     writtenAs: "escrit «{text}»",
     noInterests: "El fitxer de dades obertes del Congrés no recull cap fila amb aquest nom.",
-    assetKinds: { securities: "Valors i participacions", other: "Altres béns i drets" },
+    assetKinds: { securities: "Valors i participacions", other: "Altres béns, rendes o drets" },
     holdings: "Societats participades en més d’un 5 %",
     vehicles: "Vehicles",
     debts: "Deutes",
@@ -2106,6 +2164,35 @@ const ca: Dict = {
     interestObservations: "Observacions",
     caveat:
       "Tot el que hi ha aquí és una declaració pròpia: el Congrés la publica «sin corrección alguna», com diu el seu propi formulari. La declaració de béns i rendes només existeix com a escaneig, sense text llegible per màquina, així que la transcriu aquest lloc, i cada transcripció es publica només si els seus totals coincideixen amb la transcripció independent de {check} o amb una segona lectura independent de l’escaneig. El llistat de {check} no inclou l’IRPF, així que en les declaracions contrastades amb ell aquesta xifra prové d’una sola lectura, i els textos no es contrasten mai. S’ometen les matrícules que alguna declaració inclou, perquè el mateix formulari demana no indicar-les. Davant qualsevol diferència, mana el PDF oficial.",
+  },
+  assets: {
+    title: "El que van declarar",
+    intro:
+      "La declaració de béns i rendes que cada diputat va presentar en prendre possessió el 2023, amb les rendes del 2022. Aquest lloc la transcriu de l’escaneig oficial i només la publica quan se n’han comprovat els totals. Al costat de cada nom, els totals per apartat; el detall complet és al seu perfil.",
+    tabs: { label: "Seccions de Polítics", directory: "Directori", declarations: "Béns declarats" },
+    coverage:
+      "{done} de {total} declaracions transcrites i comprovades. La resta enllaça al PDF oficial mentre es transcriu.",
+    all: "Tots",
+    tableCaption: "Totals declarats per apartat, en ordre alfabètic",
+    columns: {
+      name: "Nom",
+      filed: "Presentada",
+      income: "Rendes",
+      financial: "Dipòsits i altres béns",
+      realEstate: "Immobles",
+      vehicles: "Vehicles",
+      debts: "Deutes pendents",
+    },
+    legend:
+      "— : res declarat en aquell apartat. Immobles i vehicles es compten, perquè el formulari no els dona valor.",
+    noRanking:
+      "En ordre alfabètic. Aquest lloc no ordena els diputats per res del que han declarat ni suma un patrimoni total.",
+    download: "Totes les partides declarades, en CSV ↓",
+    noneForParty: "Cap diputat d’aquest partit no té encara la declaració transcrita.",
+    pending: "Pendents de transcriure: {count}",
+    pendingNote: "Cada nom porta al seu perfil, que enllaça la declaració oficial.",
+    noFiling: "Sense declaració de béns a la seva fitxa del Congrés: {names}.",
+    source: "Font",
   },
   ballotGrid: {
     noBallot: "Sense vot registrat",
