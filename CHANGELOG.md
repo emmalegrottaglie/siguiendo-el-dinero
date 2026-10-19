@@ -5,6 +5,87 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-19 — Every chart says where it came from, and none relies on colour alone
+
+An audit of the site's charts against the checklist in `RESEARCH-DATAVIZ/` (research carried over
+from another project, now committed here) found six problems. All six are fixed, and `AGENTS.md`
+has a new "Charts: what every chart must carry" section so the next chart starts from the rules
+rather than rediscovering them.
+
+**A legend that described a different chart.** The subsidy ranking on `/financiacion` had a legend
+in its header saying ordinary funding was gold and security costs red. The bars drew ordinary
+funding in each party's own colour and security costs as a hatched dark ink, so the legend was
+wrong on both counts; it was also hidden on phones. The bars and the legend are now built by one
+function, so they cannot disagree, and the ordinary-funding swatch shows several party colours with
+the label "in the party's colour". A second legend under the list, whose ordinary-funding swatch
+was the same grey as "other", is gone.
+
+**Sí and No could not be told apart by a colour-blind reader.** The two were `--verd` (#2f7d70) and
+`--red` (#b23a2c). They differ in hue but hardly in lightness (CIELAB L* 47.5 against 42.3).
+Simulated for deuteranopia with the Machado (2009) full-severity matrix, both come out at L* 46.1:
+a lightness difference of 0.1, with nothing else to separate them. They were side by side in every
+vote bar on the front page, on `/votaciones`, in the ballot grid on each profile and in the flow
+diagram. Two new tokens replace them in charts:
+
+- `--stance-si` #3b8f8a: L* 54.5; 3.43:1 on the page, 3.16:1 on panels, 3.51:1 on cards. A fill
+  only; sí text keeps `--verd-text` (5.28:1).
+- `--stance-no` #6a1b12: L* 23.3; 10.57:1 on the page, 9.75:1 on panels, 10.82:1 on cards.
+- Against each other: 3.08:1, so each clears 3:1 where they meet inside a stacked bar. Simulated
+  deuteranopia: ΔL* 26.8, ΔE2000 34.6. Simulated protanopia: ΔL* 38.5, ΔE2000 35.9. (Normal
+  vision: ΔE2000 52.6.)
+
+Lightness is still colour, so No is also hatched, in light lines (3.7:1 against the No fill),
+in every bar, legend, ballot-grid cell and flow-diagram node. Stance bars are now built with one
+helper, `stanceSegments()`, which applies colour and hatch together. The stance counts on the front
+page's vote cards are now printed under the bar. Two text fixes came with this: a profile's ballot
+tags printed "A favor" in `--gold`, which is 3.02:1 and fails as text, and now use `--verd-text`;
+and those tags' borders were written as a hex suffix on a CSS variable (`var(--red)55`), which is
+not valid CSS and drew no border, and now use `color-mix()`.
+
+**Charts did not say where their numbers came from.** Only three charts carried a source line.
+Now every chart that lacked one has it inside its own frame: the subsidy ranking, electoral spending
+by formation, the front page's three register summaries and its two vote cards, the salary
+distribution, the minimum-wage ladder on profiles, the ballot grid, the coverage chart on
+`/metodologia` and the flow diagram on `/votaciones`. Each names the publisher, the dataset or
+report, the data date (the period covered, or for a live source the date it was fetched) and the
+link. They are built by `lib/chart-sources.ts` from the data files and module constants the figures
+come from, so no URL or date is typed at a chart. Two strings that were hard-coded in `/datos`
+moved into their modules on the way, so both pages read the same one: the pay register's link and
+BDNS's name for its party-subsidy listing.
+
+**Charts hidden from screen readers had no other way in.** The salary histogram, the ballot grid,
+the flow diagram, the subsidy ranking's split by kind, the coverage chart and the front page's
+three summaries are `aria-hidden`, and several drew numbers printed nowhere else. Each now has a
+closed "Ver los datos en una tabla" / "Show the data as a table" / "Mostra les dades en una taula"
+disclosure with a real table: caption, column and row headers, and every number the chart draws.
+It is one component, `components/chart/DataTable.tsx`, a native `<details>` with no JavaScript.
+The tables scroll inside their own box on a phone. Charts that already had a full table on the page
+(the per-group vote table, the per-formation spending table, the map) did not get a second one.
+
+**The salary histogram had no value axis.** Nothing said the bars were counts of posts, and the log
+scale was mentioned only in the caveat below the chart. It now has an axis title above the plot
+("Nº de cargos en cada tramo · el tramo más poblado tiene 689") and a line under the ticks saying
+the axis is gross annual pay on a logarithmic scale where each mark multiplies by 10.
+
+**The spending donut identified formations by colour only, and cut their names.** It is replaced by
+one labelled bar per formation (`SpendShares`, on the site's `Bar` primitive), each with the full
+name, the declared amount and its share of the total; names wrap instead of truncating. The front
+page's spending summary also wraps its names now.
+
+**The flow diagram on a phone.** It needs about 62rem, so on a phone it scrolls inside its own box,
+and the page itself does not scroll sideways (checked at 375px: no element outside a scrolling box
+reaches past the viewport, and `scrollWidth` equals the viewport width, on every changed page in all
+three languages). What was missing was any sign that the box scrolls: below 1024px
+a line above the diagram now says it is wider than the screen and points to the table, and the box
+is focusable so it can be scrolled from the keyboard.
+
+What is not in this change: reading values from the keyboard with a live region, exporting a chart
+as an image with its caption, and a dark theme. Each is planned as its own follow-up. The party
+page's donation bar and the foundation channel's bars, which were not part of the audit, still
+cite their report once per section rather than inside each chart.
+
+---
+
 ## 2026-10-06 — What each deputy declared to Congress, next to how they voted
 
 Every sitting deputy now has a profile, and each profile carries what the deputy declared to the

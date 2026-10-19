@@ -61,6 +61,12 @@ const es = {
       "Leyes y mociones sobre derechos trans y LGTBI, salud sexual y reproductiva, y vivienda. Cada posición enlaza al acta oficial.",
   },
   salaryShape: {
+    yAxis: "Nº de cargos en cada tramo · el tramo más poblado tiene {peak}",
+    xAxis: "Retribución bruta anual · escala logarítmica: cada marca multiplica por 10",
+    tableCaption:
+      "Las {published} retribuciones publicadas en el registro, repartidas en {bins} tramos de igual anchura en la escala logarítmica, y cuántos cargos caen en cada uno.",
+    colBand: "Tramo (€ brutos al año)",
+    colCount: "Cargos",
     title: "Dónde queda esta retribución",
     position:
       "{pay} al año está por encima del {rank} de los {published} cargos del registro que publican una cifra.",
@@ -161,6 +167,12 @@ const es = {
     noBallot: "Sin voto registrado",
     caption:
       "Voto emitido en {cast} de las {tracked} votaciones nominales que seguimos. El Congreso celebra miles, así que esto es el registro que tenemos, no el historial completo de voto de esta persona.",
+    tableCaption:
+      "Cada votación que seguimos, por tema y de la más antigua a la más reciente, con el voto que consta para esta persona.",
+    colTopic: "Tema",
+    colVote: "Votación",
+    colDate: "Fecha",
+    colBallot: "Voto",
   },
   votes: {
     eyebrow: "Votaciones nominales",
@@ -320,6 +332,21 @@ const es = {
     source:
       "Siguiendo el Dinero · Datos abiertos BDNS, Tribunal de Cuentas y Congreso de los Diputados",
     caveat: "Los hechos van uno junto a otro; ninguna causa se afirma",
+  },
+  charts: {
+    showTable: "Ver los datos en una tabla",
+    source: "Fuente",
+    updated: "actualizado el {date}",
+    approved: "aprobado el {date}",
+    financialYear: "ejercicio {year}",
+    range: "de {from} a {to}",
+    report: "Informe {report}",
+    rollCall: "Acta de la votación nominal",
+    spendingElection: "elecciones europeas del 9 de junio de 2024",
+    portraitsDataset: "retratos con licencia libre",
+    scrollHint:
+      "El gráfico es más ancho que la pantalla: desliza en horizontal dentro del recuadro para verlo entero, o abre la tabla de debajo.",
+    scrollRegion: "Gráfico desplazable en horizontal",
   },
   common: {
     backToPanel: "← Volver al panel",
@@ -509,6 +536,22 @@ const es = {
     opinionCta: "Directorio de organizaciones",
     bandTitle: "El pulso de los datos",
     bandNote: "Tres registros públicos, resumidos",
+    colVote: "Votación",
+    colDate: "Fecha",
+    colResult: "Resultado",
+    bandVotesTable:
+      "Cada votación seguida, de la más reciente a la más antigua, con los votos emitidos tal como constan en el acta.",
+    colTranche: "Tramo",
+    colDonors: "Donantes",
+    colDonorShare: "% de donantes",
+    colAmount: "Importe",
+    colMoneyShare: "% del dinero",
+    bandDonorsTable:
+      "Donantes e importes declarados en {year}, sumados en todas las formaciones, por tramo del informe.",
+    colFormation: "Formación",
+    colDeclared: "Declarado",
+    colShare: "Parte del total",
+    bandSpendTable: "Gasto ordinario declarado por cada formación en las europeas de 2024.",
     bandVotesTitle: "Los llamamientos, uno a uno",
     bandDonorsTitle: "Muchos donantes, poco dinero",
     bandDonorsNote:
@@ -573,6 +616,11 @@ const es = {
     distribution: "Reparto por partido",
     noResults: "No hay concesiones para esta selección.",
     filterStatus: "{parties} partidos · {grants} concesiones · {total} con los filtros actuales",
+    tableCaption:
+      "Lo concedido a cada partido con los filtros actuales, por tipo de ayuda, en euros: las cifras que dibuja cada barra.",
+    colParty: "Partido",
+    colTotal: "Total",
+    colShare: "Parte del total",
   },
   party: {
     switcherLabel: "Elegir formación",
@@ -624,6 +672,11 @@ const es = {
     fromOrg: "publicación de la entidad",
   },
   voteFlow: {
+    tableCaption:
+      "Las formaciones del gráfico, con lo que declararon en donaciones privadas en 2020 y cómo votó su grupo. Total declarado por ellas: {total}.",
+    colFormation: "Formación",
+    colDonations: "Donaciones declaradas, 2020",
+    colVote: "Voto del grupo",
     title: "Dinero declarado y voto registrado, uno junto a otro",
     sourceHead: "Donaciones privadas declaradas · 2020",
     outcomeHead: "Voto del grupo",
@@ -658,8 +711,10 @@ const es = {
     barNote:
       "Cada barra se compara con la de la formación que más declaró, así que su longitud dice cuánto gastó y sus tramos en qué. Un importe muy pequeño se dibuja con un ancho mínimo para que se vea que no es cero; la cifra exacta está en las columnas.",
     eyebrow: "Gasto electoral · europeas de 2024",
-    donutCentre: "DECLARADO",
-    donutCaption:
+    sharesTotal: "Gasto ordinario declarado, en total",
+    sharesNote:
+      "Cada barra es la parte de la formación en ese total, así que juntas suman el 100 %. Un importe muy pequeño se dibuja con un ancho mínimo para que se vea que no es cero.",
+    sharesCaption:
       "Gasto ordinario declarado por cada formación en las elecciones europeas del 9 de junio de 2024.",
     linesTitle: "En qué se declaró gastado",
     lineAdvertising: "Publicidad exterior y en prensa y radio",
@@ -693,6 +748,11 @@ const es = {
       "«Otros gastos ordinarios» es una sola línea sin desglose y es la mayor parte del gasto declarado. El informe no dice en qué se gastó, y la ley no obliga a detallarlo: la publicidad digital no es una categoría con límite propio, y el propio Tribunal de Cuentas ha recomendado al Gobierno que legisle para que lo sea. Estas cifras son gasto declarado y fiscalizado, no una imputación de nada a nadie.",
   },
   coverage: {
+    tableCaption: "Las cuatro proporciones, con su numerador y su denominador.",
+    colWhat: "Qué se mide",
+    colCovered: "Con dato",
+    colTotal: "Total",
+    colShare: "Proporción",
     title: "Cuánto hay de cada cosa",
     intro:
       "Esta página dice en prosa lo que falta. Aquí está en cifras, calculadas sobre los propios datos en cada compilación, para que se pueda comprobar la frase contra la barra.",
@@ -1037,6 +1097,12 @@ const en: Dict = {
       "Laws and motions on trans and LGBTI rights, sexual and reproductive health, and housing. Every position links to the official record.",
   },
   salaryShape: {
+    yAxis: "Number of posts in each band · the largest band holds {peak}",
+    xAxis: "Gross annual pay · logarithmic scale: each mark multiplies by 10",
+    tableCaption:
+      "The {published} figures published in the register, split into {bins} bands of equal width on the logarithmic scale, and how many posts fall in each.",
+    colBand: "Band (gross € a year)",
+    colCount: "Posts",
     title: "Where this pay sits",
     position:
       "{pay} a year is higher than {rank} of the {published} officeholders in the register who publish a figure.",
@@ -1137,6 +1203,12 @@ const en: Dict = {
     noBallot: "No ballot recorded",
     caption:
       "A ballot cast in {cast} of the {tracked} recorded divisions this site tracks. The Congreso holds thousands, so this is the record we hold, not this person's complete voting history.",
+    tableCaption:
+      "Every division we track, by topic and oldest first, with the ballot on record for this person.",
+    colTopic: "Topic",
+    colVote: "Division",
+    colDate: "Date",
+    colBallot: "Ballot",
   },
   votes: {
     eyebrow: "Recorded divisions",
@@ -1296,6 +1368,21 @@ const en: Dict = {
     source:
       "Siguiendo el Dinero · Open data from the BDNS, the Court of Auditors and the Congress of Deputies",
     caveat: "Facts are placed side by side; no cause is asserted",
+  },
+  charts: {
+    showTable: "Show the data as a table",
+    source: "Source",
+    updated: "updated {date}",
+    approved: "approved {date}",
+    financialYear: "financial year {year}",
+    range: "{from} to {to}",
+    report: "Report {report}",
+    rollCall: "Record of the roll-call vote",
+    spendingElection: "European Parliament election of 9 June 2024",
+    portraitsDataset: "freely licensed portraits",
+    scrollHint:
+      "The chart is wider than the screen: swipe sideways inside its box to see all of it, or open the table below.",
+    scrollRegion: "Horizontally scrollable chart",
   },
   common: {
     backToPanel: "← Back to dashboard",
@@ -1485,6 +1572,22 @@ const en: Dict = {
     opinionCta: "Directory of organisations",
     bandTitle: "The pulse of the data",
     bandNote: "Three public registers, summarised",
+    colVote: "Division",
+    colDate: "Date",
+    colResult: "Result",
+    bandVotesTable:
+      "Every tracked division, newest first, with the ballots cast as the official record gives them.",
+    colTranche: "Band",
+    colDonors: "Donors",
+    colDonorShare: "% of donors",
+    colAmount: "Amount",
+    colMoneyShare: "% of the money",
+    bandDonorsTable:
+      "Donors and amounts declared in {year}, summed across all formations, by the report's bands.",
+    colFormation: "Formation",
+    colDeclared: "Declared",
+    colShare: "Share of total",
+    bandSpendTable: "Ordinary spending declared by each formation in the 2024 European election.",
     bandVotesTitle: "The divisions, one by one",
     bandDonorsTitle: "Many donors, little money",
     bandDonorsNote:
@@ -1549,6 +1652,11 @@ const en: Dict = {
     distribution: "Breakdown by party",
     noResults: "No grants for this selection.",
     filterStatus: "{parties} parties · {grants} grants · {total} under the current filters",
+    tableCaption:
+      "What each party was granted under the current filters, by kind of grant, in euros: the figures each bar draws.",
+    colParty: "Party",
+    colTotal: "Total",
+    colShare: "Share of total",
   },
   party: {
     switcherLabel: "Choose a formation",
@@ -1600,6 +1708,11 @@ const en: Dict = {
     fromOrg: "organisation's own post",
   },
   voteFlow: {
+    tableCaption:
+      "The formations in the chart, with what they declared in private donations in 2020 and how their group voted. Their declared total: {total}.",
+    colFormation: "Formation",
+    colDonations: "Declared donations, 2020",
+    colVote: "Group's vote",
     title: "Declared money and recorded vote, side by side",
     sourceHead: "Declared private donations · 2020",
     outcomeHead: "Group’s vote",
@@ -1634,8 +1747,10 @@ const en: Dict = {
     barNote:
       "Each bar is scaled against the formation that declared most, so its length says how much was spent and its segments say on what. A very small amount is drawn at a minimum width so it reads as non-zero; the exact figure is in the columns.",
     eyebrow: "Electoral spending · 2024 European elections",
-    donutCentre: "DECLARED",
-    donutCaption:
+    sharesTotal: "Declared ordinary spending, in total",
+    sharesNote:
+      "Each bar is the formation's share of that total, so together they add up to 100%. A very small amount is drawn at a minimum width so it can be seen not to be zero.",
+    sharesCaption:
       "Ordinary spending declared by each formation for the European elections of 9 June 2024.",
     linesTitle: "What it was declared to have bought",
     lineAdvertising: "Outdoor, press and radio advertising",
@@ -1669,6 +1784,11 @@ const en: Dict = {
       "“Otros gastos ordinarios” is a single line with no breakdown, and it is most of the declared spending. The report does not say what it bought, and the law does not require it to: digital advertising is not a category with its own cap, and the Tribunal de Cuentas has itself recommended that the Government legislate to make it one. These are declared and audited figures, not an imputation of anything to anyone.",
   },
   coverage: {
+    tableCaption: "The four ratios, with their numerator and denominator.",
+    colWhat: "What is measured",
+    colCovered: "With data",
+    colTotal: "Total",
+    colShare: "Ratio",
     title: "How much of each there is",
     intro:
       "This page states its gaps in prose. Here they are as figures, computed over the data itself on every build, so the sentence can be checked against the bar.",
@@ -2011,6 +2131,12 @@ const ca: Dict = {
       "Lleis i mocions sobre drets trans i LGBTI, salut sexual i reproductiva, i habitatge. Cada posició enllaça a l'acta oficial.",
   },
   salaryShape: {
+    yAxis: "Nombre de càrrecs a cada tram · el tram més poblat en té {peak}",
+    xAxis: "Retribució bruta anual · escala logarítmica: cada marca multiplica per 10",
+    tableCaption:
+      "Les {published} retribucions publicades al registre, repartides en {bins} trams d'igual amplada en l'escala logarítmica, i quants càrrecs cauen a cada un.",
+    colBand: "Tram (€ bruts l'any)",
+    colCount: "Càrrecs",
     title: "On queda aquesta retribució",
     position:
       "{pay} l’any està per damunt del {rank} dels {published} càrrecs del registre que publiquen una xifra.",
@@ -2111,6 +2237,12 @@ const ca: Dict = {
     noBallot: "Sense vot registrat",
     caption:
       "Vot emès en {cast} de les {tracked} votacions nominals que seguim. El Congrés en celebra milers, així que això és el registre que tenim, no l’historial complet de vot d’aquesta persona.",
+    tableCaption:
+      "Cada votació que seguim, per tema i de la més antiga a la més recent, amb el vot que consta per a aquesta persona.",
+    colTopic: "Tema",
+    colVote: "Votació",
+    colDate: "Data",
+    colBallot: "Vot",
   },
   votes: {
     eyebrow: "Votacions nominals",
@@ -2270,6 +2402,21 @@ const ca: Dict = {
     source:
       "Siguiendo el Dinero · Dades obertes de la BDNS, el Tribunal de Comptes i el Congrés dels Diputats",
     caveat: "Els fets van un al costat de l’altre; no s’afirma cap causa",
+  },
+  charts: {
+    showTable: "Mostra les dades en una taula",
+    source: "Font",
+    updated: "actualitzat el {date}",
+    approved: "aprovat el {date}",
+    financialYear: "exercici {year}",
+    range: "de {from} a {to}",
+    report: "Informe {report}",
+    rollCall: "Acta de la votació nominal",
+    spendingElection: "eleccions europees del 9 de juny de 2024",
+    portraitsDataset: "retrats amb llicència lliure",
+    scrollHint:
+      "El gràfic és més ample que la pantalla: llisca en horitzontal dins el requadre per veure'l sencer, o obre la taula de sota.",
+    scrollRegion: "Gràfic desplaçable en horitzontal",
   },
   common: {
     backToPanel: "← Tornar al tauler",
@@ -2459,6 +2606,22 @@ const ca: Dict = {
     opinionCta: "Directori d'organitzacions",
     bandTitle: "El pols de les dades",
     bandNote: "Tres registres públics, resumits",
+    colVote: "Votació",
+    colDate: "Data",
+    colResult: "Resultat",
+    bandVotesTable:
+      "Cada votació seguida, de la més recent a la més antiga, amb els vots emesos tal com consten a l'acta.",
+    colTranche: "Tram",
+    colDonors: "Donants",
+    colDonorShare: "% de donants",
+    colAmount: "Import",
+    colMoneyShare: "% dels diners",
+    bandDonorsTable:
+      "Donants i imports declarats el {year}, sumats en totes les formacions, per tram de l'informe.",
+    colFormation: "Formació",
+    colDeclared: "Declarat",
+    colShare: "Part del total",
+    bandSpendTable: "Despesa ordinària declarada per cada formació a les europees del 2024.",
     bandVotesTitle: "Les votacions, una a una",
     bandDonorsTitle: "Molts donants, pocs diners",
     bandDonorsNote:
@@ -2523,6 +2686,11 @@ const ca: Dict = {
     distribution: "Repartiment per partit",
     noResults: "No hi ha concessions per a aquesta selecció.",
     filterStatus: "{parties} partits · {grants} concessions · {total} amb els filtres actuals",
+    tableCaption:
+      "El que s'ha concedit a cada partit amb els filtres actuals, per tipus d'ajuda, en euros: les xifres que dibuixa cada barra.",
+    colParty: "Partit",
+    colTotal: "Total",
+    colShare: "Part del total",
   },
   party: {
     switcherLabel: "Triar formació",
@@ -2574,6 +2742,11 @@ const ca: Dict = {
     fromOrg: "publicació de l'entitat",
   },
   voteFlow: {
+    tableCaption:
+      "Les formacions del gràfic, amb el que van declarar en donacions privades el 2020 i com va votar el seu grup. Total declarat per elles: {total}.",
+    colFormation: "Formació",
+    colDonations: "Donacions declarades, 2020",
+    colVote: "Vot del grup",
     title: "Diner declarat i vot registrat, un al costat de l’altre",
     sourceHead: "Donacions privades declarades · 2020",
     outcomeHead: "Vot del grup",
@@ -2608,8 +2781,10 @@ const ca: Dict = {
     barNote:
       "Cada barra es compara amb la de la formació que més va declarar, així que la seva llargada diu quant va gastar i els seus trams en què. Un import molt petit es dibuixa amb una amplada mínima perquè es vegi que no és zero; la xifra exacta és a les columnes.",
     eyebrow: "Despesa electoral · europees del 2024",
-    donutCentre: "DECLARAT",
-    donutCaption:
+    sharesTotal: "Despesa ordinària declarada, en total",
+    sharesNote:
+      "Cada barra és la part de la formació en aquest total, així que juntes sumen el 100 %. Un import molt petit es dibuixa amb una amplada mínima perquè es vegi que no és zero.",
+    sharesCaption:
       "Despesa ordinària declarada per cada formació a les eleccions europees del 9 de juny de 2024.",
     linesTitle: "En què es va declarar gastat",
     lineAdvertising: "Publicitat exterior i a premsa i ràdio",
@@ -2643,6 +2818,11 @@ const ca: Dict = {
       "«Otros gastos ordinarios» és una sola línia sense desglossament i és la major part de la despesa declarada. L'informe no diu en què es va gastar, i la llei no obliga a detallar-ho: la publicitat digital no és una categoria amb límit propi, i el mateix Tribunal de Comptes ha recomanat al Govern que legisli perquè ho sigui. Aquestes xifres són despesa declarada i fiscalitzada, no una imputació de res a ningú.",
   },
   coverage: {
+    tableCaption: "Les quatre proporcions, amb el numerador i el denominador.",
+    colWhat: "Què es mesura",
+    colCovered: "Amb dada",
+    colTotal: "Total",
+    colShare: "Proporció",
     title: "Quant n’hi ha de cada cosa",
     intro:
       "Aquesta pàgina diu en prosa què hi falta. Aquí està en xifres, calculades sobre les mateixes dades a cada compilació, perquè es pugui comprovar la frase contra la barra.",

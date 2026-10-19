@@ -11,9 +11,11 @@ import { getVotes, type Ballot } from "@/lib/votes";
 import { getSalaryDistribution, positionOf } from "@/lib/salary-distribution";
 import SalaryDistributionChart from "@/components/SalaryDistribution";
 import BallotGrid from "@/components/BallotGrid";
-import { getIndicators, smiLadder } from "@/lib/indicators";
+import { getIndicators, smiLadder, sourceFor } from "@/lib/indicators";
+import { getSalaries } from "@/lib/salaries";
 import { currentSmi } from "@/lib/smi";
 import SmiPosition from "@/components/SmiPosition";
+import { salariesSource, votesSource } from "@/lib/chart-sources";
 import Declarations from "@/components/Declarations";
 import { getDeclarations } from "@/lib/declarations";
 import { entities, getFoundations } from "@/lib/foundations";
@@ -21,8 +23,8 @@ import { entities, getFoundations } from "@/lib/foundations";
 export const dynamic = "force-dynamic";
 
 const BALLOT_COLOR: Record<string, string> = {
-  Sí: "var(--gold)",
-  No: "var(--red)",
+  Sí: "var(--verd-text)",
+  No: "var(--stance-no)",
   Abstención: "var(--ink-3)",
 };
 
@@ -36,13 +38,14 @@ export default async function PoliticoPage({
   if (!profile) notFound();
 
   const { person, party, donations, portrait, social, record, declaration, interests } = profile;
-  const [distribution, position, allVotes, indicators, declarations, foundations] = await Promise.all([
+  const [distribution, position, allVotes, indicators, declarations, foundations, salaries] = await Promise.all([
     getSalaryDistribution(),
     positionOf(person.gross),
     getVotes(),
     getIndicators(),
     getDeclarations(),
     getFoundations(),
+    getSalaries(),
   ]);
   const foundationSlugs = new Set(entities(foundations).map((e) => e.slug));
   const place = placeOf(person);
@@ -144,6 +147,8 @@ export default async function PoliticoPage({
               distribution={distribution}
               position={position}
               t={t.salaryShape}
+              charts={t.charts}
+              source={salariesSource(salaries, t.charts, bcp47)}
               bcp47={bcp47}
             />
 
@@ -152,6 +157,14 @@ export default async function PoliticoPage({
               tranches={smiLadder(indicators)}
               smi={smi}
               t={t.smiPosition}
+              sources={[
+                (() => {
+                  const ine = sourceFor(indicators, "smiTranches");
+                  return { publisher: "INE", name: ine.name, period: ine.period, url: ine.url };
+                })(),
+                { publisher: "BOE", name: smi.boe.title, period: String(smi.year), url: smi.boe.url },
+              ]}
+              sourceLabel={t.charts.source}
               bcp47={bcp47}
             />
           </>
@@ -179,7 +192,13 @@ export default async function PoliticoPage({
         <p className="label-mono mt-4 text-[var(--ink-3)]">{P.affectsNote}</p>
 
         {record.length > 0 && (
-          <BallotGrid record={record} votes={allVotes.votes} t={t} />
+          <BallotGrid
+            record={record}
+            votes={allVotes.votes}
+            t={t}
+            source={votesSource(allVotes, t.charts, bcp47)}
+            bcp47={bcp47}
+          />
         )}
 
         {record.length === 0 ? (
@@ -220,7 +239,7 @@ export default async function PoliticoPage({
                           </div>
                           <span
                             className="label-mono shrink-0 rounded border px-2 py-1"
-                            style={{ color, borderColor: `${color}55` }}
+                            style={{ color, borderColor: `color-mix(in srgb, ${color} 33%, transparent)` }}
                           >
                             {ballotLabel(ballot)}
                           </span>

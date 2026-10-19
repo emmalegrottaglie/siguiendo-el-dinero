@@ -16,6 +16,12 @@ import Caveat from "@/components/Caveat";
  * which read as noise on the pages that had several. Nothing in `note` is
  * shortened for this — the full sentence is still there, just not forced on
  * every reader who already trusts the number.
+ *
+ * It belongs inside the chart's own frame — the `<figure>` or the panel the
+ * chart is drawn in — and not somewhere further down the page. Charts get
+ * screenshotted and shared without their page, and a cropped chart with no
+ * publisher and no date is a chart nobody can check. `period` is the data date:
+ * the period the figures cover, or for a live source the date it was fetched.
  */
 export interface ChartSource {
   /** The producing body, e.g. "INE" or "Tribunal de Cuentas". */
@@ -29,11 +35,14 @@ export interface ChartSource {
 
 export default function SourceLine({
   sources,
+  label,
   note,
   caveatLabel,
   className = "",
 }: {
   sources: ChartSource[];
+  /** Printed before the citation, e.g. "Fuente". */
+  label?: string;
   note?: string;
   /** Label for the collapsed note's toggle. Required when `note` is set. */
   caveatLabel?: string;
@@ -42,6 +51,7 @@ export default function SourceLine({
   return (
     <div className={className}>
       <p className="label-mono mt-3 text-[var(--ink-3)]">
+        {label && <>{label}: </>}
         {sources.map((s, i) => (
           <span key={s.url + s.name}>
             {i > 0 && " · "}

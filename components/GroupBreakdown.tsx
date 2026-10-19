@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { KeyVote } from "@/lib/votes";
 import { tallyByGroup } from "@/lib/votes";
 import { groupInfo, groupParty, GROUPS_SOURCE } from "@/lib/groups";
-import { STANCE_COLORS } from "@/lib/chart-colors";
+import { stanceSegments } from "@/lib/chart-colors";
 import Bar from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict, Locale } from "@/lib/i18n";
@@ -104,25 +104,20 @@ export default function GroupBreakdown({
                     widgets apart on the same page. */}
                 <td className="py-3 pr-4">
                   <Bar
-                    segments={[
-                      { value: g.si, color: STANCE_COLORS.si, label: t.votes.inFavour },
-                      { value: g.no, color: STANCE_COLORS.no, label: t.votes.against },
-                      {
-                        value: g.abst,
-                        color: STANCE_COLORS.abstention,
-                        label: t.votes.abstention,
-                      },
-                    ]}
+                    segments={stanceSegments(
+                      { si: g.si, no: g.no, abstention: g.abst },
+                      { si: t.votes.inFavour, no: t.votes.against, abstention: t.votes.abstention },
+                    )}
                     total={Math.max(1, g.si + g.no + g.abst)}
                     scale="share"
                     size="sm"
                   />
                 </td>
 
-                <td className="mono py-3 pr-3 text-right" style={{ color: "var(--gold-deep)" }}>
+                <td className="mono py-3 pr-3 text-right" style={{ color: "var(--verd-text)" }}>
                   {g.si || "—"}
                 </td>
-                <td className="mono py-3 pr-3 text-right" style={{ color: "var(--red)" }}>
+                <td className="mono py-3 pr-3 text-right" style={{ color: "var(--stance-no)" }}>
                   {g.no || "—"}
                 </td>
                 <td className="mono py-3 pr-4 text-right text-[var(--ink-2)]">

@@ -38,8 +38,29 @@ export interface Segment {
    * A diagonal hatch over the fill. Only for a segment whose meaning a reader
    * would not guess from position — and never without the legend, since a
    * hatch that is not explained reads as a warning.
+   *
+   * `true` draws dark lines, for a light or mid fill. `"light"` draws lines in
+   * the page colour, for a fill too dark for dark lines to show — the votó No
+   * fill, where the hatch is what separates it from sí without relying on
+   * colour.
    */
-  striped?: boolean;
+  striped?: Stripe;
+}
+
+export type Stripe = boolean | "light";
+
+/**
+ * The hatch drawn over a striped segment, as a CSS background-image.
+ *
+ * One function for the bar, its legend and any swatch that stands for the same
+ * segment elsewhere (the ballot grid), so the pattern a reader is told about is
+ * the pattern they see. `period` is the repeat in pixels; the line is half of it.
+ */
+export function stripeImage(striped: Stripe | undefined, period = 6): string | undefined {
+  if (!striped) return undefined;
+  const line = period / 2;
+  const ink = striped === "light" ? "rgba(243,242,242,0.5)" : "rgba(32,31,29,0.22)";
+  return `repeating-linear-gradient(45deg, ${ink} 0 ${line}px, transparent ${line}px ${period}px)`;
 }
 
 /** Named heights, so a bar's weight is a decision and not an accident. */
@@ -99,9 +120,7 @@ export default function Bar({
               ),
               minWidth: MIN_VISIBLE_PX,
               background: s.color,
-              backgroundImage: s.striped
-                ? "repeating-linear-gradient(45deg, rgba(32,31,29,0.22) 0 3px, transparent 3px 6px)"
-                : undefined,
+              backgroundImage: stripeImage(s.striped),
             }}
           />
         ),
@@ -139,9 +158,7 @@ export function BarLegend({
               borderRadius: 1,
               flex: "none",
               background: s.color,
-              backgroundImage: s.striped
-                ? "repeating-linear-gradient(45deg, rgba(32,31,29,0.22) 0 2px, transparent 2px 4px)"
-                : undefined,
+              backgroundImage: stripeImage(s.striped, 4),
             }}
           />
           <span className="label-mono">

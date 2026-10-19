@@ -23,6 +23,13 @@ export interface SalaryData {
 
 const FILE = path.join(process.cwd(), "data", "salaries.json");
 
+/**
+ * Where a reader can find the register this file was built from. The build's
+ * own record names the register and the export it came through, but carries no
+ * link, so the link lives here, once, for `/datos` and the charts alike.
+ */
+export const SALARIES_SOURCE_URL = "https://transparencia.gob.es";
+
 let cache: SalaryData | null = null;
 
 // The dataset is ~1.8 MB, so it is read once per server instance and never sent

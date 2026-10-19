@@ -1,8 +1,10 @@
 import type { KeyVote } from "@/lib/votes";
 import { tallyByGroup } from "@/lib/votes";
 import { groupLabel } from "@/lib/groups";
-import { STANCE_COLORS } from "@/lib/chart-colors";
-import Bar from "./chart/Bar";
+import { stanceSegments } from "@/lib/chart-colors";
+import { integer } from "@/lib/format";
+import Bar, { BarLegend } from "./chart/Bar";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -13,7 +15,18 @@ import type { Dict } from "@/lib/i18n";
  * deputies are recorded voting No. Individual deputies who broke with their
  * group are visible on their own profile, which is the authoritative view.
  */
-export default function StanceByGroup({ vote, t }: { vote: KeyVote; t: Dict }) {
+export default function StanceByGroup({
+  vote,
+  t,
+  source,
+  bcp47,
+}: {
+  vote: KeyVote;
+  t: Dict;
+  /** The division's own record, shown inside the card. */
+  source: ChartSource;
+  bcp47: string;
+}) {
   const groups = tallyByGroup(vote);
 
   // Readable names, not the Congreso's group codes: "GCUP-EC-GC" tells a reader
@@ -29,7 +42,12 @@ export default function StanceByGroup({ vote, t }: { vote: KeyVote; t: Dict }) {
   }
 
   const tot = vote.totals;
-  const width = (n: number) => `${(n / Math.max(1, tot.presentes)) * 100}%`;
+  // The bar is aria-hidden; the legend under it prints each count, so the
+  // figures are in text for every reader and not only in the bar's lengths.
+  const segments = stanceSegments(
+    { si: tot.afavor, no: tot.enContra, abstention: tot.abstenciones },
+    { si: t.votes.inFavour, no: t.votes.against, abstention: t.votes.abstention },
+  );
 
   const row = (label: string, names: string[], color: string) =>
     names.length > 0 && (
@@ -54,32 +72,28 @@ export default function StanceByGroup({ vote, t }: { vote: KeyVote; t: Dict }) {
         <span>{t.votes.kinds[vote.kind as keyof typeof t.votes.kinds] ?? vote.kindLabel}</span>
         {!vote.binding && <span>· {t.votes.nonBinding}</span>}
         <span>· {vote.date}</span>
-        <a className="src" href={vote.sourceUrl} target="_blank" rel="noopener noreferrer">
-          {t.votes.officialRecord}
-        </a>
       </p>
 
       <Bar
         className="mt-4"
-        segments={[
-          { value: tot.afavor, color: STANCE_COLORS.si, label: t.votes.inFavour },
-          { value: tot.enContra, color: STANCE_COLORS.no, label: t.votes.against },
-          {
-            value: tot.abstenciones,
-            color: STANCE_COLORS.abstention,
-            label: t.votes.abstention,
-          },
-        ]}
+        segments={segments}
         total={Math.max(1, tot.presentes)}
         scale="share"
         size="sm"
       />
+      <BarLegend
+        className="mt-2"
+        segments={segments}
+        formatValue={(seg) => integer(seg.value, bcp47)}
+      />
 
       <div className="mt-3 flex flex-col gap-1">
         {row(t.portal.inFavourGroups, bucket.si, "var(--verd-text)")}
-        {row(t.portal.againstGroups, bucket.no, "var(--red)")}
+        {row(t.portal.againstGroups, bucket.no, "var(--stance-no)")}
         {row(t.portal.abstainGroups, bucket.abst, "var(--ink-3)")}
       </div>
+
+      <SourceLine sources={[source]} label={t.charts.source} />
     </div>
   );
 }

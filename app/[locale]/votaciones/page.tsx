@@ -4,7 +4,8 @@ import GroupBreakdown from "@/components/GroupBreakdown";
 import VoteFlow from "@/components/VoteFlow";
 import { getDict } from "@/lib/i18n";
 import { integer } from "@/lib/format";
-import { STANCE_COLORS } from "@/lib/chart-colors";
+import { stanceSegments } from "@/lib/chart-colors";
+import { donationsSource, voteRecordSource } from "@/lib/chart-sources";
 import Bar from "@/components/chart/Bar";
 
 // The deputy search reads the query string.
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 const BALLOT_COLOR: Record<string, string> = {
   Sí: "var(--verd-text)",
-  No: "var(--red)",
+  No: "var(--stance-no)",
   Abstención: "var(--ink-3)",
 };
 
@@ -119,7 +120,7 @@ export default async function VotacionesPage({
                             <span
                               key={vote.id}
                               className="label-mono rounded border px-2 py-1"
-                              style={{ color, borderColor: `${color}55` }}
+                              style={{ color, borderColor: `color-mix(in srgb, ${color} 33%, transparent)` }}
                               title={vote.law}
                             >
                               {vote.law}: {ballotLabel(cast.ballot, t)}
@@ -142,7 +143,15 @@ export default async function VotacionesPage({
           division: it is the one whose group stances the site has most
           confidence in, and a flow of every nine would be nine charts. */}
       {data.votes.length > 0 && (
-        <VoteFlow vote={newestFirst(data.votes)[0]} t={t} bcp47={bcp47} />
+        <VoteFlow
+          vote={newestFirst(data.votes)[0]}
+          t={t}
+          sources={[
+            donationsSource(t.charts, bcp47),
+            voteRecordSource(data, newestFirst(data.votes)[0], t.charts, bcp47),
+          ]}
+          bcp47={bcp47}
+        />
       )}
 
       {/* One block per tracked law */}
@@ -189,15 +198,10 @@ export default async function VotacionesPage({
             {/* Overall result */}
             <Bar
               className="mt-6"
-              segments={[
-                { value: tot.afavor, color: STANCE_COLORS.si, label: v.inFavour },
-                { value: tot.enContra, color: STANCE_COLORS.no, label: v.against },
-                {
-                  value: tot.abstenciones,
-                  color: STANCE_COLORS.abstention,
-                  label: v.abstention,
-                },
-              ]}
+              segments={stanceSegments(
+                { si: tot.afavor, no: tot.enContra, abstention: tot.abstenciones },
+                { si: v.inFavour, no: v.against, abstention: v.abstention },
+              )}
               total={Math.max(1, tot.presentes)}
               scale="share"
               size="lg"
@@ -206,7 +210,7 @@ export default async function VotacionesPage({
               <span style={{ color: "var(--verd-text)" }}>
                 {v.inFavour} {integer(tot.afavor, bcp47)}
               </span>
-              <span style={{ color: "var(--red)" }}>
+              <span style={{ color: "var(--stance-no)" }}>
                 {v.against} {integer(tot.enContra, bcp47)}
               </span>
               <span className="text-[var(--ink-3)]">

@@ -1,3 +1,5 @@
+import type { Segment } from "@/components/chart/Bar";
+
 /**
  * The colour a category gets, decided once.
  *
@@ -36,12 +38,29 @@ export const SPEND_COLORS = {
   mailings: "var(--grey-300)",
 } as const;
 
-/** A division's outcome, matching the stance colours used in prose. */
+/**
+ * A division's outcome.
+ *
+ * Sí and No used to be --verd and --red, which differ in hue and barely in
+ * lightness: simulated for deuteranopia they came out 0.1 L* apart, so a
+ * colour-blind reader saw one colour where the bar showed two. They are now
+ * separated by lightness (--stance-si is mid, --stance-no is dark; the measured
+ * figures are with the tokens in app/globals.css), and No also carries a hatch,
+ * so the two never differ by colour alone. Build stance bars with
+ * `stanceSegments`, which applies both, rather than listing the colours by hand.
+ */
 export const STANCE_COLORS = {
-  si: "var(--verd)",
-  no: "var(--red)",
+  si: "var(--stance-si)",
+  no: "var(--stance-no)",
   abstention: "var(--abst)",
 } as const;
+
+/** The non-colour cue: which stance is hatched, and in which ink. */
+export const STANCE_STRIPE = {
+  si: false,
+  no: "light",
+  abstention: false,
+} as const satisfies Record<keyof typeof STANCE_COLORS, Segment["striped"]>;
 
 /**
  * The same three stances, for a swatch that stands alone on the page.
@@ -55,14 +74,31 @@ export const STANCE_COLORS = {
  *
  * So abstention darkens to `--ink-3` (5.8:1) when the swatch is on its own.
  * This is a second variant rather than a change to `--abst`, because darkening
- * the token itself would drop its contrast against `--verd` to 1.4:1 and break
- * the stacked bars it was chosen for.
+ * the token itself would bring it close to the sí fill and break the stacked
+ * bars it was chosen for. No is hatched here exactly as in the bars.
  */
 export const STANCE_SWATCH = {
-  si: "var(--verd)",
-  no: "var(--red)",
+  si: "var(--stance-si)",
+  no: "var(--stance-no)",
   abstention: "var(--ink-3)",
 } as const;
+
+/**
+ * The three segments of a stance bar, in the site's fixed order (sí, no,
+ * abstention), with each stance's colour and hatch. A legend for the same bar
+ * takes the same function's output, so the two cannot drift.
+ */
+export function stanceSegments(
+  counts: { si: number; no: number; abstention: number },
+  labels: { si: string; no: string; abstention: string },
+): Segment[] {
+  return (["si", "no", "abstention"] as const).map((k) => ({
+    value: counts[k],
+    color: STANCE_COLORS[k],
+    label: labels[k],
+    striped: STANCE_STRIPE[k] || undefined,
+  }));
+}
 
 /**
  * State subsidy kinds. `seguridad` is hatched rather than given a colour of its

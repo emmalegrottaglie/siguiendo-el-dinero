@@ -7,6 +7,7 @@ import Dashboard from "@/components/Dashboard";
 import DonationsTable from "@/components/DonationsTable";
 import ElectoralSpending from "@/components/ElectoralSpending";
 import StatStrip, { type StatItem } from "@/components/StatStrip";
+import { subsidiesSource } from "@/lib/chart-sources";
 
 export const revalidate = 3600;
 
@@ -105,7 +106,14 @@ export default async function FinanciacionPage({
           party, and the only one of the three flows that is live rather than a
           snapshot from an audit with a one-to-two-year lag. */}
       <div className="mt-10 border-t border-[var(--line)]">
-        <Dashboard base={agg} home={t.home} kinds={t.kinds} locale={locale} />
+        <Dashboard
+          base={agg}
+          home={t.home}
+          kinds={t.kinds}
+          charts={t.charts}
+          source={subsidiesSource(agg, t.charts, bcp47)}
+          locale={locale}
+        />
       </div>
     </main>
   );

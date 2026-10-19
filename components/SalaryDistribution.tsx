@@ -1,10 +1,12 @@
-import { euro, euroCompact, integer, percent } from "@/lib/format";
+import { euro, euroCompact, fill, integer, percent } from "@/lib/format";
 import {
   axisPosition,
   type SalaryDistribution as Distribution,
   type SalaryPosition,
 } from "@/lib/salary-distribution";
 import type { Dict } from "@/lib/i18n";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import DataTable from "./chart/DataTable";
 
 /**
  * One person's pay against every published figure in the register.
@@ -21,7 +23,13 @@ import type { Dict } from "@/lib/i18n";
  * figure rather than relying on its position.
  *
  * The histogram is `aria-hidden`; the sentence beneath it carries the same
- * finding — rank, denominator and median — in text.
+ * finding — rank, denominator and median — in text, and the table under it
+ * lists every bar.
+ *
+ * Both axes are named on the chart itself. The bars had no value-axis title,
+ * so nothing said they were counts of posts, and the log scale was stated only
+ * in the caveat below — a reader who looked at the chart and not the small
+ * print would read equal distances as equal differences in euros.
  */
 
 const W = 100; // viewBox units; the SVG scales to its container
@@ -49,6 +57,8 @@ export default function SalaryDistributionChart({
   distribution: d,
   position,
   t,
+  charts,
+  source,
   bcp47,
 }: {
   gross: number;
@@ -56,14 +66,28 @@ export default function SalaryDistributionChart({
   /** Null when this person has no published figure. */
   position: SalaryPosition | null;
   t: Dict["salaryShape"];
+  charts: Dict["charts"];
+  /** The pay register the distribution is built from. */
+  source: ChartSource;
   bcp47: string;
 }) {
   const binW = PLOT / d.bins.length;
   const marker = position === null ? null : X(axisPosition(gross, d));
   const medianX = X(axisPosition(d.median, d));
 
+  const finding = `${sentence(position, gross, d, t, bcp47)} ${t.median.replace(
+    "{median}",
+    euro(d.median, bcp47),
+  )}`;
+
   return (
     <figure className="mt-6">
+      {/* The value axis: what a bar's height counts, above the top-left of the
+          plot and horizontal, since rotated text is the hardest kind to read.
+          The tallest bar's count gives the scale a number. */}
+      <p className="label-mono mb-1.5">
+        {fill(t.yAxis, { peak: integer(d.peak, bcp47) })}
+      </p>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="block h-24 w-full"
@@ -152,10 +176,10 @@ export default function SalaryDistributionChart({
         </span>
       </div>
 
-      <figcaption className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
-        {sentence(position, gross, d, t, bcp47)}{" "}
-        {t.median.replace("{median}", euro(d.median, bcp47))}
-      </figcaption>
+      {/* The x axis's unit, and that it is logarithmic, said on the chart. */}
+      <p className="label-mono mt-1">{t.xAxis}</p>
+
+      <figcaption className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">{finding}</figcaption>
 
       <p className="mt-2 text-sm leading-relaxed text-[var(--ink-3)]">
         {t.caveat
@@ -164,6 +188,21 @@ export default function SalaryDistributionChart({
           .replace("{min}", euro(d.min, bcp47))
           .replace("{max}", euro(d.max, bcp47))}
       </p>
+
+      <DataTable
+        summary={charts.showTable}
+        caption={`${fill(t.tableCaption, {
+          published: integer(d.published, bcp47),
+          bins: integer(d.bins.length, bcp47),
+        })} ${finding}`}
+        rows={d.bins}
+        rowKey={(b) => String(b.from)}
+        columns={[
+          { header: t.colBand, cell: (b) => `${euro(b.from, bcp47)} – ${euro(b.to, bcp47)}` },
+          { header: t.colCount, cell: (b) => integer(b.count, bcp47), numeric: true },
+        ]}
+      />
+      <SourceLine sources={[source]} label={charts.source} />
     </figure>
   );
 }

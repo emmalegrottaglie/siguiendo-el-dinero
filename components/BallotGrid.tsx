@@ -1,7 +1,11 @@
-import { STANCE_SWATCH } from "@/lib/chart-colors";
+import { STANCE_STRIPE, STANCE_SWATCH } from "@/lib/chart-colors";
 import { voteDateISO, type Ballot, type KeyVote } from "@/lib/votes";
 import type { RecordedVote } from "@/lib/people";
+import { formatDate } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
+import { stripeImage } from "./chart/Bar";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import DataTable from "./chart/DataTable";
 
 /**
  * This person's whole recorded record, at a glance, above the list that gives
@@ -28,6 +32,15 @@ const FILL: Record<string, string> = {
 };
 
 /**
+ * The non-colour cue, the same as in every stance bar: a No cell is hatched.
+ * Sí and No are also far apart in lightness, but lightness is still colour, and
+ * on a grid of 16px cells a hatch is what a colour-blind reader can rely on.
+ */
+const HATCH: Record<string, string | undefined> = {
+  No: stripeImage(STANCE_STRIPE.no, 4),
+};
+
+/**
  * Every cell carries this outline, filled or not, so that a cell's presence and
  * bounds are perceivable at 5.8:1 whatever its fill. Without it an unfilled
  * cell is the page colour and reads as nothing at all.
@@ -38,11 +51,16 @@ export default function BallotGrid({
   record,
   votes,
   t,
+  source,
+  bcp47,
 }: {
   record: RecordedVote[];
   /** Every tracked division, so the ones without a ballot show as gaps. */
   votes: KeyVote[];
   t: Dict;
+  /** The tracked divisions' open-data source. */
+  source: ChartSource;
+  bcp47: string;
 }) {
   const G = t.ballotGrid;
   const ballots = new Map(record.map((r) => [r.vote.id, r.ballot]));
@@ -74,6 +92,7 @@ export default function BallotGrid({
                   className="block h-4 w-4 rounded-[2px]"
                   style={{
                     background: FILL[ballots.get(v.id) ?? ""] ?? "transparent",
+                    backgroundImage: HATCH[ballots.get(v.id) ?? ""],
                     boxShadow: OUTLINE,
                   }}
                 />
@@ -92,7 +111,7 @@ export default function BallotGrid({
           <li key={b} className="flex items-center gap-1.5">
             <span
               className="block h-3 w-3 rounded-[2px]"
-              style={{ background: FILL[b], boxShadow: OUTLINE }}
+              style={{ background: FILL[b], backgroundImage: HATCH[b], boxShadow: OUTLINE }}
             />
             {label(b)}
           </li>
@@ -111,6 +130,29 @@ export default function BallotGrid({
       <figcaption className="mt-3 text-sm leading-relaxed text-[var(--ink-3)]">
         {G.caption.replace("{cast}", String(cast)).replace("{tracked}", String(votes.length))}
       </figcaption>
+
+      {/* The grid is aria-hidden, so its cells are listed here in the same
+          order: by topic, oldest first. */}
+      <DataTable
+        summary={t.charts.showTable}
+        caption={G.tableCaption}
+        rows={[...byTopic.values()].flat()}
+        rowKey={(v) => v.id}
+        columns={[
+          { header: G.colVote, cell: (v) => v.law },
+          { header: G.colTopic, cell: (v) => v.topicLabel },
+          { header: G.colDate, cell: (v) => formatDate(voteDateISO(v), bcp47) },
+          {
+            header: G.colBallot,
+            cell: (v) => {
+              const b = ballots.get(v.id);
+              // More precise than the grid: a "No vota" on the roll is named.
+              return b && FILL[b] ? label(b) : b ? t.votes.noVote : G.noBallot;
+            },
+          },
+        ]}
+      />
+      <SourceLine sources={[source]} label={t.charts.source} />
     </figure>
   );
 }

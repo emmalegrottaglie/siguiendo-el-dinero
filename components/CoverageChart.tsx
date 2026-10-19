@@ -1,6 +1,8 @@
 import { integer, percent } from "@/lib/format";
 import type { Coverage } from "@/lib/coverage";
 import Bar from "./chart/Bar";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import DataTable from "./chart/DataTable";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -23,10 +25,13 @@ import type { Dict } from "@/lib/i18n";
 export default function CoverageChart({
   coverage,
   t,
+  sources,
   bcp47,
 }: {
   coverage: Coverage;
   t: Dict;
+  /** The datasets the four ratios are counted over, each with its date. */
+  sources: ChartSource[];
   bcp47: string;
 }) {
   const C = t.coverage;
@@ -60,6 +65,24 @@ export default function CoverageChart({
           </li>
         ))}
       </ul>
+
+      <DataTable
+        summary={t.charts.showTable}
+        caption={C.tableCaption}
+        rows={coverage.ratios}
+        rowKey={(r) => r.id}
+        columns={[
+          { header: C.colWhat, cell: (r) => label(r.id) },
+          { header: C.colCovered, cell: (r) => integer(r.covered, bcp47), numeric: true },
+          { header: C.colTotal, cell: (r) => integer(r.total, bcp47), numeric: true },
+          {
+            header: C.colShare,
+            cell: (r) => percent(r.total > 0 ? r.covered / r.total : 0, bcp47),
+            numeric: true,
+          },
+        ]}
+      />
+      <SourceLine sources={sources} label={t.charts.source} />
 
       {/* Counts with no denominator. Drawing these as bars would invent a whole
           they are not a part of: the Congreso holds thousands of divisions, and
