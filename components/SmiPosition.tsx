@@ -3,6 +3,8 @@ import { trancheFor, type SmiTranche } from "@/lib/indicators";
 import type { SmiYear } from "@/lib/smi";
 import Bar from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import ChartReader from "./chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -26,6 +28,7 @@ export default function SmiPosition({
   t,
   sources,
   sourceLabel,
+  charts,
   bcp47,
 }: {
   gross: number | null;
@@ -35,6 +38,7 @@ export default function SmiPosition({
   /** The INE table the tranches come from, and the decree fixing the SMI. */
   sources: ChartSource[];
   sourceLabel: string;
+  charts: Dict["charts"];
   bcp47: string;
 }) {
   if (gross === null || !(gross > 0)) {
@@ -49,39 +53,54 @@ export default function SmiPosition({
     <figure className="mt-6">
       <h3 className="display text-lg">{t.title}</h3>
 
-      <ul className="mt-4 flex flex-col gap-2.5">
-        {tranches.map((r) => {
-          const active = r === tranche;
-          return (
-            <li
-              key={r.tranche}
-              style={active ? { borderLeft: "2px solid var(--gold-deep)", paddingLeft: "10px" } : undefined}
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                <span style={{ fontSize: "13px", fontWeight: active ? 600 : 400 }}>
-                  {r.tranche}
-                </span>
-                <span className="mono whitespace-nowrap" style={{ fontSize: "12.5px" }}>
-                  {percent((r.percent ?? 0) / 100, bcp47, 2)}
-                </span>
-              </div>
-              <Bar
-                className="mt-1"
-                segments={[
-                  {
-                    value: r.percent ?? 0,
-                    color: active ? "var(--gold-deep)" : "var(--verd)",
-                    label: r.tranche,
-                  },
-                ]}
-                total={top}
-                scale="compare"
-                size="sm"
-              />
-            </li>
-          );
-        })}
-      </ul>
+      <ChartReader
+        className="mt-4"
+        items={tranches.map((r) =>
+          say(
+            r.tranche,
+            r.percent === null || r.percent === undefined
+              ? "—"
+              : percent(r.percent / 100, bcp47, 2),
+            r === tranche && t.readerHere,
+          ),
+        )}
+        {...readerProps(charts, bcp47, { title: t.title, count: tranches.length })}
+      >
+        <ul className="flex flex-col gap-2.5">
+          {tranches.map((r, i) => {
+            const active = r === tranche;
+            return (
+              <li
+                key={r.tranche}
+                data-chart-item={i}
+                style={active ? { borderLeft: "2px solid var(--gold-deep)", paddingLeft: "10px" } : undefined}
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <span style={{ fontSize: "13px", fontWeight: active ? 600 : 400 }}>
+                    {r.tranche}
+                  </span>
+                  <span className="mono whitespace-nowrap" style={{ fontSize: "12.5px" }}>
+                    {percent((r.percent ?? 0) / 100, bcp47, 2)}
+                  </span>
+                </div>
+                <Bar
+                  className="mt-1"
+                  segments={[
+                    {
+                      value: r.percent ?? 0,
+                      color: active ? "var(--gold-deep)" : "var(--verd)",
+                      label: r.tranche,
+                    },
+                  ]}
+                  total={top}
+                  scale="compare"
+                  size="sm"
+                />
+              </li>
+            );
+          })}
+        </ul>
+      </ChartReader>
 
       <figcaption className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
         {fill(t.sentence, {

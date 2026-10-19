@@ -82,11 +82,22 @@ export default async function RootLayout({
     // attributes legitimately differ from the server's: the theme script sets
     // data-theme on it before React hydrates, and browser extensions (e.g.
     // Dark Reader) inject attributes there too. It does not reach children.
-    <html lang={locale} suppressHydrationWarning>
+    //
+    // The font variables go on <html>, not <body>. `--font-heading` and
+    // `--font-body` are declared on :root and refer to them, and a custom
+    // property is resolved where it is declared: with the variables on <body>
+    // both resolved as invalid at :root, and every page fell back to the
+    // system sans stack instead of Cormorant Garamond and Lora. The theme
+    // script only sets data-theme, so it leaves this className alone.
+    <html
+      lang={locale}
+      className={`${cormorant.variable} ${lora.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className={`${cormorant.variable} ${lora.variable}`}>
+      <body>
         {/* Skip link: the nav repeats eight links before the content on every
             page, so a keyboard or screen-reader user had to pass all of them
             each time.

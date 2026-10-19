@@ -41,7 +41,7 @@ export default async function MapaPage({ params }: { params: Promise<{ locale: s
         </p>
       </header>
 
-      <RightsMap regions={regions} hate={hate} M={M} bcp47={bcp47} />
+      <RightsMap regions={regions} hate={hate} M={M} C={t.charts} bcp47={bcp47} />
     </main>
   );
 }

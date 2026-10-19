@@ -53,6 +53,7 @@ export function subsidiesSource(agg: Aggregation, c: Charts, bcp47: string): Cha
     name: SUBSIDIES_DATASET_NAME,
     period: updated(c, agg.generatedAt, bcp47),
     url: agg.source.url,
+    asOf: iso(agg.generatedAt),
   };
 }
 
@@ -68,6 +69,7 @@ export function votesSource(votes: VotesData, c: Charts, bcp47: string): ChartSo
     name: rest,
     period: [range, updated(c, votes.generatedAt, bcp47)].filter(Boolean).join("; "),
     url: votes.source.url,
+    asOf: iso(votes.generatedAt),
   };
 }
 
@@ -83,6 +85,7 @@ export function voteRecordSource(
     name: c.rollCall,
     period: formatDate(voteDateISO(vote), bcp47),
     url: vote.sourceUrl,
+    asOf: voteDateISO(vote),
   };
 }
 
@@ -93,6 +96,7 @@ export function donationsSource(c: Charts, bcp47: string): ChartSource {
     name: DONATIONS_SOURCE.report,
     period: `${fill(c.financialYear, { year: String(DONATIONS_SOURCE.year) })}; ${approved(c, DONATIONS_SOURCE.approved, bcp47)}`,
     url: DONATIONS_SOURCE.url,
+    asOf: iso(DONATIONS_SOURCE.approved),
   };
 }
 
@@ -103,6 +107,7 @@ export function spendingSource(spend: SpendingFile, c: Charts, bcp47: string): C
     name: fill(c.report, { report: spend.source.report }),
     period: `${c.spendingElection}; ${approved(c, spend.source.approved, bcp47)}`,
     url: spend.source.url,
+    asOf: iso(spend.source.approved),
   };
 }
 
@@ -114,6 +119,7 @@ export function salariesSource(salaries: SalaryData, c: Charts, bcp47: string): 
     name: salaries.source.via,
     period: updated(c, date, bcp47),
     url: SALARIES_SOURCE_URL,
+    asOf: iso(date),
   };
 }
 
@@ -124,6 +130,7 @@ export function foundationsSource(f: FoundationsFile, c: Charts, bcp47: string):
     name: f.source.report,
     period: approved(c, f.source.approved, bcp47),
     url: f.source.url,
+    asOf: iso(f.source.approved),
   };
 }
 
@@ -139,5 +146,6 @@ export function portraitsSource(
     name: c.portraitsDataset,
     period: generatedAt ? updated(c, generatedAt, bcp47) : "—",
     url: photos.url,
+    asOf: generatedAt ? iso(generatedAt) : undefined,
   };
 }

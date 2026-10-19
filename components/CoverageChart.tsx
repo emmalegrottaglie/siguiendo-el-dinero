@@ -3,6 +3,10 @@ import type { Coverage } from "@/lib/coverage";
 import Bar from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -36,35 +40,64 @@ export default function CoverageChart({
 }) {
   const C = t.coverage;
   const label = (id: string) => C.rows[id as keyof typeof C.rows];
+  const share = (r: Coverage["ratios"][number]) =>
+    percent(r.total > 0 ? r.covered / r.total : 0, bcp47);
+  const counted = (r: Coverage["ratios"][number]) =>
+    `${integer(r.covered, bcp47)} ${C.of} ${integer(r.total, bcp47)}`;
+
+  const image: ChartExport = {
+    ...exportMeta(t.charts, bcp47, {
+      title: C.title,
+      caption: C.note,
+      sources,
+      file: "cobertura-de-los-datos",
+    }),
+    body: {
+      kind: "bars",
+      rows: coverage.ratios.map((r) => ({
+        label: label(r.id),
+        value: `${counted(r)} · ${share(r)}`,
+        segments: [{ value: r.covered, color: "var(--gold)" }],
+        total: r.total,
+        scale: "share",
+      })),
+    },
+  };
 
   return (
     <section className="mt-12">
       <h2 className="display section-tick text-2xl">{C.title}</h2>
       <p className="mt-6 text-[var(--ink-2)]">{C.intro}</p>
 
-      <ul className="mt-8 flex flex-col gap-5">
-        {coverage.ratios.map((r) => (
-          <li key={r.id}>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <span style={{ fontSize: "14px" }}>{label(r.id)}</span>
-              <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                {integer(r.covered, bcp47)}{" "}
-                <span style={{ color: "var(--ink-3)" }}>
-                  {C.of} {integer(r.total, bcp47)} ·{" "}
-                  {percent(r.total > 0 ? r.covered / r.total : 0, bcp47)}
+      <ChartReader
+        className="mt-8"
+        items={coverage.ratios.map((r) => say(label(r.id), counted(r), share(r)))}
+        {...readerProps(t.charts, bcp47, { title: C.title, count: coverage.ratios.length })}
+      >
+        <ul className="flex flex-col gap-5">
+          {coverage.ratios.map((r, i) => (
+            <li key={r.id} data-chart-item={i}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <span style={{ fontSize: "14px" }}>{label(r.id)}</span>
+                <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
+                  {integer(r.covered, bcp47)}{" "}
+                  <span style={{ color: "var(--ink-3)" }}>
+                    {C.of} {integer(r.total, bcp47)} ·{" "}
+                    {percent(r.total > 0 ? r.covered / r.total : 0, bcp47)}
+                  </span>
                 </span>
-              </span>
-            </div>
-            <Bar
-              className="mt-1.5"
-              segments={[{ value: r.covered, color: "var(--gold)", label: label(r.id) }]}
-              total={r.total}
-              scale="share"
-              size="md"
-            />
-          </li>
-        ))}
-      </ul>
+              </div>
+              <Bar
+                className="mt-1.5"
+                segments={[{ value: r.covered, color: "var(--gold)", label: label(r.id) }]}
+                total={r.total}
+                scale="share"
+                size="md"
+              />
+            </li>
+          ))}
+        </ul>
+      </ChartReader>
 
       <DataTable
         summary={t.charts.showTable}
@@ -83,6 +116,7 @@ export default function CoverageChart({
         ]}
       />
       <SourceLine sources={sources} label={t.charts.source} />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(t.charts, C.title)} />
 
       {/* Counts with no denominator. Drawing these as bars would invent a whole
           they are not a part of: the Congreso holds thousands of divisions, and

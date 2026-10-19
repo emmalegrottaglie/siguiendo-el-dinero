@@ -1,5 +1,9 @@
 import Bar from "./chart/Bar";
-import SourceLine from "./chart/SourceLine";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import { euro } from "@/lib/format";
 import type { Indicators } from "@/lib/indicators";
 import { jornadaSplit, nationalWages, sectorLadder, sourceFor } from "@/lib/indicators";
@@ -24,11 +28,13 @@ export default function WageLadder({
   t,
   bcp47,
   caveatLabel,
+  charts,
 }: {
   indicators: Indicators;
   t: Dict["contexto"];
   bcp47: string;
   caveatLabel: string;
+  charts: Dict["charts"];
 }) {
   const W = t.wages;
   const ladder = sectorLadder(indicators);
@@ -38,53 +44,79 @@ export default function WageLadder({
   const src = sourceFor(indicators, "sector");
   const pct = sourceFor(indicators, "percentiles");
 
+  const sources: ChartSource[] = [
+    { publisher: "INE", name: src.name, period: src.period, url: src.url },
+    { publisher: "INE", name: pct.name, period: pct.period, url: pct.url },
+  ];
+  const intro = W.intro
+    .replace("{mean}", euro(national.mean, bcp47))
+    .replace("{median}", euro(national.median, bcp47))
+    .replace("{p10}", euro(national.p10, bcp47))
+    .replace("{p90}", euro(national.p90, bcp47));
+  const shown = (v: number | null) => (v === null ? "—" : euro(v, bcp47));
+  const image: ChartExport = {
+    ...exportMeta(charts, bcp47, { title: W.title, caption: intro, sources, file: "salario-por-sector" }),
+    body: {
+      kind: "bars",
+      rows: ladder.map((s) => ({
+        label: s.lowSample ? `${s.sector} (${W.lowSample})` : s.sector,
+        value: shown(s.value),
+        segments: [{ value: s.value ?? 0, color: "var(--gold)" }],
+        total: top,
+        scale: "compare",
+      })),
+    },
+  };
+
   return (
     <section className="mt-12">
       <h2 className="display section-tick text-2xl">{W.title}</h2>
       <p className="mt-6 leading-relaxed text-[var(--ink-2)]">
-        {W.intro
-          .replace("{mean}", euro(national.mean, bcp47))
-          .replace("{median}", euro(national.median, bcp47))
-          .replace("{p10}", euro(national.p10, bcp47))
-          .replace("{p90}", euro(national.p90, bcp47))}
+        {intro}
       </p>
 
-      <ul className="mt-8 flex flex-col gap-4">
-        {ladder.map((s) => (
-          <li key={s.sector}>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <span style={{ fontSize: "14px" }}>
-                {s.sector}
-                {/* INE flags a cell whose sample is 100-500 observations. It is
-                    a real figure with a stated weakness, so it is shown and
-                    marked rather than dropped or shown unmarked. */}
-                {s.lowSample && (
-                  <span className="label-mono ml-2 text-[var(--ink-3)]">{W.lowSample}</span>
-                )}
-              </span>
-              <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                {euro(s.value ?? 0, bcp47)}
-              </span>
-            </div>
-            <Bar
-              className="mt-1.5"
-              segments={[{ value: s.value ?? 0, color: "var(--gold)", label: s.sector }]}
-              total={top}
-              scale="compare"
-              size="sm"
-            />
-          </li>
-        ))}
-      </ul>
+      <ChartReader
+        className="mt-8"
+        items={ladder.map((s) => say(s.sector, shown(s.value), s.lowSample && W.lowSample))}
+        {...readerProps(charts, bcp47, {
+          title: W.title,
+          count: ladder.length,
+          range: ladder.length
+            ? { min: shown(ladder[ladder.length - 1].value), max: shown(ladder[0].value) }
+            : undefined,
+        })}
+      >
+        <ul className="flex flex-col gap-4">
+          {ladder.map((s, i) => (
+            <li key={s.sector} data-chart-item={i}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <span style={{ fontSize: "14px" }}>
+                  {s.sector}
+                  {/* INE flags a cell whose sample is 100-500 observations. It is
+                      a real figure with a stated weakness, so it is shown and
+                      marked rather than dropped or shown unmarked. */}
+                  {s.lowSample && (
+                    <span className="label-mono ml-2 text-[var(--ink-3)]">{W.lowSample}</span>
+                  )}
+                </span>
+                <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
+                  {shown(s.value)}
+                </span>
+              </div>
+              <Bar
+                className="mt-1.5"
+                segments={[{ value: s.value ?? 0, color: "var(--gold)", label: s.sector }]}
+                total={top}
+                scale="compare"
+                size="sm"
+              />
+            </li>
+          ))}
+        </ul>
+      </ChartReader>
 
-      <SourceLine
-        sources={[
-          { publisher: "INE", name: src.name, period: src.period, url: src.url },
-          { publisher: "INE", name: pct.name, period: pct.period, url: pct.url },
-        ]}
-        note={W.sourceNote}
-        caveatLabel={caveatLabel}
-      />
+      <SourceLine sources={sources} note={W.sourceNote} caveatLabel={caveatLabel} />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(charts, W.title)} />
 
       {/* The single caveat that changes how every figure above should be read:
           EAES counts part-time workers in the same mean as full-time ones, so

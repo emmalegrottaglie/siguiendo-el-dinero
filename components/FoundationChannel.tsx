@@ -17,6 +17,7 @@ import Avatar from "./Avatar";
 import Caveat from "./Caveat";
 import { euro, euroCompact, fill, formatDate, integer, percent } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 /**
  * The party-linked foundation channel.
@@ -105,7 +106,7 @@ export default function FoundationChannel({
       <Caveat label={t.common.caveat} className="mt-3">
         {F.counterpartyNote}
       </Caveat>
-      <div className="mt-6 overflow-x-auto">
+      <ScrollBox className="mt-6">
         <table className="w-full min-w-[46rem] border-collapse text-sm">
           <caption className="sr-only">{F.counterpartyTitle}</caption>
           <thead>
@@ -167,7 +168,7 @@ export default function FoundationChannel({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       {/* Every audited entity, so the named deals above are not mistaken for
           the whole channel. One card per entity, ranked by the same total the

@@ -94,10 +94,28 @@
 
      --on-gold        text on a gold fill (the active filter chip, ::selection).
                       4.89:1 against --gold.
-     --hatch          the dark diagonal hatch over a light or mid fill.
-     --hatch-inverse  the hatch over the votó No fill. It is light here because
-                      --stance-no is dark; in the dark theme --stance-no is the
-                      light one, so this turns dark.
+     --hatch          the dark diagonal hatch over a light or mid fill
+                      (`striped: true`). No segment uses it today; a new one
+                      must measure its lines against its fill.
+     --hatch-inverse  the hatch over the two fills that flip between themes:
+                      votó No (--stance-no) and security costs (--ink-2). It is
+                      light here because both fills are dark; in the dark
+                      theme both fills are light, so this turns dark. Measured
+                      as the lines composited over their fill, against that
+                      fill (WCAG 1.4.11 asks 3:1 of a graphic):
+                        light  on --stance-no 3.70:1   on --ink-2 3.59:1
+                        dark   on --stance-no 4.03:1   on --ink-2 3.83:1
+                      Before 2026-10-19 the dark value was 40% (2.36:1 and
+                      2.30:1), and the security hatch used --hatch, dark
+                      lines on a dark fill, at 1.12:1 here and 1.83:1 in dark.
+     --map-hatch      the two investiture hatches on the map. They are drawn
+                      over the governing party's fill, which for every hatched
+                      community is the PP's #4a86c5: 3.34:1 against it here,
+                      3.12:1 in the dark theme (where the lines are --ink at
+                      full strength, the most a light line can get on that
+                      blue). The two hatches differ by density, not by colour.
+                      They used to be --ink at 34% and 22%, which measured
+                      1.64:1 and 1.37:1 against the same fill.
      --ramp-low       the empty end of the map's hate-crime ramp.
      --map-edge       the stroke between communities on the map.
      --fill-edge      a 1px edge drawn inside a party-coloured fill that falls
@@ -107,6 +125,7 @@
   --on-gold: #201f1d;
   --hatch: rgba(32, 31, 29, 0.22);
   --hatch-inverse: rgba(243, 242, 242, 0.5);
+  --map-hatch: rgba(32, 31, 29, 0.8);
   --ramp-low: #f4f2ee;
   --map-edge: var(--bg);
   --fill-edge: transparent;
@@ -227,7 +246,8 @@
     --line-soft: rgba(235, 232, 227, 0.11);
     --on-gold: #181716;
     --hatch: rgba(24, 23, 22, 0.3);
-    --hatch-inverse: rgba(24, 23, 22, 0.4);
+    --hatch-inverse: rgba(24, 23, 22, 0.6);
+    --map-hatch: #ebe8e3;
     --ramp-low: #2c2925;
     --map-edge: #8f8a84;
     --fill-edge: #8f8a84;
@@ -260,7 +280,8 @@
   --line-soft: rgba(235, 232, 227, 0.11);
   --on-gold: #181716;
   --hatch: rgba(24, 23, 22, 0.3);
-  --hatch-inverse: rgba(24, 23, 22, 0.4);
+  --hatch-inverse: rgba(24, 23, 22, 0.6);
+  --map-hatch: #ebe8e3;
   --ramp-low: #2c2925;
   --map-edge: #8f8a84;
   --fill-edge: #8f8a84;
@@ -276,21 +297,29 @@
   --font-serif: var(--font-heading);
 }
 
-* {
-  box-sizing: border-box;
-}
+/* Element defaults live in `@layer base`, after Tailwind's preflight, for the
+   same reason as `.eyebrow` and `.label-mono` below: an unlayered rule beats
+   every Tailwind utility whatever its specificity, so an element default
+   authored unlayered silently overrides the classes on that element. That
+   happened with `a { color: inherit }`, which made every link ignore its
+   colour utility; see the `a` rule further down. */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
-  background-color: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
 }
 
 /* Typographic primitives ------------------------------------------------ */
@@ -599,15 +628,124 @@ body {
   stroke-width: 2.4;
 }
 
-/* Never the browser default. */
+/* Keyboard reading of a chart (components/chart/ChartReader.tsx).
+
+   The chart is one tab stop; arrow keys move a cursor over its marks. The
+   cursor is an outline (or, on an SVG mark, a stroke), never a border or a
+   size change, so drawing it moves nothing and nothing is redrawn under the
+   reader. It shows only while the chart has focus, including focus from a
+   click (which `:focus-visible` would miss, as with `.region:focus` above);
+   `data-focused` is set from focus events, so it also survives the window
+   losing focus. The ink outline is 14.74:1 on --bg and 13.59:1 on --surface;
+   the readout is --bg on --ink, also 14.74:1. */
+.chart-reader-wrap {
+  position: relative;
+}
+.chart-reader:focus {
+  outline: none;
+}
+.chart-reader:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.chart-reader[data-focused] [data-chart-active] {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.chart-reader[data-focused] svg [data-chart-active] {
+  outline: none;
+  stroke: var(--ink);
+  stroke-width: 2.4px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The live region. Visually hidden until the chart has focus and something has
+   been read; then the same text shows below the chart, for a sighted keyboard
+   user on a chart whose marks carry no text (the ballot grid's cells). It is
+   positioned over what follows rather than pushing it down, so focusing the
+   chart does not shift the page. */
+.chart-readout {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.chart-reader[data-focused] + .chart-readout:not(:empty) {
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 52ch);
+  margin-top: 6px;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+  padding: 5px 9px;
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* "Descargar imagen". 32px tall, over the 24px minimum for a small control. */
+.chart-export {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.chart-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.chart-export-btn:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.chart-export-btn:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+.chart-export-status:not(:empty) {
+  color: var(--red);
+  font-size: 12px;
+}
+
+/* Never the browser default.
+
+   Deliberately unlayered, unlike the element defaults above: it has to win
+   over `outline-none` on the two search inputs, which would otherwise show
+   focus only as a 1px border change. */
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* In `@layer base`, so a colour utility on a link wins. Authored unlayered,
+   this rule beat every `text-[…]` class on every <a>: the party filter chips
+   on /politicos asked for --ink-3 and rendered --ink, the inherited colour. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 .src {

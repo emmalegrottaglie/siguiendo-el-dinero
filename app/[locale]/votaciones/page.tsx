@@ -7,6 +7,8 @@ import { integer } from "@/lib/format";
 import { stanceSegments } from "@/lib/chart-colors";
 import { donationsSource, voteRecordSource } from "@/lib/chart-sources";
 import Bar from "@/components/chart/Bar";
+import ChartReader from "@/components/chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 
 // The deputy search reads the query string.
 export const dynamic = "force-dynamic";
@@ -196,30 +198,40 @@ export default async function VotacionesPage({
             </p>
 
             {/* Overall result */}
-            <Bar
+            <ChartReader
               className="mt-6"
-              segments={stanceSegments(
-                { si: tot.afavor, no: tot.enContra, abstention: tot.abstenciones },
-                { si: v.inFavour, no: v.against, abstention: v.abstention },
-              )}
-              total={Math.max(1, tot.presentes)}
-              scale="share"
-              size="lg"
-            />
-            <div className="label-mono mt-3 flex flex-wrap gap-x-6 gap-y-1">
-              <span style={{ color: "var(--verd-text)" }}>
-                {v.inFavour} {integer(tot.afavor, bcp47)}
-              </span>
-              <span style={{ color: "var(--stance-no)" }}>
-                {v.against} {integer(tot.enContra, bcp47)}
-              </span>
-              <span className="text-[var(--ink-3)]">
-                {v.abstention} {integer(tot.abstenciones, bcp47)}
-              </span>
-              <span className="text-[var(--ink-3)]">
-                {v.present} {integer(tot.presentes, bcp47)}
-              </span>
-            </div>
+              items={[
+                [v.inFavour, tot.afavor],
+                [v.against, tot.enContra],
+                [v.abstention, tot.abstenciones],
+                [v.present, tot.presentes],
+              ].map(([l, n]) => say(vote.law, String(l), integer(Number(n), bcp47)))}
+              {...readerProps(t.charts, bcp47, { title: vote.law, count: 4 })}
+            >
+              <Bar
+                segments={stanceSegments(
+                  { si: tot.afavor, no: tot.enContra, abstention: tot.abstenciones },
+                  { si: v.inFavour, no: v.against, abstention: v.abstention },
+                )}
+                total={Math.max(1, tot.presentes)}
+                scale="share"
+                size="lg"
+              />
+              <div className="label-mono mt-3 flex flex-wrap gap-x-6 gap-y-1">
+                <span data-chart-item={0} style={{ color: "var(--verd-text)" }}>
+                  {v.inFavour} {integer(tot.afavor, bcp47)}
+                </span>
+                <span data-chart-item={1} style={{ color: "var(--stance-no)" }}>
+                  {v.against} {integer(tot.enContra, bcp47)}
+                </span>
+                <span data-chart-item={2} className="text-[var(--ink-3)]">
+                  {v.abstention} {integer(tot.abstenciones, bcp47)}
+                </span>
+                <span data-chart-item={3} className="text-[var(--ink-3)]">
+                  {v.present} {integer(tot.presentes, bcp47)}
+                </span>
+              </div>
+            </ChartReader>
 
             {/* Per-group breakdown */}
             <h3 className="label-mono mt-8">{v.byGroup}</h3>

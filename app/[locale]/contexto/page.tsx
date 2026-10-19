@@ -37,9 +37,27 @@ export default async function ContextoPage({
       <p className="mt-6 text-lg leading-relaxed text-[var(--ink-2)]">{c.lead}</p>
       <p className="mt-4 leading-relaxed text-[var(--ink-3)]">{c.framing}</p>
 
-      <WageLadder indicators={indicators} t={c} bcp47={bcp47} caveatLabel={t.common.caveat} />
-      <SmiLadder indicators={indicators} t={c} bcp47={bcp47} caveatLabel={t.common.caveat} />
-      <PovertyPanel indicators={indicators} t={c} bcp47={bcp47} caveatLabel={t.common.caveat} />
+      <WageLadder
+        indicators={indicators}
+        t={c}
+        bcp47={bcp47}
+        caveatLabel={t.common.caveat}
+        charts={t.charts}
+      />
+      <SmiLadder
+        indicators={indicators}
+        t={c}
+        bcp47={bcp47}
+        caveatLabel={t.common.caveat}
+        charts={t.charts}
+      />
+      <PovertyPanel
+        indicators={indicators}
+        t={c}
+        bcp47={bcp47}
+        caveatLabel={t.common.caveat}
+        charts={t.charts}
+      />
     </main>
   );
 }

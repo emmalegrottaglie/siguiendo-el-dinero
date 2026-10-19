@@ -7,6 +7,16 @@ import {
 import type { Dict } from "@/lib/i18n";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import {
+  exportLabels,
+  exportMeta,
+  type ChartExport,
+  type ExportLabel,
+  type ExportShape,
+} from "@/lib/chart-export";
 
 /**
  * One person's pay against every published figure in the register.
@@ -59,6 +69,7 @@ export default function SalaryDistributionChart({
   t,
   charts,
   source,
+  subject,
   bcp47,
 }: {
   gross: number;
@@ -69,6 +80,8 @@ export default function SalaryDistributionChart({
   charts: Dict["charts"];
   /** The pay register the distribution is built from. */
   source: ChartSource;
+  /** Whose pay this is, for the exported image's title: "Nombre · cargo". */
+  subject?: string;
   bcp47: string;
 }) {
   const binW = PLOT / d.bins.length;
@@ -80,6 +93,84 @@ export default function SalaryDistributionChart({
     euro(d.median, bcp47),
   )}`;
 
+  // Which bin holds this person's figure and which the median, so the reader
+  // can say so on the bin the marker crosses.
+  const binOf = (v: number) =>
+    d.bins.findIndex((b, i) => v >= b.from && (v < b.to || i === d.bins.length - 1));
+  const hereBin = position === null ? -1 : binOf(gross);
+  const medianBin = binOf(d.median);
+  const band = (b: (typeof d.bins)[number]) => `${euro(b.from, bcp47)} – ${euro(b.to, bcp47)}`;
+  const items = d.bins.map((b, i) =>
+    say(
+      band(b),
+      fill(t.readerBin, { count: integer(b.count, bcp47) }),
+      i === hereBin && t.readerHere,
+      i === medianBin && t.readerMedian,
+    ),
+  );
+
+  // The image redraws the same marks in the same 0-100 space, with room above
+  // for the value-axis title and below for the ticks, the median label and the
+  // x-axis title. Text is placed, not stretched.
+  const TOP = 6;
+  const rect = (x: number, y: number, w: number, h: number) =>
+    `M${x} ${y + TOP}h${w}v${h}h${-w}Z`;
+  const shapes: ExportShape[] = [
+    ...d.bins.map((b, i) => {
+      const h = (b.count / d.peak) * BASE;
+      return { d: rect(PAD + i * binW, BASE - h, binW * 0.86, h), fill: "var(--ink-3)" };
+    }),
+    ...d.ticks.map((v) => ({ d: rect(X(axisPosition(v, d)), 0, 0.12, BASE), fill: "var(--line)" })),
+    ...Array.from({ length: 7 }, (_, i) => ({
+      d: rect(medianX - 0.09, (BASE / 7) * i + 1, 0.18, BASE / 7 - 2),
+      fill: "var(--ink)",
+    })),
+    ...(marker === null
+      ? []
+      : [
+          { d: rect(marker - 0.22, 0, 0.44, BASE), fill: "var(--gold-deep)" },
+          {
+            d: `M${marker - 1.1} ${TOP}L${marker + 1.1} ${TOP}L${marker} ${TOP + 2.4}Z`,
+            fill: "var(--gold-deep)",
+          },
+        ]),
+  ];
+  const labels: ExportLabel[] = [
+    { x: PAD, y: 0, text: fill(t.yAxis, { peak: integer(d.peak, bcp47) }).toUpperCase(), size: 12, tone: "ink-3", weight: 600, face: "heading" },
+    ...d.ticks.map((v) => ({
+      x: X(axisPosition(v, d)),
+      y: TOP + BASE + 1.2,
+      text: euroCompact(v, bcp47),
+      align: "center" as const,
+      size: 13,
+      tone: "ink-3" as const,
+    })),
+    { x: medianX, y: TOP + BASE + 5.4, text: t.medianTick, align: "center", size: 13, tone: "ink-3" },
+    { x: PAD, y: TOP + BASE + 9.8, text: t.xAxis.toUpperCase(), size: 12, tone: "ink-3", weight: 600, face: "heading" },
+    ...(marker === null
+      ? []
+      : [
+          {
+            // Above the plot, beside the arrowhead, so it crosses no bar.
+            x: marker > 70 ? marker + 1.4 : marker - 1.4,
+            y: 2.4,
+            text: euro(gross, bcp47),
+            align: marker > 70 ? ("right" as const) : ("left" as const),
+            size: 15,
+            weight: 600 as const,
+          },
+        ]),
+  ];
+  const image: ChartExport = {
+    ...exportMeta(charts, bcp47, {
+      title: subject ? `${t.title}: ${subject}` : t.title,
+      caption: finding,
+      sources: [source],
+      file: "retribucion-en-el-registro",
+    }),
+    body: { kind: "shapes", width: W, height: TOP + BASE + 13, stretch: true, shapes, labels },
+  };
+
   return (
     <figure className="mt-6">
       {/* The value axis: what a bar's height counts, above the top-left of the
@@ -88,64 +179,87 @@ export default function SalaryDistributionChart({
       <p className="label-mono mb-1.5">
         {fill(t.yAxis, { peak: integer(d.peak, bcp47) })}
       </p>
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="block h-24 w-full"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        focusable="false"
+      <ChartReader
+        items={items}
+        {...readerProps(charts, bcp47, {
+          title: t.title,
+          count: d.bins.length,
+          range: { min: euro(d.min, bcp47), max: euro(d.max, bcp47) },
+        })}
       >
-        {d.bins.map((b, i) => {
-          const h = (b.count / d.peak) * BASE;
-          return (
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="block h-24 w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
+        >
+          {d.bins.map((b, i) => {
+            const h = (b.count / d.peak) * BASE;
+            return (
+              <rect
+                key={i}
+                x={PAD + i * binW}
+                y={BASE - h}
+                width={binW * 0.86}
+                height={h}
+                fill="var(--ink-3)"
+              />
+            );
+          })}
+
+          {/* Decade ticks. preserveAspectRatio="none" stretches the x axis, so
+              every stroke is drawn as a rect with a width in x units rather than
+              as a line with a stroke-width, which the stretch would distort. */}
+          {d.ticks.map((v) => (
+            <rect
+              key={v}
+              x={X(axisPosition(v, d))}
+              y={0}
+              width={0.12}
+              height={BASE}
+              fill="var(--line)"
+            />
+          ))}
+
+          {/* The median, dashed by repetition rather than by stroke-dasharray for
+              the same reason. */}
+          {Array.from({ length: 7 }, (_, i) => (
             <rect
               key={i}
+              x={medianX - 0.09}
+              y={(BASE / 7) * i + 1}
+              width={0.18}
+              height={BASE / 7 - 2}
+              fill="var(--ink)"
+            />
+          ))}
+
+          {marker !== null && (
+            <>
+              <rect x={marker - 0.22} y={0} width={0.44} height={BASE} fill="var(--gold-deep)" />
+              <polygon
+                points={`${marker - 1.1},0 ${marker + 1.1},0 ${marker},2.4`}
+                fill="var(--gold-deep)"
+              />
+            </>
+          )}
+
+          {/* One full-height column per bin, for the keyboard cursor and the
+              pointer: a bin of two posts is too short to outline or to hover. */}
+          {d.bins.map((b, i) => (
+            <rect
+              key={`hit-${b.from}`}
+              data-chart-item={i}
               x={PAD + i * binW}
-              y={BASE - h}
-              width={binW * 0.86}
-              height={h}
-              fill="var(--ink-3)"
+              y={0}
+              width={binW}
+              height={BASE}
+              fill="transparent"
             />
-          );
-        })}
-
-        {/* Decade ticks. preserveAspectRatio="none" stretches the x axis, so
-            every stroke is drawn as a rect with a width in x units rather than
-            as a line with a stroke-width, which the stretch would distort. */}
-        {d.ticks.map((v) => (
-          <rect
-            key={v}
-            x={X(axisPosition(v, d))}
-            y={0}
-            width={0.12}
-            height={BASE}
-            fill="var(--line)"
-          />
-        ))}
-
-        {/* The median, dashed by repetition rather than by stroke-dasharray for
-            the same reason. */}
-        {Array.from({ length: 7 }, (_, i) => (
-          <rect
-            key={i}
-            x={medianX - 0.09}
-            y={(BASE / 7) * i + 1}
-            width={0.18}
-            height={BASE / 7 - 2}
-            fill="var(--ink)"
-          />
-        ))}
-
-        {marker !== null && (
-          <>
-            <rect x={marker - 0.22} y={0} width={0.44} height={BASE} fill="var(--gold-deep)" />
-            <polygon
-              points={`${marker - 1.1},0 ${marker + 1.1},0 ${marker},2.4`}
-              fill="var(--gold-deep)"
-            />
-          </>
-        )}
-      </svg>
+          ))}
+        </svg>
+      </ChartReader>
 
       {/* Tick labels in HTML, not SVG text: the viewBox is stretched, and
           stretched text is unreadable at either end. W is 100, so a viewBox x
@@ -203,6 +317,7 @@ export default function SalaryDistributionChart({
         ]}
       />
       <SourceLine sources={[source]} label={charts.source} />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(charts, t.title)} />
     </figure>
   );
 }
