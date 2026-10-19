@@ -11,7 +11,7 @@ import { getVotes, newestFirst, stancesByParty } from "@/lib/votes";
 import { sharedGroupFor } from "@/lib/groups";
 import CourtRecords from "@/components/CourtRecords";
 import PartySwitcher from "@/components/PartySwitcher";
-import { TRANCHE_COLORS } from "@/lib/chart-colors";
+import { fillEdge, TRANCHE_COLORS } from "@/lib/chart-colors";
 import Bar, { type Segment } from "@/components/chart/Bar";
 import Caveat from "@/components/Caveat";
 import type { SubsidyKind } from "@/lib/types";
@@ -99,7 +99,7 @@ export default async function PartyPage({
           <span
             className="dot"
             aria-hidden
-            style={{ width: 11, height: 11, background: party.color }}
+            style={{ width: 11, height: 11, background: party.color, ...fillEdge(party.color) }}
           />
           {t.party.fichaKicker} · {t.common.nif} {party.nif} · Nº{" "}
           {String(rank).padStart(2, "0")} · {t.blocs[party.bloc]}
@@ -187,7 +187,8 @@ export default async function PartyPage({
                   className="w-full rounded-t-sm"
                   style={{
                     height: `${h}px`,
-                    background: `linear-gradient(180deg, ${party.color}, ${party.color}55)`,
+                    background: `linear-gradient(180deg, ${party.color}, color-mix(in srgb, ${party.color} 33%, transparent))`,
+                    ...fillEdge(party.color),
                   }}
                 />
                 <span className="mono text-xs text-[var(--ink-3)]">{y}</span>

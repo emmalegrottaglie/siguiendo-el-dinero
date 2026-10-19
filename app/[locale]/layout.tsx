@@ -47,6 +47,15 @@ export async function generateMetadata({
   return { title: t.meta.title, description: t.meta.description };
 }
 
+/* Applies a stored theme choice before first paint. It runs inline in <head>,
+   ahead of the body, so a reader who chose dark never sees a light frame
+   first. With nothing stored it does nothing, and the stylesheet follows
+   prefers-color-scheme on its own — live, so a system switch at dusk is
+   followed without a reload. The key and the values must match
+   components/ThemeToggle.tsx. Wrapped in try/catch because localStorage
+   throws when storage is blocked; the system theme is the right fallback. */
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
+
 export default async function RootLayout({
   children,
   params,
@@ -69,9 +78,14 @@ export default async function RootLayout({
   }).format(new Date());
 
   return (
-    // suppressHydrationWarning: browser extensions (e.g. Dark Reader) inject
-    // attributes onto <html> before React hydrates; that mismatch is benign.
+    // suppressHydrationWarning on <html> only, which is the one element whose
+    // attributes legitimately differ from the server's: the theme script sets
+    // data-theme on it before React hydrates, and browser extensions (e.g.
+    // Dark Reader) inject attributes there too. It does not reach children.
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className={`${cormorant.variable} ${lora.variable}`}>
         {/* Skip link: the nav repeats eight links before the content on every
             page, so a keyboard or screen-reader user had to pass all of them

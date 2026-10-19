@@ -356,6 +356,10 @@ const es = {
     place: "Madrid",
     sources: "Fuentes: BDNS · Tribunal de Cuentas · Congreso",
     navLabel: "Secciones",
+    theme: "Tema de color",
+    themeLight: "Claro",
+    themeDark: "Oscuro",
+    themeSystem: "Como el sistema",
   },
   footer: {
     source:
@@ -1421,6 +1425,10 @@ const en: Dict = {
     place: "Madrid",
     sources: "Sources: BDNS · Court of Auditors · Congress",
     navLabel: "Sections",
+    theme: "Colour theme",
+    themeLight: "Light",
+    themeDark: "Dark",
+    themeSystem: "Match the system",
   },
   footer: {
     source:
@@ -2484,6 +2492,10 @@ const ca: Dict = {
     place: "Madrid",
     sources: "Fonts: BDNS · Tribunal de Comptes · Congrés",
     navLabel: "Seccions",
+    theme: "Tema de color",
+    themeLight: "Clar",
+    themeDark: "Fosc",
+    themeSystem: "Com el sistema",
   },
   footer: {
     source:

@@ -6,7 +6,7 @@ import { getSpending, spendingTotals, rankedBySpending } from "@/lib/spending";
 import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { fetchTopicNews } from "@/lib/news";
 import { formationColor } from "@/lib/spending";
-import { stanceSegments, TRANCHE_COLORS } from "@/lib/chart-colors";
+import { fillEdge, stanceSegments, TRANCHE_COLORS } from "@/lib/chart-colors";
 import { donationsSource, spendingSource, voteRecordSource, votesSource } from "@/lib/chart-sources";
 import { getDict, relativeTime } from "@/lib/i18n";
 import { euroExact, euroM, integer, percent } from "@/lib/format";
@@ -180,7 +180,7 @@ export default async function PortalPage({
               fontSize: 250,
               fontWeight: 400,
               lineHeight: 1,
-              color: "rgba(182,130,53,0.22)",
+              color: "color-mix(in srgb, var(--gold) 22%, transparent)",
             }}
           >
             {Math.trunc(totals.otherShare * 100)}
@@ -479,6 +479,7 @@ export default async function PortalPage({
                       borderRadius: 1,
                       flex: "none",
                       background: formationColor(f.name),
+                      ...fillEdge(formationColor(f.name)),
                     }}
                   />
                   {/* Wraps rather than truncating: a cut coalition name names nobody. */}

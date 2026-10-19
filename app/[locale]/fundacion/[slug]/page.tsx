@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getDict } from "@/lib/i18n";
 import { euro, integer } from "@/lib/format";
 import { PARTIES } from "@/lib/parties";
+import { fillEdge } from "@/lib/chart-colors";
 import FoundationGovernance from "@/components/FoundationGovernance";
 import {
   displayName,
@@ -60,7 +61,7 @@ export default async function FundacionPage({
 
       <div
         className="mt-2 h-1 w-16 rounded-full"
-        style={{ backgroundColor: party?.color ?? "var(--gold)" }}
+        style={{ backgroundColor: party?.color ?? "var(--gold)", ...fillEdge(party?.color) }}
       />
       <p className="eyebrow mt-4">{F.dossierEyebrow}</p>
       <h1 className="display mt-3 text-3xl leading-tight sm:text-4xl">{displayName(entity.name)}</h1>

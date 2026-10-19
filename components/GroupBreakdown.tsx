@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { KeyVote } from "@/lib/votes";
 import { tallyByGroup } from "@/lib/votes";
 import { groupInfo, groupParty, GROUPS_SOURCE } from "@/lib/groups";
-import { stanceSegments } from "@/lib/chart-colors";
+import { fillEdge, stanceSegments } from "@/lib/chart-colors";
 import Bar from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict, Locale } from "@/lib/i18n";
@@ -81,7 +81,10 @@ export default function GroupBreakdown({
                     <span
                       aria-hidden="true"
                       className="mt-1 h-3.5 w-[3px] shrink-0 rounded-full"
-                      style={{ backgroundColor: party ? party.color : "var(--line)" }}
+                      style={{
+                        backgroundColor: party ? party.color : "var(--line)",
+                        ...fillEdge(party?.color),
+                      }}
                     />
                     <span className="min-w-0">
                       <span className="block text-[var(--ink)]">
