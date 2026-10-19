@@ -61,6 +61,9 @@ const es = {
       "Leyes y mociones sobre derechos trans y LGTBI, salud sexual y reproductiva, y vivienda. Cada posición enlaza al acta oficial.",
   },
   salaryShape: {
+    readerBin: "{count} cargos",
+    readerHere: "aquí cae esta retribución",
+    readerMedian: "aquí cae la mediana",
     yAxis: "Nº de cargos en cada tramo · el tramo más poblado tiene {peak}",
     xAxis: "Retribución bruta anual · escala logarítmica: cada marca multiplica por 10",
     tableCaption:
@@ -86,6 +89,7 @@ const es = {
       "{missing} de las {total} filas del registro no publican cifra y no entran en este reparto. El eje es logarítmico: lo publicado va de {min} a {max}, cuatro órdenes de magnitud, y mezcla una alcaldía de pueblo a tiempo parcial con la Corona y una comisaría europea. Una posición en este eje es una posición en una lista, no un juicio sobre si un cargo vale lo que cobra.",
   },
   smiPosition: {
+    readerHere: "aquí cae esta retribución",
     title: "En múltiplos del salario mínimo",
     sentence:
       "{pay} al año equivale a {multiple} veces el SMI de {year} ({smi}/año); cae en el tramo «{tranche}», donde se sitúa el {share} de los asalariados.",
@@ -356,6 +360,10 @@ const es = {
     place: "Madrid",
     sources: "Fuentes: BDNS · Tribunal de Cuentas · Congreso",
     navLabel: "Secciones",
+    theme: "Tema de color",
+    themeLight: "Claro",
+    themeDark: "Oscuro",
+    themeSystem: "Como el sistema",
   },
   footer: {
     source:
@@ -376,6 +384,19 @@ const es = {
     scrollHint:
       "El gráfico es más ancho que la pantalla: desliza en horizontal dentro del recuadro para verlo entero, o abre la tabla de debajo.",
     scrollRegion: "Gráfico desplazable en horizontal",
+    readerKeys:
+      "Usa las flechas para recorrer los valores; Inicio y Fin llevan al primero y al último.",
+    readerGridKeys:
+      "Usa las flechas para moverte entre las celdas; Inicio y Fin llevan al principio y al final de la fila, y Control con Inicio o Fin, a la primera y la última celda.",
+    readerCount: "{n} valores",
+    readerRange: "Valores de {min} a {max}",
+    readerPosition: "{i} de {n}",
+    ofTotal: "{share} del total",
+    download: "Descargar imagen",
+    downloadBusy: "Preparando la imagen…",
+    downloadFailed: "No se ha podido generar la imagen.",
+    downloadLabel: "Descargar imagen: «{title}», PNG de 1200 × 675",
+    dataAsOf: "Datos a {date}",
   },
   common: {
     backToPanel: "← Volver al panel",
@@ -701,6 +722,8 @@ const es = {
     fromOrg: "publicación de la entidad",
   },
   voteFlow: {
+    readerParty: "{party} · {amount} en donaciones declaradas en 2020 · voto del grupo: {vote}",
+    readerOutcome: "{vote} · formaciones: {count} · {amount} declarados por ellas en 2020",
     tableCaption:
       "Las formaciones del gráfico, con lo que declararon en donaciones privadas en 2020 y cómo votó su grupo. Total declarado por ellas: {total}.",
     colFormation: "Formación",
@@ -1126,6 +1149,9 @@ const en: Dict = {
       "Laws and motions on trans and LGBTI rights, sexual and reproductive health, and housing. Every position links to the official record.",
   },
   salaryShape: {
+    readerBin: "{count} posts",
+    readerHere: "this pay falls here",
+    readerMedian: "the median falls here",
     yAxis: "Number of posts in each band · the largest band holds {peak}",
     xAxis: "Gross annual pay · logarithmic scale: each mark multiplies by 10",
     tableCaption:
@@ -1151,6 +1177,7 @@ const en: Dict = {
       "{missing} of the register's {total} rows publish no figure and are not in this distribution. The axis is logarithmic: published pay runs from {min} to {max}, four orders of magnitude, and it mixes a part-time village mayoralty with the Crown and a European commissionership. A position on this axis is a position in a list, not a judgement about whether a post is worth its pay.",
   },
   smiPosition: {
+    readerHere: "this pay falls here",
     title: "In multiples of the minimum wage",
     sentence:
       "{pay} a year is {multiple} times the {year} SMI ({smi}/year); it falls in the \"{tranche}\" tranche, where {share} of wage earners sit.",
@@ -1421,6 +1448,10 @@ const en: Dict = {
     place: "Madrid",
     sources: "Sources: BDNS · Court of Auditors · Congress",
     navLabel: "Sections",
+    theme: "Colour theme",
+    themeLight: "Light",
+    themeDark: "Dark",
+    themeSystem: "Match the system",
   },
   footer: {
     source:
@@ -1441,6 +1472,20 @@ const en: Dict = {
     scrollHint:
       "The chart is wider than the screen: swipe sideways inside its box to see all of it, or open the table below.",
     scrollRegion: "Horizontally scrollable chart",
+    readerKeys:
+      "Use the arrow keys to step through the values; Home and End go to the first and the last.",
+    readerGridKeys:
+      "Use the arrow keys to move between cells; Home and End go to the start and end of the row, and Control with Home or End to the first and last cell.",
+    readerCount: "{n} values",
+    readerRange: "Values from {min} to {max}",
+
+    readerPosition: "{i} of {n}",
+    ofTotal: "{share} of the total",
+    download: "Download image",
+    downloadBusy: "Preparing the image…",
+    downloadFailed: "The image could not be generated.",
+    downloadLabel: "Download image: “{title}”, 1200 × 675 PNG",
+    dataAsOf: "Data as of {date}",
   },
   common: {
     backToPanel: "← Back to dashboard",
@@ -1766,6 +1811,8 @@ const en: Dict = {
     fromOrg: "organisation's own post",
   },
   voteFlow: {
+    readerParty: "{party} · {amount} in declared donations in 2020 · group vote: {vote}",
+    readerOutcome: "{vote} · formations: {count} · {amount} declared by them in 2020",
     tableCaption:
       "The formations in the chart, with what they declared in private donations in 2020 and how their group voted. Their declared total: {total}.",
     colFormation: "Formation",
@@ -2189,6 +2236,9 @@ const ca: Dict = {
       "Lleis i mocions sobre drets trans i LGBTI, salut sexual i reproductiva, i habitatge. Cada posició enllaça a l'acta oficial.",
   },
   salaryShape: {
+    readerBin: "{count} càrrecs",
+    readerHere: "aquí cau aquesta retribució",
+    readerMedian: "aquí cau la mediana",
     yAxis: "Nombre de càrrecs a cada tram · el tram més poblat en té {peak}",
     xAxis: "Retribució bruta anual · escala logarítmica: cada marca multiplica per 10",
     tableCaption:
@@ -2214,6 +2264,7 @@ const ca: Dict = {
       "{missing} de les {total} files del registre no publiquen xifra i no entren en aquest repartiment. L’eix és logarítmic: el que es publica va de {min} a {max}, quatre ordres de magnitud, i barreja una alcaldia de poble a temps parcial amb la Corona i una comissaria europea. Una posició en aquest eix és una posició en una llista, no un judici sobre si un càrrec val el que cobra.",
   },
   smiPosition: {
+    readerHere: "aquí cau aquesta retribució",
     title: "En múltiples del salari mínim",
     sentence:
       "{pay} l’any equival a {multiple} vegades l’SMI de {year} ({smi}/any); cau al tram «{tranche}», on se situa el {share} dels assalariats.",
@@ -2484,6 +2535,10 @@ const ca: Dict = {
     place: "Madrid",
     sources: "Fonts: BDNS · Tribunal de Comptes · Congrés",
     navLabel: "Seccions",
+    theme: "Tema de color",
+    themeLight: "Clar",
+    themeDark: "Fosc",
+    themeSystem: "Com el sistema",
   },
   footer: {
     source:
@@ -2504,6 +2559,19 @@ const ca: Dict = {
     scrollHint:
       "El gràfic és més ample que la pantalla: llisca en horitzontal dins el requadre per veure'l sencer, o obre la taula de sota.",
     scrollRegion: "Gràfic desplaçable en horitzontal",
+    readerKeys:
+      "Fes servir les fletxes per recórrer els valors; Inici i Fi porten al primer i a l'últim.",
+    readerGridKeys:
+      "Fes servir les fletxes per moure't entre les cel·les; Inici i Fi porten al principi i al final de la fila, i Control amb Inici o Fi, a la primera i l'última cel·la.",
+    readerCount: "{n} valors",
+    readerRange: "Valors de {min} a {max}",
+    readerPosition: "{i} de {n}",
+    ofTotal: "{share} del total",
+    download: "Baixa la imatge",
+    downloadBusy: "S'està preparant la imatge…",
+    downloadFailed: "No s'ha pogut generar la imatge.",
+    downloadLabel: "Baixa la imatge: «{title}», PNG de 1200 × 675",
+    dataAsOf: "Dades a {date}",
   },
   common: {
     backToPanel: "← Tornar al tauler",
@@ -2829,6 +2897,8 @@ const ca: Dict = {
     fromOrg: "publicació de l'entitat",
   },
   voteFlow: {
+    readerParty: "{party} · {amount} en donacions declarades el 2020 · vot del grup: {vote}",
+    readerOutcome: "{vote} · formacions: {count} · {amount} declarats per elles el 2020",
     tableCaption:
       "Les formacions del gràfic, amb el que van declarar en donacions privades el 2020 i com va votar el seu grup. Total declarat per elles: {total}.",
     colFormation: "Formació",

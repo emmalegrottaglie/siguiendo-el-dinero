@@ -27,7 +27,14 @@ export default function Avatar({
         width={size}
         height={size}
         className="shrink-0 rounded-full object-cover"
-        style={{ width: size, height: size, border: `1px solid ${color}66` }}
+        style={{
+          width: size,
+          height: size,
+          // Mixed towards --ring-base, which is transparent in the light theme
+          // (so this is the party colour at 40%) and a mid grey in the dark
+          // one, where a 40% party colour alone can vanish into the ground.
+          border: `1px solid color-mix(in srgb, ${color} 40%, var(--ring-base))`,
+        }}
         unoptimized
       />
     );
@@ -46,8 +53,8 @@ export default function Avatar({
         height: size,
         fontSize: size * 0.34,
         color: "var(--ink)",
-        background: `linear-gradient(160deg, ${color}26, var(--surface) 70%)`,
-        border: `1px solid ${color}80`,
+        background: `linear-gradient(160deg, color-mix(in srgb, ${color} 15%, transparent), var(--surface) 70%)`,
+        border: `1px solid color-mix(in srgb, ${color} 50%, var(--ring-base))`,
       }}
     >
       {initials(name)}

@@ -5,6 +5,245 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-19 — Both themes and the chart tools together, and the contrast both left open
+
+The dark theme and the keyboard-reading and export work were built side by side from the same
+starting point, and each left a short list of things it could not finish because the other was not
+there yet. This change merges the dark theme into the keyboard-and-export branch, resolves the
+places where the two collided, and works through those lists.
+
+**The merge.** Both branches had changed the root layout. The font variables stay on `<html>`,
+because `:root` declares the heading and body font families in terms of them; the inline script
+that applies a stored theme before first paint stays in `<head>`. The hatch colour shared by the
+bars and the exported images (`stripeInk()`) now returns the theme tokens rather than light-theme
+literals, so a PNG downloaded in the dark theme is drawn in the dark theme. The party-colour edge
+the dark theme draws around IU and the colour UPN and Foro share is now drawn on the keyboard-ready
+charts and in the exported images too, and the map's region strokes and ramp end use the theme
+tokens in the image as well as on the page.
+
+**Links take the colour their class asks for.** An unlayered `a { color: inherit }` rule in the
+stylesheet was beating every Tailwind colour class on every link, because unlayered rules win over
+any cascade layer. It now sits in `@layer base` with the other element defaults. To check that
+nothing else moved, every link and every element inside one was sampled on fifteen pages in both
+themes before and after: 152 of 3,894 samples changed, and every one changed to the colour its own
+class names — the skip link (now gold, as designed), the back links, the party filter chips, a few
+inline links, and one link that gains the underline its class asked for. The party filter counts
+on `/politicos` were also faded to 60% opacity; they are now set apart by weight instead. They
+measured 4.21:1; they now measure 5.83:1 (5.97:1 on the active chip) in the light theme and
+6.65:1 (8.02:1) in the dark. The global focus ring stays unlayered on purpose, so that
+`outline-none` on the two search boxes cannot remove it.
+
+**The flow diagram's ribbons have an edge.** The ribbons are drawn at 42% so that one ribbon
+shows through another where they cross, which leaves every one of them under the 3:1 a graphic
+needs against the page: 1.32 to 1.76:1 in the light theme and 1.67 to 2.46:1 in the dark. Each now
+carries a 1px edge in its own party colour mixed with ink, darker in the light theme and lighter
+in the dark, so it keeps its hue. Against the page the weakest edge is 6.08:1 in the light theme
+and 8.68:1 in the dark (4.75:1 and 7.00:1 across every party colour the site knows); against its
+own fill, 4.62:1. The exported image draws the same edges.
+
+**Hatches are visible in both themes.** The hatch over votó No was 3.70:1 against its fill in the
+light theme but 2.36:1 in the dark; it is now 4.04:1 there. The hatch over security costs on the
+subsidy ranking was drawn in dark lines on a dark fill and measured 1.12:1 in the light theme and
+1.83:1 in the dark — there, but not visible. It now takes the same inverse hatch as No, because its
+fill flips between themes in the same way: 3.59:1 light and 3.84:1 dark. The map's two investiture
+hatches were ink at 34% and 22% over the PP's blue, 1.64:1 and 1.37:1; they are now one token that
+measures 3.34:1 in the light theme and 3.12:1 in the dark, and the two still differ in density, so
+the weaker claim still looks weaker. These apply to the bars, the legends, the ballot grid, the
+flow diagram's No node, the map and every exported image, which resolves the same tokens.
+
+**Wide tables can be scrolled from the keyboard.** A table wider than the screen scrolled inside
+its own box, but nothing in a plain table can take focus, so a keyboard user with no pointer could
+not reach its right-hand columns. A new `ScrollBox` makes the box a tab stop and a region named by
+the table's caption, only while the table overflows, so it adds no tab stop on a wide screen. It
+is used by every chart's data table and by the long tables: the map's territory table, the group
+breakdown, electoral spending by formation, the declarations, donations, the foundation tables and
+the feed list in the methodology. The tables are otherwise untouched; screen readers read them
+with their own table commands. The map table's sortable headers were already buttons inside
+headers carrying `aria-sort`, and no other table on the site sorts.
+
+**A grid cell is announced once.** In the ballot grid and the map, moving the keyboard cursor
+moves `aria-activedescendant`, which makes a screen reader speak the cell's name, and the live
+region then spoke the same cell again with its context. Each cell's name is now the full
+announcement (for example "Ley 4/2023 (Ley Trans) · Derechos trans y LGTBI · 16 feb 2023 · A favor ·
+1 de 9"), and the live region stays quiet for keyboard moves in a grid. It still speaks for list
+charts, which have no active descendant, and on pointer hover. The visible readout under a chart is
+now hidden from assistive technology, since it repeats the live region. A real screen-reader test
+was not possible here. What was checked instead: the accessibility tree lists every grid cell with
+the full announcement as its name; after a keyboard move `aria-activedescendant` points at a cell
+with that name while the live region is empty; on hover without focus the live region speaks; and
+switching the map's layer renames every cell.
+
+**The front-page summaries can be downloaded.** The three summaries on the front page — every
+tracked division's tally, the donor tranches, and electoral spending by formation — are the front
+page's own charts, and the donor tranches appear nowhere else on the site, so each now has a
+"Descargar imagen" button. The division result bars on `/votaciones`, `StanceByGroup` and the small
+bars on party and comunidad pages stay without one: each is a single bar or list inside a card,
+read in place, with its figures printed beside it. The image renderer now wraps a figure that is
+too wide for its column at its " · " separators, rather than letting it run over the bar, which
+the division summary's four figures per row would otherwise have done.
+
+**Left out, or found and not fixed:**
+
+- Where one ribbon crosses another, the edge sits on the other ribbon's fill, and there it is
+  3.29:1 in the light theme and 2.67:1 in the dark. The ribbons are still told apart there by the
+  edge itself and by where each one starts and ends, and every figure is in the table under the
+  diagram.
+- The map's investiture hatch clears 3:1 only against the blue it is drawn over today, because
+  every hatched community is governed by the PP. A hatch over another party's colour would need
+  measuring again, and over several of the greens in the dark theme it would need dark lines
+  rather than light ones.
+- Pressing the arrow keys inside a focused scroll box could not be confirmed to scroll here,
+  because the preview pane runs as a background page that does not animate scrolling; that the box
+  takes focus, is named and shows the focus ring was checked.
+- No screen reader (NVDA, VoiceOver, JAWS) has been run against any of this.
+
+---
+
+## 2026-10-19 — Charts can be read from the keyboard and downloaded as images
+
+Two items the chart audit left open are done: reading a chart value by value from the keyboard,
+and a PNG export that carries its own source and date.
+
+**Keyboard reading.** Until now a keyboard or screen-reader user could reach a chart's numbers
+only through the text beside the bars or the data table below; there was no way to point at one
+mark and hear what it is. A new component, `ChartReader`, makes each chart one tab stop with a
+descriptive label (what it shows, its range, how many values, which keys). The arrow keys step
+through the values, Home and End jump to the ends, and a polite live region announces the value
+with its context, for example "PSOE · 83.852.842,14 € · 27,9 % del total · 2 de 28". The current
+mark gets a visible outline (ink, 14.74:1 on the page), and the same text appears in a small
+readout under the chart while it has focus, which matters for the ballot grid, whose cells carry
+no text. The cursor is an attribute on the existing mark, so nothing is redrawn while someone is
+reading. Pointer hover announces too, but only while the chart does not have keyboard focus.
+
+It is applied to every chart with discrete values: the subsidy ranking, electoral spending by
+formation and by line, the money-and-vote flow (formations, then outcomes, with the box scrolling
+to keep the current one in view), the pay distribution and minimum-wage position on profiles, the
+three `/contexto` charts, the coverage chart, the three front-page summaries, each division's
+result bar, and the small bars on party and comunidad pages. The ballot grid and the map follow
+the ARIA grid pattern. The map used to make all nineteen territories separate tab stops; it is now
+one, with the arrow keys moving between territories along rows built from their positions (north
+to south, then west to east) and the fact sheet following the cursor. The fact sheet is no longer a
+live region, since it read the whole sheet aloud on every move.
+
+**Image export.** Each main chart has a "Descargar imagen" button that produces a 1200 × 675 PNG
+drawn at 2× (2400 × 1350 pixels). The image carries the title, a caption, "Datos a <fecha>", every
+source with its period and host, and the site address with the page's path, all drawn into the
+pixels, so a shared or cropped post still says where its figures came from. Most charts here are
+HTML, not SVG, so instead of serialising markup each chart describes itself as data (labelled bars,
+a grid of cells, or SVG path data for the flow diagram, the map and the histogram) and one small
+canvas renderer draws it. No dependency was added: an HTML-to-image library would have had to
+reproduce the page's layout, fonts and hatches, which is more code and more ways to be wrong than
+drawing the same data directly. Colours are read from the page's CSS variables when the button is
+pressed, so the image follows the reader's theme, and the site's own faces are used once loaded.
+
+The honesty rules hold in the image. The footer is laid out before the chart, so the source and
+the date can never be squeezed out; long text wraps and is never cut; a chart with more rows than
+fit flows into two or three columns instead of losing its tail; rows keep the page's order; unknown
+values print "—"; the flow diagram's image keeps its caveat and names the formations it excludes;
+the ballot grid's image names each division and the ballot in words; and the map's image lists
+every territory's value beside the map, in the table's order. Where sources have different dates
+(the flow diagram sets a 2020 report beside a 2026 division) each date is named with its publisher.
+
+**A font fix found on the way.** The site was not rendering in Cormorant Garamond and Lora at all.
+`--font-heading` and `--font-body` are declared on `:root` and refer to the next/font variables,
+which were set on `<body>`; a custom property resolves where it is declared, so both were invalid
+and every page fell back to the system sans stack. The variables are now on `<html>`. This changes
+the look of every page, back to the design the rest of this file describes.
+
+Also: the `/contexto` minimum-wage ladder and sector ladder print "—" for a tranche or sector INE
+leaves empty, where they printed 0 before.
+
+Left out: the tables (`GroupBreakdown`, `DonationsTable`, the per-formation and per-territory
+tables) get no reader, because table navigation already reads them cell by cell. The foundation
+cards on `/fundaciones` are links and stay so. The front-page summaries, the division cards and
+the small bars on party and comunidad pages have keyboard reading but no export; they summarise
+charts that have one. The light hatch inks are still literals and will need tokens when dark mode
+lands.
+
+## 2026-10-19 — A dark theme, measured, that follows the system until the reader chooses
+
+The site now has a dark theme. It follows the reader's system setting (`prefers-color-scheme`),
+live, until the reader picks one with a new toggle in the masthead: three buttons, light, dark and
+"match the system", each a 44px target with `aria-pressed` and a label in all three languages. A
+pick is kept in `localStorage` and applied by a short inline script in `<head>` before the page
+first paints, so a reader who chose dark never sees a light frame first; the script is wrapped in
+`try/catch`, and if storage is blocked the system setting decides.
+
+**Why the dark theme is built the way it is.** This project's first visual system was dark, and it
+was replaced partly because of how it failed: its muted text token measured 3.48:1 against the
+ground, its chip borders 1.77:1, and an aura, a vignette, panel shadows and a tint over photographs
+each lowered contrast somewhere no-one had measured. The new dark theme has none of those layers.
+It is the same set of tokens with dark values, every one measured and recorded in
+`app/globals.css`:
+
+- **Text, against the page, panels and cards** (4.5:1 needed): `--ink` 13.28–14.65, `--ink-2`
+  9.37–10.34, `--ink-3` 6.03–6.65, the gold text colour 7.26–8.02, verdigris text 6.90–7.62, red
+  5.53–6.11. The worst text ratio anywhere in the palette is **6.03:1** (`--ink-3` on a panel).
+- **Graphics** (3:1 needed): gold 4.82–5.31 (the same hex as the light theme), verdigris
+  4.79–5.29, `--grey-500` 3.07–3.39, votó Sí 3.48–3.84, votó No 10.61–11.71. The worst graphic
+  ratio is **3.48:1** (votó Sí on a panel).
+- Each accent keeps its hue and changes only in lightness.
+
+**Sí and No swap ends.** In the light theme No is the dark fill; in the dark theme it is the light
+one (`#f6c6bd`) and Sí the mid one (`#32807b`). With both fills at 3:1 against a dark ground and 3:1
+against each other, one of them has to sit near L* 80, and the light end is the heavier mark on a
+dark page. The pair measures **3.05:1** against each other (3.08:1 in the light theme). Simulated
+with the Machado (2009) full-severity matrices they stay apart in lightness: deuteranopia ΔL* 37.6
+(ΔE2000 34.7), protanopia ΔL* 30.8 (ΔE2000 26.1). The hatch over No turns dark, because the fill
+turned light, and abstention (`#4a4745`) measures 6.03:1 against the No segment it sits beside.
+
+**Every hard-coded colour now goes through a token.** They were: the hatch over
+bars, the vote-flow pattern and the map legend; the map's ramp, which mixed gold towards a fixed
+`#f4f2ee`; the stroke between communities; hover tints on the tabs and the party switcher; the
+underline on source links; the background hatch behind article images; the front page's large
+decorative numeral; text on the gold filter chips, which was `--ink` and would have turned light on
+gold in the dark theme (now `--on-gold`, 5.31:1); and `::selection`. In the light theme each new
+token reproduces the old value exactly, so nothing there moved, with one exception: the initials
+avatar without a party wrote `var(--ink-3)26` as its tint, which is not a colour and painted
+nothing; it is now a valid `color-mix()` and shows the faint ring and tint it was meant to.
+
+**Party colours are kept as they are.** They are the parties' own, and they are data. Measured
+against the dark page, panels, cards and the bar track, three fall under 3:1: **IU** `#b5343a`
+(2.46–3.00), and **UPN** and **Foro**, which share `#3a6ea5` (2.76 against the track). Those get a
+1px edge inside the fill wherever they are a bar segment, a legend swatch, a dot or a vote-flow
+node; the edge is transparent in the light theme. The check is a function (`fillEdge()` in
+`lib/chart-colors.ts`), not a list, so a party added later is checked too. On the map every
+community takes a mid-grey stroke in the dark theme instead, because the regions meet the page as
+well as each other.
+
+**Photographs** are not inverted or filtered; portrait rings mix the party colour towards a mid
+grey in the dark theme so the frame stays visible.
+
+**Verified.** Typecheck and production build clean. In the browser, an audit composited every
+visible text element against its real background on 13 routes (the portada, funding, politicians, a
+deputy's profile, votes, map, context, rights, foundations, methodology, data, a party page and
+search), in the dark theme following the system, in the light theme chosen explicitly over a dark
+system, and in the dark theme chosen explicitly over a light system, at 1280px and 375px, across
+`es`, `en` and `ca`. No text fails in the dark theme. The only element under its threshold is the
+front page's 250px decorative numeral, which is `aria-hidden` ornament behind the headline and is
+the same in the light theme. No page scrolls sideways at 375px. A choice survives a reload and a
+change of language, "match the system" follows a system switch without a reload, and there are no
+hydration warnings.
+
+**Left out, or found and not fixed:**
+
+- The vote-flow ribbons are drawn at 42% opacity, so in either theme they are lighter than 3:1
+  against the page. They connect the solid party and outcome bars, which do pass, and every figure
+  is in the table under the diagram, so they were left as they are.
+- `/politicos/declaraciones` does not exist on this branch, so it was not checked.
+- Found while auditing, in the light theme and not caused by this change: the party filter chips on
+  `/politicos` print their counts at 60% opacity, which measures **4.21:1**. The chips render in
+  `--ink` rather than the `--ink-3` their class asks for, because the unlayered `a { color: inherit }`
+  rule in `app/globals.css` beats every Tailwind colour utility on a link — the same cascade trap
+  recorded for `.label-mono` on 2026-09-01. Fixing that rule changes the colour of links site-wide,
+  so it is left for its own change. In the dark theme the counts pass.
+- Fixed while there: the map's unsorted column arrows were raised from 55% to 70% opacity, so they
+  clear 3:1 as graphics in both themes (from 2.33:1 to 3.08:1 in light, and from 2.90:1 to 3.90:1 in
+  dark).
+- There is no favicon, so pages log a 404 for `/favicon.ico`, as before.
+
+---
+
 ## 2026-10-19 — Every chart says where it came from, and none relies on colour alone
 
 An audit of the site's charts against the checklist in `RESEARCH-DATAVIZ/` (research carried over

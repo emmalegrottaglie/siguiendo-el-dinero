@@ -1,5 +1,9 @@
 import Bar from "./chart/Bar";
-import SourceLine from "./chart/SourceLine";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import { percent } from "@/lib/format";
 import type { Indicators, PovertyRow } from "@/lib/indicators";
 import { AROPE_BASE, povertyBases, povertyRate, sourceFor } from "@/lib/indicators";
@@ -36,11 +40,13 @@ export default function PovertyPanel({
   t,
   bcp47,
   caveatLabel,
+  charts,
 }: {
   indicators: Indicators;
   t: Dict["contexto"];
   bcp47: string;
   caveatLabel: string;
+  charts: Dict["charts"];
 }) {
   const P = t.poverty;
   const src = sourceFor(indicators, "povertyNational");
@@ -70,38 +76,70 @@ export default function PovertyPanel({
     )
     .sort((a, b) => (b.percent ?? 0) - (a.percent ?? 0));
 
+  const sources: ChartSource[] = [
+    { publisher: "INE", name: src.name, period: src.period, url: src.url },
+    { publisher: "INE", name: regionalSrc.name, period: regionalSrc.period, url: regionalSrc.url },
+  ];
+  const rowLabel = (id: string) => P.rows[id as keyof typeof P.rows];
+  const shown = (row: PovertyRow) =>
+    row.percent === null ? "—" : percent(row.percent / 100, bcp47);
+  const image: ChartExport = {
+    ...exportMeta(charts, bcp47, {
+      title: P.title,
+      caption: `${P.intro} ${P.note}`,
+      sources,
+      file: "pobreza-y-exclusion",
+    }),
+    body: {
+      kind: "bars",
+      rows: found.map(({ id, row }) => ({
+        label: rowLabel(id),
+        value: shown(row),
+        segments: [{ value: row.percent ?? 0, color: "var(--red)" }],
+        total: 100,
+        scale: "share",
+      })),
+    },
+  };
+
   return (
     <section className="mt-16">
       <h2 className="display section-tick text-2xl">{P.title}</h2>
       <p className="mt-6 leading-relaxed text-[var(--ink-2)]">{P.intro}</p>
 
-      <ul className="mt-8 flex flex-col gap-5">
-        {found.map(({ id, row }) => (
-          <li key={id}>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <span style={{ fontSize: "14px" }}>
-                {P.rows[id as keyof typeof P.rows]}
-              </span>
-              <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                {percent((row.percent ?? 0) / 100, bcp47)}
-              </span>
-            </div>
-            <Bar
-              className="mt-1.5"
-              segments={[
-                {
-                  value: row.percent ?? 0,
-                  color: "var(--red)",
-                  label: P.rows[id as keyof typeof P.rows],
-                },
-              ]}
-              total={100}
-              scale="share"
-              size="md"
-            />
-          </li>
-        ))}
-      </ul>
+      <ChartReader
+        className="mt-8"
+        items={found.map(({ id, row }) => say(rowLabel(id), shown(row)))}
+        {...readerProps(charts, bcp47, { title: P.title, count: found.length })}
+      >
+        <ul className="flex flex-col gap-5">
+          {found.map(({ id, row }, i) => (
+            <li key={id} data-chart-item={i}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <span style={{ fontSize: "14px" }}>
+                  {P.rows[id as keyof typeof P.rows]}
+                </span>
+                <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
+                  {shown(row)}
+                </span>
+              </div>
+              <Bar
+                className="mt-1.5"
+                segments={[
+                  {
+                    value: row.percent ?? 0,
+                    color: "var(--red)",
+                    label: P.rows[id as keyof typeof P.rows],
+                  },
+                ]}
+                total={100}
+                scale="share"
+                size="md"
+              />
+            </li>
+          ))}
+        </ul>
+      </ChartReader>
 
       {regional.length > 1 && (
         <p className="mt-6 leading-relaxed text-[var(--ink-2)]">
@@ -114,15 +152,7 @@ export default function PovertyPanel({
       )}
 
       <SourceLine
-        sources={[
-          { publisher: "INE", name: src.name, period: src.period, url: src.url },
-          {
-            publisher: "INE",
-            name: regionalSrc.name,
-            period: regionalSrc.period,
-            url: regionalSrc.url,
-          },
-        ]}
+        sources={sources}
         note={
           bases.length === 1
             ? P.base.replace("{base}", bases[0])
@@ -130,6 +160,7 @@ export default function PovertyPanel({
         }
         caveatLabel={caveatLabel}
       />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(charts, P.title)} />
 
       <p className="mt-6 leading-relaxed text-[var(--ink-3)]">{P.note}</p>
     </section>

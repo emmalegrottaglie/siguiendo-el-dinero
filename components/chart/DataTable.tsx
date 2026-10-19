@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import ScrollBox from "./ScrollBox";
 
 /**
  * A chart's numbers as a real table, one click below the chart.
@@ -45,7 +46,7 @@ export default function DataTable<T>({
   return (
     <details className={`data-table mt-3 ${className}`}>
       <summary>{summary}</summary>
-      <div className="mt-2 max-w-full overflow-x-auto">
+      <ScrollBox className="mt-2 max-w-full">
         <table className="w-full border-collapse text-sm">
           <caption className="pb-2 text-left text-xs leading-relaxed text-[var(--ink-2)]">
             {caption}
@@ -84,7 +85,7 @@ export default function DataTable<T>({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
     </details>
   );
 }

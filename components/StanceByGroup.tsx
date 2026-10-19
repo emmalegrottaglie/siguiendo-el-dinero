@@ -5,6 +5,8 @@ import { stanceSegments } from "@/lib/chart-colors";
 import { integer } from "@/lib/format";
 import Bar, { BarLegend } from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import ChartReader from "./chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -74,18 +76,19 @@ export default function StanceByGroup({
         <span>· {vote.date}</span>
       </p>
 
-      <Bar
+      <ChartReader
         className="mt-4"
-        segments={segments}
-        total={Math.max(1, tot.presentes)}
-        scale="share"
-        size="sm"
-      />
-      <BarLegend
-        className="mt-2"
-        segments={segments}
-        formatValue={(seg) => integer(seg.value, bcp47)}
-      />
+        items={segments.map((seg) => say(vote.law, seg.label, integer(seg.value, bcp47)))}
+        {...readerProps(t.charts, bcp47, { title: vote.law, count: segments.length })}
+      >
+        <Bar segments={segments} total={Math.max(1, tot.presentes)} scale="share" size="sm" />
+        <BarLegend
+          className="mt-2"
+          segments={segments}
+          formatValue={(seg) => integer(seg.value, bcp47)}
+          readable
+        />
+      </ChartReader>
 
       <div className="mt-3 flex flex-col gap-1">
         {row(t.portal.inFavourGroups, bucket.si, "var(--verd-text)")}

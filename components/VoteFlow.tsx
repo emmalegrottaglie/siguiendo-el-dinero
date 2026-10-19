@@ -1,11 +1,21 @@
 import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
-import { euroExact, formatDate, integer } from "@/lib/format";
+import { euroExact, fill, formatDate, integer } from "@/lib/format";
 import { stancesByParty, voteDateISO, type Stance, type KeyVote } from "@/lib/votes";
 import { PARTIES } from "@/lib/parties";
-import { STANCE_SWATCH } from "@/lib/chart-colors";
+import { STANCE_SWATCH, svgFillEdge } from "@/lib/chart-colors";
 import type { Dict } from "@/lib/i18n";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps } from "@/lib/chart-reader";
+import {
+  exportLabels,
+  exportMeta,
+  type ChartExport,
+  type ExportLabel,
+  type ExportShape,
+} from "@/lib/chart-export";
 
 /**
  * The site's standalone stance fills: each outcome node sits on the page, not
@@ -18,6 +28,28 @@ const STANCE_COLOUR: Record<Stance, string> = {
   no: STANCE_SWATCH.no,
   ab: STANCE_SWATCH.abstention,
 };
+
+/**
+ * A ribbon's fill and its edge.
+ *
+ * The fill stays at 42% so that where ribbons cross, the one underneath still
+ * shows through. At that strength no party colour reaches the 3:1 a graphic
+ * needs against the page, in either theme (measured on this diagram: 1.32 to
+ * 1.76:1 in the light theme, 1.67 to 2.46:1 in the dark), so each ribbon also
+ * carries a 1px edge: its own party colour mixed 45% with --ink, which darkens
+ * it in the light theme and lightens it in the dark one, so the edge keeps the
+ * party's hue and a ribbon is still matched to its node by colour as well as
+ * by position.
+ *
+ * Measured against the page, the weakest edge is 6.08:1 in the light theme and
+ * 8.68:1 in the dark for the parties drawn today, and 4.75:1 and 7.00:1 across
+ * every colour in lib/parties.ts on --bg, --surface and --card. Against its own
+ * fill it is at least 4.62:1. Where one ribbon crosses another the edge sits on
+ * the other ribbon's fill; there the weakest case is 3.29:1 in the light theme
+ * and 2.67:1 in the dark.
+ */
+const RIBBON_FILL_OPACITY = 0.42;
+const ribbonEdge = (colour: string) => `color-mix(in oklab, ${colour} 45%, var(--ink))`;
 
 /** One page shows one flow diagram, so a fixed pattern id cannot collide. */
 const HATCH_NO = "voteflow-hatch-no";
@@ -132,6 +164,101 @@ export default function VoteFlow({
   const mid = (PARTY_X + NODE_W + OUT_X) / 2;
   const srcMid = (SOURCE_X + SOURCE_W + PARTY_X) / 2;
 
+  // Every ribbon, laid out once. The outcome node's cursor advances as each
+  // ribbon lands, so the paths are computed here rather than while rendering,
+  // where the page and the exported image would each advance it.
+  const ribbons = nodes.map((n) => {
+    const colour = PARTIES[n.d.nif!]?.color ?? "var(--grey-500)";
+    // Source to party. Both edges of the ribbon are cubics with control points
+    // at the horizontal midpoint, which is what keeps the band an even
+    // thickness through the turn. The source bar spans the same band the party
+    // column is laid out over, so a ribbon leaves it at its party's own y.
+    const sy0 = n.y;
+    const ribbonIn = [
+      `M ${SOURCE_X + SOURCE_W} ${sy0}`,
+      `C ${srcMid} ${sy0} ${srcMid} ${n.y} ${PARTY_X} ${n.y}`,
+      `L ${PARTY_X} ${n.y + n.h}`,
+      `C ${srcMid} ${n.y + n.h} ${srcMid} ${sy0 + n.h} ${SOURCE_X + SOURCE_W} ${sy0 + n.h}`,
+      "Z",
+    ].join(" ");
+
+    const out = outBy.get(n.stance)!;
+    const oy0 = out.cursor;
+    out.cursor += n.h;
+    const ribbonOut = [
+      `M ${PARTY_X + NODE_W} ${n.y}`,
+      `C ${mid} ${n.y} ${mid} ${oy0} ${OUT_X} ${oy0}`,
+      `L ${OUT_X} ${oy0 + n.h}`,
+      `C ${mid} ${oy0 + n.h} ${mid} ${n.y + n.h} ${PARTY_X + NODE_W} ${n.y + n.h}`,
+      "Z",
+    ].join(" ");
+    return { n, colour, ribbonIn, ribbonOut };
+  });
+
+  // The keyboard reads the party column top to bottom, then the outcomes.
+  const items = [
+    ...nodes.map((n) =>
+      fill(V.readerParty, {
+        party: n.d.label,
+        amount: euroExact(n.d.total.amount, bcp47),
+        vote: label[n.stance],
+      }),
+    ),
+    ...outs.map((o) => {
+      const into = nodes.filter((n) => n.stance === o.s);
+      return fill(V.readerOutcome, {
+        vote: label[o.s],
+        count: integer(into.length, bcp47),
+        amount: euroExact(
+          into.reduce((m, n) => m + n.d.total.amount, 0),
+          bcp47,
+        ),
+      });
+    }),
+  ];
+
+  const scope = `${V.scope
+    .replace("{included}", integer(included.length, bcp47))
+    .replace("{report}", DONATIONS_SOURCE.report.split("—")[0].trim())}${
+    excluded.length > 0 ? ` ${V.excluded} ${excluded.map((d) => d.label).join(" · ")}.` : ""
+  }`;
+
+  const rectPath = (x: number, y: number, w: number, h: number) => `M${x} ${y}h${w}v${h}h${-w}Z`;
+  const shapes: ExportShape[] = [
+    { d: rectPath(SOURCE_X, TOP, SOURCE_W, band), fill: "var(--ink)" },
+    ...ribbons.flatMap((r) => [
+      { d: r.ribbonIn, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
+      { d: r.ribbonOut, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
+      { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour, ...svgFillEdge(r.colour) },
+    ]),
+    ...outs.map((o) => ({
+      d: rectPath(OUT_X, o.y, NODE_W, o.h),
+      fill: STANCE_COLOUR[o.s],
+      // The same light hatch as the page's pattern: No is never colour alone.
+      hatch: o.s === "no" ? { ink: "var(--hatch-inverse)", line: 3, period: 6 } : undefined,
+    })),
+  ];
+  const labels: ExportLabel[] = [
+    { x: SOURCE_X, y: 0, text: V.sourceHead.toUpperCase(), size: 12, tone: "ink-3", weight: 600, face: "heading" },
+    { x: SOURCE_X, y: 20, text: euroExact(sum, bcp47), size: 13 },
+    { x: OUT_X + NODE_W, y: 0, text: V.outcomeHead.toUpperCase(), align: "right", size: 12, tone: "ink-3", weight: 600, face: "heading" },
+    ...nodes.flatMap((n): ExportLabel[] => [
+      { x: 463, y: n.y, text: n.d.label, align: "right", size: 11 },
+      { x: 492, y: n.y, text: euroExact(n.d.total.amount, bcp47), size: 11, tone: "ink-3" },
+    ]),
+    ...outs.map((o): ExportLabel => ({ x: 892, y: o.y, text: label[o.s], align: "right", size: 13 })),
+  ];
+  const date = formatDate(voteDateISO(vote), bcp47);
+  const image: ChartExport = {
+    ...exportMeta(t.charts, bcp47, {
+      title: `${V.title}: ${vote.law} (${date})`,
+      caption: `${V.caveat} ${scope}`,
+      sources,
+      file: `dinero-y-voto-${vote.id}`,
+    }),
+    body: { kind: "shapes", width: W, height: H, shapes, labels },
+  };
+
   return (
     <section className="pt-9">
       <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-3">
@@ -159,12 +286,15 @@ export default function VoteFlow({
 
       {/* Shown only below the width at which the diagram fits. */}
       <p className="label-mono mt-5 lg:hidden">{t.charts.scrollHint}</p>
-      {/* Focusable, so a keyboard user can scroll it with the arrow keys. */}
-      <div
+      {/* One tab stop. The arrow keys step through the formations and then the
+          outcomes, and the box scrolls to keep the current one in view. */}
+      <ChartReader
         className="mt-2 overflow-x-auto lg:mt-5"
-        tabIndex={0}
-        role="region"
-        aria-label={`${V.title}: ${t.charts.scrollRegion}`}
+        items={items}
+        {...(() => {
+          const r = readerProps(t.charts, bcp47, { title: V.title, count: items.length });
+          return { ...r, label: `${r.label} ${t.charts.scrollRegion}.` };
+        })()}
       >
         <div className="relative min-w-[62rem]">
           <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" aria-hidden>
@@ -177,47 +307,40 @@ export default function VoteFlow({
                 patternTransform="rotate(45)"
               >
                 <rect width={6} height={6} fill={STANCE_COLOUR.no} />
-                <rect width={3} height={6} fill="rgba(243,242,242,0.5)" />
+                <rect width={3} height={6} fill="var(--hatch-inverse)" />
               </pattern>
             </defs>
             {/* Source: all declared donations, as one bar */}
             <rect x={SOURCE_X} y={TOP} width={SOURCE_W} height={band} fill="var(--ink)" />
 
-            {nodes.map((n) => {
-              const colour = PARTIES[n.d.nif!]?.color ?? "var(--grey-500)";
-              // Source to party. Both edges of the ribbon are cubics with
-              // control points at the horizontal midpoint, which is what keeps
-              // the band an even thickness through the turn.
-              // The source bar spans the same band the party column is laid
-              // out over, so a ribbon leaves it at its party's own y.
-              const sy0 = n.y;
-              const ribbonIn = [
-                `M ${SOURCE_X + SOURCE_W} ${sy0}`,
-                `C ${srcMid} ${sy0} ${srcMid} ${n.y} ${PARTY_X} ${n.y}`,
-                `L ${PARTY_X} ${n.y + n.h}`,
-                `C ${srcMid} ${n.y + n.h} ${srcMid} ${sy0 + n.h} ${SOURCE_X + SOURCE_W} ${sy0 + n.h}`,
-                "Z",
-              ].join(" ");
-
-              const out = outBy.get(n.stance)!;
-              const oy0 = out.cursor;
-              out.cursor += n.h;
-              const ribbonOut = [
-                `M ${PARTY_X + NODE_W} ${n.y}`,
-                `C ${mid} ${n.y} ${mid} ${oy0} ${OUT_X} ${oy0}`,
-                `L ${OUT_X} ${oy0 + n.h}`,
-                `C ${mid} ${oy0 + n.h} ${mid} ${n.y + n.h} ${PARTY_X + NODE_W} ${n.y + n.h}`,
-                "Z",
-              ].join(" ");
-
-              return (
-                <g key={n.d.nif}>
-                  <path d={ribbonIn} fill={colour} opacity={0.42} />
-                  <path d={ribbonOut} fill={colour} opacity={0.42} />
-                  <rect x={PARTY_X} y={n.y} width={NODE_W} height={n.h} fill={colour} />
-                </g>
-              );
-            })}
+            {ribbons.map(({ n, colour, ribbonIn, ribbonOut }) => (
+              <g key={n.d.nif}>
+                {/* fillOpacity, not opacity, so the edge is drawn at full
+                    strength while the fill stays see-through. */}
+                <path
+                  d={ribbonIn}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
+                <path
+                  d={ribbonOut}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
+                <rect
+                  x={PARTY_X}
+                  y={n.y}
+                  width={NODE_W}
+                  height={n.h}
+                  fill={colour}
+                  {...svgFillEdge(colour)}
+                />
+              </g>
+            ))}
 
             {outs.map((o) => (
               <rect
@@ -274,9 +397,10 @@ export default function VoteFlow({
                 0×0, so both children resolved their `left` percentages
                 against a zero-width box and every label in the column piled
                 up at the same point, party name overprinting amount. */}
-            {nodes.map((n) => (
+            {nodes.map((n, i) => (
               <span key={n.d.nif}>
                 <span
+                  data-chart-item={i}
                   className="absolute text-right"
                   style={{
                     top: `${(n.y / H) * 100}%`,
@@ -303,9 +427,10 @@ export default function VoteFlow({
               </span>
             ))}
 
-            {outs.map((o) => (
+            {outs.map((o, k) => (
               <span
                 key={o.s}
+                data-chart-item={nodes.length + k}
                 className="absolute text-right"
                 style={{
                   left: `${(892 / W) * 100 - 14}%`,
@@ -321,21 +446,13 @@ export default function VoteFlow({
             ))}
           </div>
         </div>
-      </div>
+      </ChartReader>
 
       <p
         className="mt-4"
         style={{ fontSize: "12px", lineHeight: 1.55, color: "var(--ink-3)", maxWidth: "88ch" }}
       >
-        {V.scope
-          .replace("{included}", integer(included.length, bcp47))
-          .replace("{report}", DONATIONS_SOURCE.report.split("—")[0].trim())}
-        {excluded.length > 0 && (
-          <>
-            {" "}
-            {V.excluded} {excluded.map((d) => d.label).join(" · ")}.
-          </>
-        )}
+        {scope}
       </p>
 
       <DataTable
@@ -350,6 +467,7 @@ export default function VoteFlow({
         ]}
       />
       <SourceLine sources={sources} label={t.charts.source} />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(t.charts, V.title)} />
     </section>
   );
 }

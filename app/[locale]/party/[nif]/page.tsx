@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAggregation } from "@/lib/data";
 import { getDict } from "@/lib/i18n";
-import { euro, euroCompact, integer, percent, formatDate } from "@/lib/format";
+import { euro, euroCompact, euroExact, integer, percent, formatDate } from "@/lib/format";
 import CountUp from "@/components/CountUp";
 import NewsFeed from "@/components/NewsFeed";
 import { politiciansByParty } from "@/lib/politicians";
@@ -11,8 +11,10 @@ import { getVotes, newestFirst, stancesByParty } from "@/lib/votes";
 import { sharedGroupFor } from "@/lib/groups";
 import CourtRecords from "@/components/CourtRecords";
 import PartySwitcher from "@/components/PartySwitcher";
-import { TRANCHE_COLORS } from "@/lib/chart-colors";
+import { fillEdge, TRANCHE_COLORS } from "@/lib/chart-colors";
 import Bar, { type Segment } from "@/components/chart/Bar";
+import ChartReader from "@/components/chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 import Caveat from "@/components/Caveat";
 import type { SubsidyKind } from "@/lib/types";
 
@@ -99,7 +101,7 @@ export default async function PartyPage({
           <span
             className="dot"
             aria-hidden
-            style={{ width: 11, height: 11, background: party.color }}
+            style={{ width: 11, height: 11, background: party.color, ...fillEdge(party.color) }}
           />
           {t.party.fichaKicker} · {t.common.nif} {party.nif} · Nº{" "}
           {String(rank).padStart(2, "0")} · {t.blocs[party.bloc]}
@@ -187,7 +189,8 @@ export default async function PartyPage({
                   className="w-full rounded-t-sm"
                   style={{
                     height: `${h}px`,
-                    background: `linear-gradient(180deg, ${party.color}, ${party.color}55)`,
+                    background: `linear-gradient(180deg, ${party.color}, color-mix(in srgb, ${party.color} 33%, transparent))`,
+                    ...fillEdge(party.color),
                   }}
                 />
                 <span className="mono text-xs text-[var(--ink-3)]">{y}</span>
@@ -222,7 +225,19 @@ export default async function PartyPage({
           </div>
 
           {/* tranche split by amount */}
-          <div className="mt-6">
+          <ChartReader
+            className="mt-6"
+            items={(
+              [
+                [t.donationsTable.trancheSmall, donations.small],
+                [t.donationsTable.trancheMid, donations.mid],
+                [t.donationsTable.trancheLarge, donations.large],
+              ] as const
+            ).map(([lab, tr]) =>
+              say(lab, euroExact(tr.amount, bcp47), `${integer(tr.donors, bcp47)} ${t.party.donors}`),
+            )}
+            {...readerProps(t.charts, bcp47, { title: t.party.donationsDeclared, count: 3 })}
+          >
             <Bar
               segments={trancheSegments}
               total={donations.total.amount}
@@ -236,8 +251,8 @@ export default async function PartyPage({
                   [t.donationsTable.trancheMid, donations.mid, TRANCHE_COLORS.mid],
                   [t.donationsTable.trancheLarge, donations.large, TRANCHE_COLORS.large],
                 ] as const
-              ).map(([lab, tr, color]) => (
-                <li key={lab} className="flex items-center gap-2">
+              ).map(([lab, tr, color], i) => (
+                <li key={lab} className="flex items-center gap-2" data-chart-item={i}>
                   <span
                     aria-hidden
                     style={{
@@ -255,7 +270,7 @@ export default async function PartyPage({
                 </li>
               ))}
             </ul>
-          </div>
+          </ChartReader>
           <p className="label-mono mt-4 text-[var(--ink-3)]">{t.party.privateCaveat}</p>
         </section>
       )}

@@ -1,4 +1,5 @@
 import { cssPercent } from "@/lib/format";
+import { fillEdge } from "@/lib/chart-colors";
 
 /**
  * The one bar on this site.
@@ -39,10 +40,14 @@ export interface Segment {
    * would not guess from position — and never without the legend, since a
    * hatch that is not explained reads as a warning.
    *
-   * `true` draws dark lines, for a light or mid fill. `"light"` draws lines in
-   * the page colour, for a fill too dark for dark lines to show — the votó No
-   * fill, where the hatch is what separates it from sí without relying on
-   * colour.
+   * `true` draws dark lines (`--hatch`), for a light or mid fill; nothing uses
+   * it today. `"light"` draws `--hatch-inverse`, for the two fills that flip
+   * between themes: the votó No fill, where the hatch is what separates it
+   * from sí without relying on colour, and the security-costs fill (`--ink-2`).
+   * The name is the light theme's: there both fills are dark and the lines are
+   * light. The dark theme makes both fills light and turns the same token
+   * dark, so the lines clear 3:1 against the fill they sit on in both themes
+   * (measured in app/globals.css).
    */
   striped?: Stripe;
 }
@@ -59,8 +64,17 @@ export type Stripe = boolean | "light";
 export function stripeImage(striped: Stripe | undefined, period = 6): string | undefined {
   if (!striped) return undefined;
   const line = period / 2;
-  const ink = striped === "light" ? "rgba(243,242,242,0.5)" : "rgba(32,31,29,0.22)";
+  const ink = stripeInk(striped);
   return `repeating-linear-gradient(45deg, ${ink} 0 ${line}px, transparent ${line}px ${period}px)`;
+}
+
+/**
+ * The hatch's line colour, shared with the exported image so the two match.
+ * Both are theme tokens: the exporter resolves them against the page at export
+ * time, so the image takes whichever theme the reader is in.
+ */
+export function stripeInk(striped: Stripe): string {
+  return striped === "light" ? "var(--hatch-inverse)" : "var(--hatch)";
 }
 
 /** Named heights, so a bar's weight is a decision and not an accident. */
@@ -121,6 +135,7 @@ export default function Bar({
               minWidth: MIN_VISIBLE_PX,
               background: s.color,
               backgroundImage: stripeImage(s.striped),
+              ...fillEdge(s.color),
             }}
           />
         ),
@@ -139,17 +154,27 @@ export default function Bar({
 export function BarLegend({
   segments,
   formatValue,
+  readable = false,
   className = "",
 }: {
   segments: Segment[];
   /** Prints each segment's figure, if the legend should carry one. */
   formatValue?: (s: Segment) => string;
+  /**
+   * Marks each entry as a `ChartReader` item, in segment order, for a chart
+   * whose legend is where its values are printed.
+   */
+  readable?: boolean;
   className?: string;
 }) {
   return (
     <ul className={`flex flex-wrap gap-x-5 gap-y-1.5 ${className}`}>
-      {segments.map((s) => (
-        <li key={s.label} className="flex items-center gap-2">
+      {segments.map((s, i) => (
+        <li
+          key={s.label}
+          className="flex items-center gap-2"
+          data-chart-item={readable ? i : undefined}
+        >
           <span
             aria-hidden
             style={{
@@ -159,6 +184,7 @@ export function BarLegend({
               flex: "none",
               background: s.color,
               backgroundImage: stripeImage(s.striped, 4),
+              ...fillEdge(s.color),
             }}
           />
           <span className="label-mono">

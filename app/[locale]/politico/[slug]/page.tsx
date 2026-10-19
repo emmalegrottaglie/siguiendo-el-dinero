@@ -149,6 +149,7 @@ export default async function PoliticoPage({
               t={t.salaryShape}
               charts={t.charts}
               source={salariesSource(salaries, t.charts, bcp47)}
+              subject={[person.name, person.role].filter(Boolean).join(" · ")}
               bcp47={bcp47}
             />
 
@@ -165,6 +166,7 @@ export default async function PoliticoPage({
                 { publisher: "BOE", name: smi.boe.title, period: String(smi.year), url: smi.boe.url },
               ]}
               sourceLabel={t.charts.source}
+              charts={t.charts}
               bcp47={bcp47}
             />
           </>
@@ -197,6 +199,7 @@ export default async function PoliticoPage({
             votes={allVotes.votes}
             t={t}
             source={votesSource(allVotes, t.charts, bcp47)}
+            subject={person.name}
             bcp47={bcp47}
           />
         )}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Dict, Locale } from "@/lib/i18n";
 import LocaleToggle from "./LocaleToggle";
+import ThemeToggle from "./ThemeToggle";
 import SearchBox, { type SearchBoxStrings } from "./SearchBox";
 
 interface Tab {
@@ -139,12 +140,18 @@ export default function Masthead({
             </Link>
           );
         })}
-        {/* Search sits with the locale toggle rather than as a twelfth tab:
-            the tab row already wraps to four lines on a phone, and a search
-            field is not one of the site's sections. */}
-        <div className="flex w-full items-center gap-4 py-1.5 pl-4 pr-1 sm:ml-auto sm:w-auto">
-          <SearchBox locale={locale} t={search} className="min-w-0 flex-1 sm:flex-none" />
-          <LocaleToggle current={locale} />
+        {/* Search sits with the locale and theme toggles rather than as a
+            twelfth tab: the tab row already wraps to four lines on a phone,
+            and a search field is not one of the site's sections. The toggles
+            are one unit that wraps below the search box on a phone rather
+            than squeezing it. */}
+        <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-1 py-1.5 pl-4 pr-1 sm:ml-auto sm:w-auto">
+          <SearchBox locale={locale} t={search} className="min-w-[12rem] flex-1 sm:flex-none" />
+          <div className="flex items-center gap-3">
+            <LocaleToggle current={locale} />
+            <span aria-hidden className="h-6 w-px bg-[var(--line)]" />
+            <ThemeToggle t={masthead} />
+          </div>
         </div>
       </nav>
     </header>

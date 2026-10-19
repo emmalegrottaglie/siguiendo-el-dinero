@@ -2,10 +2,11 @@ import Link from "next/link";
 import type { KeyVote } from "@/lib/votes";
 import { tallyByGroup } from "@/lib/votes";
 import { groupInfo, groupParty, GROUPS_SOURCE } from "@/lib/groups";
-import { stanceSegments } from "@/lib/chart-colors";
+import { fillEdge, stanceSegments } from "@/lib/chart-colors";
 import Bar from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict, Locale } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 /**
  * How each parliamentary group voted, as a table rather than a row of coloured
@@ -34,7 +35,7 @@ export default function GroupBreakdown({
   const v = t.votes;
 
   return (
-    <div className="mt-3 overflow-x-auto">
+    <ScrollBox className="mt-3">
       <table className="w-full min-w-[36rem] border-collapse text-sm">
         {/* Not label-mono: it uppercases, and this is a sentence. */}
         <caption className="max-w-3xl pb-4 text-left text-xs leading-relaxed text-[var(--ink-2)]">
@@ -81,7 +82,10 @@ export default function GroupBreakdown({
                     <span
                       aria-hidden="true"
                       className="mt-1 h-3.5 w-[3px] shrink-0 rounded-full"
-                      style={{ backgroundColor: party ? party.color : "var(--line)" }}
+                      style={{
+                        backgroundColor: party ? party.color : "var(--line)",
+                        ...fillEdge(party?.color),
+                      }}
                     />
                     <span className="min-w-0">
                       <span className="block text-[var(--ink)]">
@@ -155,6 +159,6 @@ export default function GroupBreakdown({
           {v.groupSource}
         </a>
       </Caveat>
-    </div>
+    </ScrollBox>
   );
 }

@@ -6,6 +6,8 @@ import { getLocalView } from "@/lib/local";
 import { shortName } from "@/lib/governments";
 import { euro, fill, integer, percent, rate, formatDate } from "@/lib/format";
 import Bar from "@/components/chart/Bar";
+import ChartReader from "@/components/chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 import SourceLine from "@/components/chart/SourceLine";
 import Caveat from "@/components/Caveat";
 
@@ -201,28 +203,37 @@ export default async function DondePage({
         <h2 className="display section-tick text-2xl">{W.povertyTitle}</h2>
         {poverty ? (
           <>
-            <div className="mt-6 flex flex-col gap-5">
-              {[
-                { id: "local", label: territoryName, value: poverty.percent, color: "var(--red)" },
-                { id: "national", label: W.national, value: poverty.nationalPercent, color: "var(--grey-500)" },
-              ].map((row) => (
-                <div key={row.id}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                    <span style={{ fontSize: "14px" }}>{row.label}</span>
-                    <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                      {percent(row.value / 100, bcp47)}
-                    </span>
+            <ChartReader
+              className="mt-6"
+              items={[
+                say(territoryName, percent(poverty.percent / 100, bcp47)),
+                say(W.national, percent(poverty.nationalPercent / 100, bcp47)),
+              ]}
+              {...readerProps(t.charts, bcp47, { title: W.povertyTitle, count: 2 })}
+            >
+              <div className="flex flex-col gap-5">
+                {[
+                  { id: "local", label: territoryName, value: poverty.percent, color: "var(--red)" },
+                  { id: "national", label: W.national, value: poverty.nationalPercent, color: "var(--grey-500)" },
+                ].map((row, i) => (
+                  <div key={row.id} data-chart-item={i}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                      <span style={{ fontSize: "14px" }}>{row.label}</span>
+                      <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
+                        {percent(row.value / 100, bcp47)}
+                      </span>
+                    </div>
+                    <Bar
+                      className="mt-1.5"
+                      segments={[{ value: row.value, color: row.color, label: row.label }]}
+                      total={100}
+                      scale="share"
+                      size="md"
+                    />
                   </div>
-                  <Bar
-                    className="mt-1.5"
-                    segments={[{ value: row.value, color: row.color, label: row.label }]}
-                    total={100}
-                    scale="share"
-                    size="md"
-                  />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </ChartReader>
             <SourceLine
               sources={[
                 {

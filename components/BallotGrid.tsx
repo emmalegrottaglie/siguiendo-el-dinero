@@ -6,6 +6,10 @@ import type { Dict } from "@/lib/i18n";
 import { stripeImage } from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 
 /**
  * This person's whole recorded record, at a glance, above the list that gives
@@ -52,6 +56,7 @@ export default function BallotGrid({
   votes,
   t,
   source,
+  subject,
   bcp47,
 }: {
   record: RecordedVote[];
@@ -60,6 +65,8 @@ export default function BallotGrid({
   t: Dict;
   /** The tracked divisions' open-data source. */
   source: ChartSource;
+  /** Whose record this is, for the exported image's title. */
+  subject?: string;
   bcp47: string;
 }) {
   const G = t.ballotGrid;
@@ -80,28 +87,90 @@ export default function BallotGrid({
   const label = (b: Ballot) =>
     b === "Sí" ? t.votes.inFavour : b === "No" ? t.votes.against : t.votes.abstention;
 
+  // What a cell says, as precisely as the table below: a "No vota" on the roll
+  // is named, and a division the person was not part of is "no ballot".
+  const said = (v: KeyVote) => {
+    const b = ballots.get(v.id);
+    return b && FILL[b] ? label(b) : b ? t.votes.noVote : G.noBallot;
+  };
+
+  // Reading order is the grid's: by topic, oldest first inside each.
+  const topics = [...byTopic.entries()];
+  const flat = topics.flatMap(([, list]) => list);
+  const rowOf = topics.flatMap(([, list], r) => list.map(() => r));
+  const caption = G.caption
+    .replace("{cast}", String(cast))
+    .replace("{tracked}", String(votes.length));
+  const title = subject ? `${t.people.affects}: ${subject}` : t.people.affects;
+
+  const image: ChartExport = {
+    ...exportMeta(t.charts, bcp47, {
+      title,
+      caption,
+      sources: [source],
+      file: "votos-registrados",
+    }),
+    legend: [
+      ...shown.map((b) => ({ label: label(b), color: FILL[b], striped: b === "No" ? STANCE_STRIPE.no : undefined })),
+      ...(cast < votes.length ? [{ label: G.noBallot, color: null }] : []),
+    ],
+    body: {
+      kind: "grid",
+      rows: topics.map(([topic, list]) => ({
+        label: topic,
+        cells: list.map((v) => {
+          const b = ballots.get(v.id) ?? "";
+          return {
+            color: FILL[b] ?? null,
+            striped: b === "No" ? STANCE_STRIPE.no : undefined,
+            // The ballot in words, so the image does not rely on colour.
+            text: say(v.law, formatDate(voteDateISO(v), bcp47), said(v)),
+          };
+        }),
+      })),
+    },
+  };
+
   return (
     <figure className="mt-6">
-      <ul className="flex flex-col gap-2" aria-hidden="true">
-        {[...byTopic.entries()].map(([topic, list]) => (
-          <li key={topic} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="flex gap-1">
-              {list.map((v) => (
-                <span
-                  key={v.id}
-                  className="block h-4 w-4 rounded-[2px]"
-                  style={{
-                    background: FILL[ballots.get(v.id) ?? ""] ?? "transparent",
-                    backgroundImage: HATCH[ballots.get(v.id) ?? ""],
-                    boxShadow: OUTLINE,
-                  }}
-                />
-              ))}
-            </span>
-            <span className="text-sm text-[var(--ink-2)]">{topic}</span>
-          </li>
-        ))}
-      </ul>
+      {/* The ARIA grid pattern: one row per topic, one cell per division. The
+          cell is rendered named by its law; once hydrated, ChartReader renames
+          it with the full announcement (law, topic, date, ballot, position), so
+          a screen reader hears each cell once, through aria-activedescendant,
+          and the live region stays quiet for keyboard moves. */}
+      <ChartReader
+        items={flat.map((v) =>
+          say(v.law, v.topicLabel, formatDate(voteDateISO(v), bcp47), said(v)),
+        )}
+        rows={rowOf}
+        {...readerProps(t.charts, bcp47, { title: t.people.affects, count: flat.length, grid: true })}
+      >
+        <ul className="flex flex-col gap-2" role="presentation">
+          {topics.map(([topic, list], r) => (
+            <li key={topic} role="row" className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="flex gap-1" role="presentation">
+                {list.map((v, k) => (
+                  <span
+                    key={v.id}
+                    role="gridcell"
+                    aria-label={v.law}
+                    data-chart-item={topics.slice(0, r).reduce((n, [, l]) => n + l.length, 0) + k}
+                    className="block h-4 w-4 rounded-[2px]"
+                    style={{
+                      background: FILL[ballots.get(v.id) ?? ""] ?? "transparent",
+                      backgroundImage: HATCH[ballots.get(v.id) ?? ""],
+                      boxShadow: OUTLINE,
+                    }}
+                  />
+                ))}
+              </span>
+              <span role="rowheader" className="text-sm text-[var(--ink-2)]">
+                {topic}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </ChartReader>
 
       {/* The legend prints only the stances this person's record contains, plus
           the empty state when there is one, so a reader is not given a key to
@@ -128,7 +197,7 @@ export default function BallotGrid({
       </ul>
 
       <figcaption className="mt-3 text-sm leading-relaxed text-[var(--ink-3)]">
-        {G.caption.replace("{cast}", String(cast)).replace("{tracked}", String(votes.length))}
+        {caption}
       </figcaption>
 
       {/* The grid is aria-hidden, so its cells are listed here in the same
@@ -136,23 +205,18 @@ export default function BallotGrid({
       <DataTable
         summary={t.charts.showTable}
         caption={G.tableCaption}
-        rows={[...byTopic.values()].flat()}
+        rows={flat}
         rowKey={(v) => v.id}
         columns={[
           { header: G.colVote, cell: (v) => v.law },
           { header: G.colTopic, cell: (v) => v.topicLabel },
           { header: G.colDate, cell: (v) => formatDate(voteDateISO(v), bcp47) },
-          {
-            header: G.colBallot,
-            cell: (v) => {
-              const b = ballots.get(v.id);
-              // More precise than the grid: a "No vota" on the roll is named.
-              return b && FILL[b] ? label(b) : b ? t.votes.noVote : G.noBallot;
-            },
-          },
+          // More precise than the grid's colours: a "No vota" on the roll is named.
+          { header: G.colBallot, cell: said },
         ]}
       />
       <SourceLine sources={[source]} label={t.charts.source} />
+      <ExportButton className="mt-3" spec={image} {...exportLabels(t.charts, t.people.affects)} />
     </figure>
   );
 }

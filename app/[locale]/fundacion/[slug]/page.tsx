@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getDict } from "@/lib/i18n";
 import { euro, integer } from "@/lib/format";
 import { PARTIES } from "@/lib/parties";
+import { fillEdge } from "@/lib/chart-colors";
 import FoundationGovernance from "@/components/FoundationGovernance";
 import {
   displayName,
@@ -13,6 +14,7 @@ import {
   type Dossier,
 } from "@/lib/foundations";
 import { officeTies } from "@/lib/officeholder-ties";
+import ScrollBox from "@/components/chart/ScrollBox";
 
 export const revalidate = 3600;
 
@@ -60,7 +62,7 @@ export default async function FundacionPage({
 
       <div
         className="mt-2 h-1 w-16 rounded-full"
-        style={{ backgroundColor: party?.color ?? "var(--gold)" }}
+        style={{ backgroundColor: party?.color ?? "var(--gold)", ...fillEdge(party?.color) }}
       />
       <p className="eyebrow mt-4">{F.dossierEyebrow}</p>
       <h1 className="display mt-3 text-3xl leading-tight sm:text-4xl">{displayName(entity.name)}</h1>
@@ -164,7 +166,7 @@ function Exercise({
       </p>
 
       <h2 className="display section-tick mt-4 text-xl">{F.moneyInTitle}</h2>
-      <div className="mt-5 overflow-x-auto">
+      <ScrollBox className="mt-5">
         <table className="w-full min-w-[26rem] border-collapse text-sm">
           <caption className="sr-only">
             {F.moneyInTitle} · {year.exercise}
@@ -207,13 +209,13 @@ function Exercise({
             </tr>
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       <h2 className="display section-tick mt-10 text-xl">{F.publicByTitle}</h2>
       {year.subsidies.items.length === 0 ? (
         <p className="mt-4 text-sm text-[var(--ink-3)]">{F.notStated}</p>
       ) : (
-        <div className="mt-5 overflow-x-auto">
+        <ScrollBox className="mt-5">
           <table className="w-full min-w-[26rem] border-collapse text-sm">
             <caption className="sr-only">
               {F.publicByTitle} · {year.exercise}
@@ -249,7 +251,7 @@ function Exercise({
               </tr>
             </tbody>
           </table>
-        </div>
+        </ScrollBox>
       )}
 
       {/* Where the report's own total disagrees with its own lines, both are
