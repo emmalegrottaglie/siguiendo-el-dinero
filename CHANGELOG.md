@@ -86,6 +86,36 @@ cite their report once per section rather than inside each chart.
 
 ---
 
+## 2026-10-20 — Asset declarations, fourth batch: 84 published
+
+**What was read.** The next 20 first filings in Congreso's surname order, from Isabel María Borrego
+Cortés to Raquel Clemente Muñoz; second readings, in the same pass, of the four of them who took
+their seats after RTVE's snapshot (Iván Cacho Isla, Víctor Camino Miñana, Andrea Canelo Matito,
+María Carmen Castilla Álvarez); and second readings of the two whose first reading did not match
+RTVE: 26 readings in all.
+
+**Result: 84 published, up from 64**, 57 checked against RTVE and 27 by an independent second
+reading. None is waiting for a second reading; 265 filings are not yet transcribed. Of the 16 new
+filings RTVE covers, 14 matched it on the first reading, and the four later joiners' two readings
+agreed on all four totals.
+
+**Where two readings agree and RTVE does not.** Two, each checked against the scan:
+
+- Pilar Calvo Gómez: financial assets 266,093.81 € against RTVE's 303,029.39 €. The difference,
+  36,935.58 €, is exactly the two entries in the form's "Sociedades participadas en más de un 5% por
+  otras sociedades…" block: Esportia SL (6.5 %), 36,185.58 €, and E-Players (25 %), 750 €. That
+  block lists companies held by companies the deputy owns, not holdings of her own, and it is
+  transcribed as free text and not counted in any total; RTVE added it to financial assets. The
+  readings are unchanged, and the question is recorded as open in `NEXT-STEPS.md`.
+- Javier Celaya Brey: financial assets 28,204.66 € against RTVE's 19,341.34 €, and debts 23,621.61 €
+  against 22,621.61 €. RTVE's financial figure is his securities and pension plan without his
+  current accounts, 8,863.32 €; the scan shows the accounts in the deposits block and the mortgage's
+  outstanding balance as 23.621,61 €.
+
+**Verified.** `check:declarations`, `check:deputies`, `npx tsc --noEmit` and `npm run build` pass.
+
+---
+
 ## 2026-10-19 — Asset declarations, third batch: 64 published
 
 **Two earlier changes reach the site with this one.** The "Declared assets" tab under Politicians
