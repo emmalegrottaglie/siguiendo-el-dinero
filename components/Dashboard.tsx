@@ -7,7 +7,7 @@ import type { Aggregation, SubsidyKind } from "@/lib/types";
 import { BCP47, type Dict, type Locale } from "@/lib/i18n";
 import { filterAggregation } from "@/lib/normalize";
 import { euroCompact, euroExact, integer, percent, formatDate } from "@/lib/format";
-import { SUBSIDY_COLORS } from "@/lib/chart-colors";
+import { fillEdge, SUBSIDY_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
@@ -140,7 +140,7 @@ export default function Dashboard({
                 aria-pressed={kind === tab.key}
                 className={`label-mono inline-flex min-h-11 items-center rounded-full border px-4 transition-all ${
                   kind === tab.key
-                    ? "border-[var(--gold)] bg-[var(--gold)] text-[var(--ink)]"
+                    ? "border-[var(--gold)] bg-[var(--gold)] text-[var(--on-gold)]"
                     : "border-[var(--line)] text-[var(--ink-2)] hover:border-[var(--gold)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -221,7 +221,7 @@ export default function Dashboard({
                   <span className="flex items-center gap-2 font-medium">
                     <span
                       className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: p.color }}
+                      style={{ backgroundColor: p.color, ...fillEdge(p.color) }}
                     />
                     <span className="truncate group-hover:text-[var(--gold-deep)]">
                       {p.shortName}

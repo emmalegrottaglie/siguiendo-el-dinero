@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PARTIES } from "@/lib/parties";
+import { fillEdge } from "@/lib/chart-colors";
 
 /**
  * Jump between the parties that have something to compare.
@@ -40,13 +41,13 @@ export default function PartySwitcher({
             key={it.nif}
             href={`/${locale}/party/${it.nif}`}
             aria-current={active ? "page" : undefined}
-            className="relative flex items-center gap-2 border-l border-[var(--line)] px-3.5 py-2.5 transition-colors hover:bg-[rgba(182,130,53,0.1)]"
+            className="relative flex items-center gap-2 border-l border-[var(--line)] px-3.5 py-2.5 transition-colors hover:bg-[color-mix(in_srgb,var(--gold)_10%,transparent)]"
             style={{ fontSize: "13px" }}
           >
             <span
               className="dot"
               aria-hidden
-              style={{ width: 9, height: 9, background: it.meta.color }}
+              style={{ width: 9, height: 9, background: it.meta.color, ...fillEdge(it.meta.color) }}
             />
             {it.meta.shortName}
             {active && (
@@ -59,6 +60,7 @@ export default function PartySwitcher({
                   bottom: -1,
                   height: 3,
                   background: it.meta.color,
+                  ...fillEdge(it.meta.color),
                 }}
               />
             )}

@@ -88,8 +88,184 @@
   --line: rgba(32, 31, 29, 0.16);
   --line-soft: rgba(32, 31, 29, 0.11);
 
+  /* Roles that exist so the dark theme can change them. In this theme each
+     one reproduces exactly what was hard-coded before it, so nothing in the
+     light theme moved.
+
+     --on-gold        text on a gold fill (the active filter chip, ::selection).
+                      4.89:1 against --gold.
+     --hatch          the dark diagonal hatch over a light or mid fill.
+     --hatch-inverse  the hatch over the votó No fill. It is light here because
+                      --stance-no is dark; in the dark theme --stance-no is the
+                      light one, so this turns dark.
+     --ramp-low       the empty end of the map's hate-crime ramp.
+     --map-edge       the stroke between communities on the map.
+     --fill-edge      a 1px edge drawn inside a party-coloured fill that falls
+                      under 3:1 against the ground. Transparent here: the party
+                      colours are measured against the dark grounds only.
+     --ring-base      what a portrait's party-colour ring is mixed towards. */
+  --on-gold: #201f1d;
+  --hatch: rgba(32, 31, 29, 0.22);
+  --hatch-inverse: rgba(243, 242, 242, 0.5);
+  --ramp-low: #f4f2ee;
+  --map-edge: var(--bg);
+  --fill-edge: transparent;
+  --ring-base: transparent;
+
+  color-scheme: light;
+
   --font-heading: var(--font-cormorant), Garamond, "Times New Roman", serif;
   --font-body: var(--font-lora), Georgia, serif;
+}
+
+/* ------------------------------------------------------------------ *
+   The dark theme
+
+   The site follows the reader's system setting until the reader picks a
+   theme with the masthead toggle. A choice is kept in localStorage under
+   "theme" and applied by an inline script in <head> (app/[locale]/layout.tsx)
+   before first paint, as data-theme="light" or "dark" on <html>. No saved
+   choice means no attribute, and the media query below then follows the
+   system live. So the same values appear twice: once under the media query,
+   guarded so an explicit light choice wins, and once for an explicit dark
+   choice. Change one, change both.
+
+   Why it is built this way. The site's first visual system was dark (the
+   "dossier": ink #100e0a, paper #ece2cd), and it failed in ways a dark
+   theme invites. Its muted text token, --paper-faint #6f6857, measured
+   3.48:1 against the ground and was used for 10–12px text; its chip borders
+   measured 1.77:1; and it stacked a page aura, a vignette, panel shadows and
+   a gradient tint over photographs, each of which lowered contrast somewhere
+   no-one had measured. None of that is repeated here. There are no overlays,
+   no glows and no shadows, and every value below was measured rather than
+   chosen by eye — the lightest text token clears 6:1 on every ground.
+
+   Measured (WCAG 2.x relative luminance) on the three dark grounds:
+
+     ground          --bg #181716   --surface #22201f   --card #1e1c1b
+
+   Text (4.5:1 needed):
+     --ink           #ebe8e3        14.65   13.28   13.89
+     --ink-2         #c9c4bf        10.34    9.37    9.81
+     --ink-3         #a29d97         6.65    6.03    6.31   (worst text: 6.03)
+     --gold-deep     #d6a55e         8.02    7.26    7.60
+     --verd-text     #62b8a7         7.62    6.90    7.22
+     --verd-deep     #7cc7b7         9.13    8.27    8.66
+     --red           #e07a6a         6.11    5.53    5.79
+   On the composited tints: --ink-3 is 6.08:1 on .panel-org (--verd-tint over
+   --bg) and 5.54:1 on a pressed .layer-btn (gold 14% over --bg).
+
+   Graphics (3:1 needed):
+     --gold          #b68235         5.31    4.82    5.04   (unchanged hex)
+     --verd          #3f9a8a         5.29    4.79    5.01
+     --stance-si     #32807b         3.84    3.48    3.64   (worst graphic: 3.48)
+     --stance-no     #f6c6bd        11.71   10.61   11.10
+     --grey-500      #6f6b67         3.39    3.07    3.21
+     --fill-edge     #8f8a84         5.23    4.74    4.96
+     --map-edge      #8f8a84         as --fill-edge
+   Against --track #2a2826, which is what a bar's segment meets beside it:
+     --stance-si 3.15, --grey-500 2.78, --gold 4.36, --verd 4.34.
+
+   Exempt, as in the light theme, and for the same reasons: --abst #4a4745
+   (1.76–1.94) is judged against the segments it sits between — 6.03:1
+   against --stance-no — and the stand-alone abstention swatch takes --ink-3;
+   --grey-300 #3b3836 (1.39–1.54) is the deliberately inert fill for mailings
+   and for no data; --track, --ramp-low and the hairlines are grounds, not
+   marks.
+
+   Each accent keeps its hue and moves in lightness only: gold 36°, verdigris
+   168°, red 8°, sí 176°, no 9°.
+
+   Sí and no swap ends. In the light theme no is the dark fill and sí the mid
+   one; here no is the light fill and sí the mid one. Against a dark ground the
+   light end is the heavier mark, so no keeps its weight, and the light end is
+   the only room left: with both fills at 3:1 against a dark ground and 3:1
+   against each other, one of them has to sit near L* 80.
+     sí against no: 3.05:1 (light theme: 3.08:1)
+     Simulated (Machado 2009, full severity), sí against no:
+       deuteranopia ΔL* 37.6, ΔE2000 34.7
+       protanopia   ΔL* 30.8, ΔE2000 26.1
+       normal vision ΔE2000 47.6
+   The hatch over no turns dark (--hatch-inverse) because the fill turned
+   light; it is the same pattern a reader is told about in every legend.
+
+   Party colours are data, so they are not adjusted. Against the dark grounds
+   and --track, three fall under 3:1: IU #b5343a (2.46–3.00), and UPN and
+   Foro, which share #3a6ea5 (2.76 against --track, 3.05 against --surface).
+   Each is drawn with a 1px --fill-edge inside the fill wherever it is a bar,
+   a swatch or a node; `fillEdge()` in lib/chart-colors.ts decides which,
+   from these same grounds, so a party added later is checked too. On the map
+   every community takes a --map-edge stroke instead, because the regions sit
+   against the page as well as against each other.
+
+   Photographs are never inverted or filtered for the dark theme. Their frames
+   keep a visible edge: --line and the portrait ring mixed towards
+   --ring-base. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #181716;
+    --surface: #22201f;
+    --card: #1e1c1b;
+    --ink: #ebe8e3;
+    --ink-2: #c9c4bf;
+    --ink-3: #a29d97;
+    --gold: #b68235;
+    --gold-deep: #d6a55e;
+    --verd: #3f9a8a;
+    --verd-text: #62b8a7;
+    --verd-deep: #7cc7b7;
+    --verd-tint: rgba(63, 154, 138, 0.08);
+    --red: #e07a6a;
+    --stance-si: #32807b;
+    --stance-no: #f6c6bd;
+    --grey-300: #3b3836;
+    --grey-500: #6f6b67;
+    --abst: #4a4745;
+    --track: #2a2826;
+    --line: rgba(235, 232, 227, 0.16);
+    --line-soft: rgba(235, 232, 227, 0.11);
+    --on-gold: #181716;
+    --hatch: rgba(24, 23, 22, 0.3);
+    --hatch-inverse: rgba(24, 23, 22, 0.4);
+    --ramp-low: #2c2925;
+    --map-edge: #8f8a84;
+    --fill-edge: #8f8a84;
+    --ring-base: #8f8a84;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #181716;
+  --surface: #22201f;
+  --card: #1e1c1b;
+  --ink: #ebe8e3;
+  --ink-2: #c9c4bf;
+  --ink-3: #a29d97;
+  --gold: #b68235;
+  --gold-deep: #d6a55e;
+  --verd: #3f9a8a;
+  --verd-text: #62b8a7;
+  --verd-deep: #7cc7b7;
+  --verd-tint: rgba(63, 154, 138, 0.08);
+  --red: #e07a6a;
+  --stance-si: #32807b;
+  --stance-no: #f6c6bd;
+  --grey-300: #3b3836;
+  --grey-500: #6f6b67;
+  --abst: #4a4745;
+  --track: #2a2826;
+  --line: rgba(235, 232, 227, 0.16);
+  --line-soft: rgba(235, 232, 227, 0.11);
+  --on-gold: #181716;
+  --hatch: rgba(24, 23, 22, 0.3);
+  --hatch-inverse: rgba(24, 23, 22, 0.4);
+  --ramp-low: #2c2925;
+  --map-edge: #8f8a84;
+  --fill-edge: #8f8a84;
+  --ring-base: #8f8a84;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -247,7 +423,7 @@ body {
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
     135deg,
-    rgba(32, 31, 29, 0.07) 0 1px,
+    color-mix(in srgb, var(--ink) 7%, transparent) 0 1px,
     transparent 1px 10px
   );
 }
@@ -267,7 +443,7 @@ body {
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
     135deg,
-    rgba(32, 31, 29, 0.07) 0 1px,
+    color-mix(in srgb, var(--ink) 7%, transparent) 0 1px,
     transparent 1px 10px
   );
 }
@@ -322,11 +498,11 @@ body {
 }
 
 .nav-tab:hover {
-  background: rgba(182, 130, 53, 0.1);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
 }
 
 .nav-tab[data-org]:hover {
-  background: rgba(47, 125, 112, 0.12);
+  background: color-mix(in srgb, var(--verd) 12%, transparent);
 }
 
 .nav-tab-active::after {
@@ -437,7 +613,7 @@ a {
 .src {
   color: var(--gold-deep);
   text-decoration: underline;
-  text-decoration-color: rgba(125, 84, 17, 0.4);
+  text-decoration-color: color-mix(in srgb, var(--gold-deep) 40%, transparent);
   text-underline-offset: 3px;
 }
 
@@ -455,7 +631,7 @@ a {
   list-style: none;
   color: var(--gold-deep);
   text-decoration: underline;
-  text-decoration-color: rgba(125, 84, 17, 0.4);
+  text-decoration-color: color-mix(in srgb, var(--gold-deep) 40%, transparent);
   text-underline-offset: 3px;
   font-size: 0.688rem;
   letter-spacing: 0.02em;
@@ -497,7 +673,7 @@ a {
 .src-org {
   color: var(--verd-deep);
   text-decoration: underline;
-  text-decoration-color: rgba(31, 95, 85, 0.4);
+  text-decoration-color: color-mix(in srgb, var(--verd-deep) 40%, transparent);
   text-underline-offset: 3px;
 }
 
@@ -507,7 +683,7 @@ a {
 
 ::selection {
   background: var(--gold);
-  color: var(--ink);
+  color: var(--on-gold);
 }
 
 /* A ticking underline used under section headers. */

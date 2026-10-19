@@ -91,7 +91,7 @@ export default async function VotacionesPage({
         />
         <button
           type="submit"
-          className="label-mono inline-flex min-h-11 items-center rounded border border-[var(--gold)] bg-[var(--gold)] px-4 text-[var(--ink)]"
+          className="label-mono inline-flex min-h-11 items-center rounded border border-[var(--gold)] bg-[var(--gold)] px-4 text-[var(--on-gold)]"
         >
           {v.searchLabel}
         </button>

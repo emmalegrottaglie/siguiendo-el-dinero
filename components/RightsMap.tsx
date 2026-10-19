@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { PARTIES } from "@/lib/parties";
+import { fillEdge } from "@/lib/chart-colors";
 import { GOVERNMENTS, GOVERNMENTS_SOURCE, shortName } from "@/lib/governments";
 import { investitureFor, type InvestitureStatus } from "@/lib/investitures";
 import type { HateTerritoryFile, RegionsFile } from "@/lib/regions";
@@ -95,7 +96,7 @@ export default function RightsMap({
         out[r.id] = {
           id: r.id,
           fill: h
-            ? `color-mix(in oklab, var(--gold) ${(k * 100).toFixed(1)}%, #f4f2ee)`
+            ? `color-mix(in oklab, var(--gold) ${(k * 100).toFixed(1)}%, var(--ramp-low))`
             : "var(--grey-300)",
           value: h ? rate(h.ratePer100k, bcp47) : M.noData,
         };
@@ -226,12 +227,12 @@ export default function RightsMap({
             {
               label: M.hatchDecisive,
               bg:
-                "repeating-linear-gradient(45deg, rgba(32,31,29,0.34) 0 2px, transparent 2px 6px)",
+                "repeating-linear-gradient(45deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 2px, transparent 2px 6px)",
             },
             {
               label: M.hatchShort,
               bg:
-                "repeating-linear-gradient(45deg, rgba(32,31,29,0.22) 0 1.5px, transparent 1.5px 10px)",
+                "repeating-linear-gradient(45deg, color-mix(in srgb, var(--ink) 22%, transparent) 0 1.5px, transparent 1.5px 10px)",
             },
           ].map((h) => (
             <li key={h.label} className="flex items-center gap-2">
@@ -308,7 +309,7 @@ export default function RightsMap({
               const isSel = r.id === selected;
               const shared = {
                 fill: c.fill,
-                stroke: isSel ? "var(--ink)" : "var(--bg)",
+                stroke: isSel ? "var(--ink)" : "var(--map-edge)",
                 strokeWidth: isSel ? 1.8 : 0.8,
                 className: "region",
                 tabIndex: 0,
@@ -660,7 +661,7 @@ export default function RightsMap({
                     <span
                       className="dot"
                       aria-hidden
-                      style={{ width: 9, height: 9, background: row.cell.fill }}
+                      style={{ width: 9, height: 9, background: row.cell.fill, ...fillEdge(row.cell.fill) }}
                     />
                     {row.name}
                   </span>
@@ -775,7 +776,7 @@ function SortHeader({
         style={{ color: active ? "var(--gold-deep)" : undefined }}
       >
         {label}
-        <span aria-hidden style={{ opacity: active ? 1 : 0.55, fontSize: "10px" }}>
+        <span aria-hidden style={{ opacity: active ? 1 : 0.7, fontSize: "10px" }}>
           {active && sort!.dir === "asc" ? "\u25b2" : "\u25bc"}
         </span>
       </button>

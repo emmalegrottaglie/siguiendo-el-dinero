@@ -2,7 +2,7 @@ import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { euroExact, formatDate, integer } from "@/lib/format";
 import { stancesByParty, voteDateISO, type Stance, type KeyVote } from "@/lib/votes";
 import { PARTIES } from "@/lib/parties";
-import { STANCE_SWATCH } from "@/lib/chart-colors";
+import { STANCE_SWATCH, svgFillEdge } from "@/lib/chart-colors";
 import type { Dict } from "@/lib/i18n";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
@@ -177,7 +177,7 @@ export default function VoteFlow({
                 patternTransform="rotate(45)"
               >
                 <rect width={6} height={6} fill={STANCE_COLOUR.no} />
-                <rect width={3} height={6} fill="rgba(243,242,242,0.5)" />
+                <rect width={3} height={6} fill="var(--hatch-inverse)" />
               </pattern>
             </defs>
             {/* Source: all declared donations, as one bar */}
@@ -214,7 +214,14 @@ export default function VoteFlow({
                 <g key={n.d.nif}>
                   <path d={ribbonIn} fill={colour} opacity={0.42} />
                   <path d={ribbonOut} fill={colour} opacity={0.42} />
-                  <rect x={PARTY_X} y={n.y} width={NODE_W} height={n.h} fill={colour} />
+                  <rect
+                    x={PARTY_X}
+                    y={n.y}
+                    width={NODE_W}
+                    height={n.h}
+                    fill={colour}
+                    {...svgFillEdge(colour)}
+                  />
                 </g>
               );
             })}
