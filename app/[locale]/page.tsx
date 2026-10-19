@@ -9,10 +9,12 @@ import { formationColor } from "@/lib/spending";
 import { stanceSegments, TRANCHE_COLORS } from "@/lib/chart-colors";
 import { donationsSource, spendingSource, voteRecordSource, votesSource } from "@/lib/chart-sources";
 import { getDict, relativeTime } from "@/lib/i18n";
-import { euroExact, euroM, integer, percent } from "@/lib/format";
+import { euroExact, euroM, fill, integer, percent } from "@/lib/format";
 import Bar, { BarLegend, type Segment } from "@/components/chart/Bar";
 import SourceLine from "@/components/chart/SourceLine";
 import DataTable from "@/components/chart/DataTable";
+import ChartReader from "@/components/chart/ChartReader";
+import { readerProps, say } from "@/lib/chart-reader";
 import StatStrip, { type StatItem } from "@/components/StatStrip";
 import WhereYouLive from "@/components/WhereYouLive";
 import { getProvinces } from "@/lib/provinces";
@@ -88,6 +90,25 @@ export default async function PortalPage({
   );
   const donorTotal = tranche.smallDonors + tranche.midDonors + tranche.largeDonors;
   const moneyTotal = tranche.smallMoney + tranche.midMoney + tranche.largeMoney;
+
+  // The three register summaries, as the keyboard reads them.
+  const votesNewest = newestFirst(votes.votes);
+  const voteItems = votesNewest.map((v) =>
+    say(
+      v.law,
+      `${t.votes.inFavour} ${integer(v.totals.afavor, bcp47)}`,
+      `${t.votes.against} ${integer(v.totals.enContra, bcp47)}`,
+      `${t.votes.abstention} ${integer(v.totals.abstenciones, bcp47)}`,
+      v.totals.afavor > v.totals.enContra ? P.carried : P.rejected,
+    ),
+  );
+  const spendItems = ranked.map((f) =>
+    say(
+      f.name,
+      euroExact(f.ordinary.declared, bcp47),
+      fill(t.charts.ofTotal, { share: percent(f.ordinary.declared / totals.declared, bcp47) }),
+    ),
+  );
 
   const ticker: StatItem[] = [
     {
@@ -280,42 +301,53 @@ export default async function PortalPage({
           {/* Every tracked division, one row each */}
           <div className="px-5 py-5" style={{ borderRight: "1px solid var(--line)" }}>
             <p className="eyebrow">{P.bandVotesTitle}</p>
-            <ul className="mt-4 flex flex-col gap-2.5">
-              {newestFirst(votes.votes).map((vote) => {
-                const cast =
-                  vote.totals.afavor + vote.totals.enContra + vote.totals.abstenciones;
-                const carried = vote.totals.afavor > vote.totals.enContra;
-                return (
-                  <li key={vote.id} className="grid items-center gap-2" style={{ gridTemplateColumns: "minmax(0,1fr) 92px" }}>
-                    <div className="min-w-0">
-                      <p className="truncate" style={{ fontSize: "11.5px" }} title={vote.law}>
-                        {vote.law}
-                      </p>
-                      <Bar
-                        className="mt-1"
-                        segments={stanceSegments(
-                          {
-                            si: vote.totals.afavor,
-                            no: vote.totals.enContra,
-                            abstention: vote.totals.abstenciones,
-                          },
-                          stanceLabels,
-                        )}
-                        total={Math.max(1, cast)}
-                        scale="share"
-                        size="sm"
-                      />
-                    </div>
-                    <span
-                      className="label-mono text-right"
-                      style={{ color: carried ? "var(--verd-text)" : "var(--red)" }}
+            <ChartReader
+              className="mt-4"
+              items={voteItems}
+              {...readerProps(t.charts, bcp47, { title: P.bandVotesTitle, count: voteItems.length })}
+            >
+              <ul className="flex flex-col gap-2.5">
+                {votesNewest.map((vote, i) => {
+                  const cast =
+                    vote.totals.afavor + vote.totals.enContra + vote.totals.abstenciones;
+                  const carried = vote.totals.afavor > vote.totals.enContra;
+                  return (
+                    <li
+                      key={vote.id}
+                      data-chart-item={i}
+                      className="grid items-center gap-2"
+                      style={{ gridTemplateColumns: "minmax(0,1fr) 92px" }}
                     >
-                      {carried ? P.carried : P.rejected}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+                      <div className="min-w-0">
+                        <p className="truncate" style={{ fontSize: "11.5px" }} title={vote.law}>
+                          {vote.law}
+                        </p>
+                        <Bar
+                          className="mt-1"
+                          segments={stanceSegments(
+                            {
+                              si: vote.totals.afavor,
+                              no: vote.totals.enContra,
+                              abstention: vote.totals.abstenciones,
+                            },
+                            stanceLabels,
+                          )}
+                          total={Math.max(1, cast)}
+                          scale="share"
+                          size="sm"
+                        />
+                      </div>
+                      <span
+                        className="label-mono text-right"
+                        style={{ color: carried ? "var(--verd-text)" : "var(--red)" }}
+                      >
+                        {carried ? P.carried : P.rejected}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </ChartReader>
             <BarLegend
               className="mt-4"
               segments={stanceSegments({ si: 1, no: 1, abstention: 1 }, stanceLabels)}
@@ -348,66 +380,82 @@ export default async function PortalPage({
           {/* Many donors, little money */}
           <div className="px-5 py-5" style={{ borderRight: "1px solid var(--line)" }}>
             <p className="eyebrow">{P.bandDonorsTitle}</p>
-            {[
+            <ChartReader
+              items={[
+                [P.per100Donors, tranche.smallDonors, tranche.midDonors, tranche.largeDonors, donorTotal] as const,
+                [P.per100Euros, tranche.smallMoney, tranche.midMoney, tranche.largeMoney, moneyTotal] as const,
+              ].flatMap(([caption, small, mid, large, whole]) =>
+                (
+                  [
+                    [t.donationsTable.trancheSmall, small],
+                    [t.donationsTable.trancheMid, mid],
+                    [t.donationsTable.trancheLarge, large],
+                  ] as const
+                ).map(([l, n]) => say(caption, l, percent(n / whole, bcp47))),
+              )}
+              {...readerProps(t.charts, bcp47, { title: P.bandDonorsTitle, count: 6 })}
+            >
+                          {[
+                            {
+                              caption: P.per100Donors,
+                              parts: [
+                {
+                                  n: tranche.smallDonors,
+                                  c: TRANCHE_COLORS.small,
+                                  l: t.donationsTable.trancheSmall,
+                                },
+                                { n: tranche.midDonors, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
+                                {
+                                  n: tranche.largeDonors,
+                                  c: TRANCHE_COLORS.large,
+                                  l: t.donationsTable.trancheLarge,
+                                },
+                              ],
+                              total: donorTotal,
+                            },
+                            {
+                              caption: P.per100Euros,
+                              parts: [
               {
-                caption: P.per100Donors,
-                parts: [
-  {
-                    n: tranche.smallDonors,
-                    c: TRANCHE_COLORS.small,
-                    l: t.donationsTable.trancheSmall,
-                  },
-                  { n: tranche.midDonors, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
-                  {
-                    n: tranche.largeDonors,
-                    c: TRANCHE_COLORS.large,
-                    l: t.donationsTable.trancheLarge,
-                  },
-                ],
-                total: donorTotal,
-              },
-              {
-                caption: P.per100Euros,
-                parts: [
-{
-                    n: tranche.smallMoney,
-                    c: TRANCHE_COLORS.small,
-                    l: t.donationsTable.trancheSmall,
-                  },
-                  { n: tranche.midMoney, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
-                  {
-                    n: tranche.largeMoney,
-                    c: TRANCHE_COLORS.large,
-                    l: t.donationsTable.trancheLarge,
-                  },
-                ],
-                total: moneyTotal,
-              },
-            ].map((block) => (
-              <div key={block.caption} className="mt-4">
-                <p className="display text-[15px] font-semibold">{block.caption}</p>
-                <Bar
-                  className="mt-2"
-                  segments={block.parts.map((p) => ({ value: p.n, color: p.c, label: p.l }))}
-                  total={block.total}
-                  scale="share"
-                  size="xl"
-                />
-                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                  {block.parts.map((p) => (
-                    <li key={p.l} className="flex items-center gap-1.5">
-                      <span
-                        aria-hidden
-                        style={{ width: 10, height: 10, borderRadius: 1, background: p.c }}
-                      />
-                      <span className="label-mono">
-                        {p.l} · <span className="mono">{percent(p.n / block.total, bcp47)}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                                  n: tranche.smallMoney,
+                                  c: TRANCHE_COLORS.small,
+                                  l: t.donationsTable.trancheSmall,
+                                },
+                                { n: tranche.midMoney, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
+                                {
+                                  n: tranche.largeMoney,
+                                  c: TRANCHE_COLORS.large,
+                                  l: t.donationsTable.trancheLarge,
+                                },
+                              ],
+                              total: moneyTotal,
+                            },
+                          ].map((block, b) => (
+                            <div key={block.caption} className="mt-4">
+                              <p className="display text-[15px] font-semibold">{block.caption}</p>
+                              <Bar
+                                className="mt-2"
+                                segments={block.parts.map((p) => ({ value: p.n, color: p.c, label: p.l }))}
+                                total={block.total}
+                                scale="share"
+                                size="xl"
+                              />
+                              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                                {block.parts.map((p, k) => (
+                                  <li key={p.l} className="flex items-center gap-1.5" data-chart-item={b * 3 + k}>
+                                    <span
+                                      aria-hidden
+                                      style={{ width: 10, height: 10, borderRadius: 1, background: p.c }}
+                                    />
+                                    <span className="label-mono">
+                                      {p.l} · <span className="mono">{percent(p.n / block.total, bcp47)}</span>
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+            </ChartReader>
             <p className="mt-4" style={{ fontSize: "11.5px", lineHeight: 1.5, color: "var(--ink-3)" }}>
               {P.bandDonorsNote
                 .replace("{n}", integer(tranche.largeDonors, bcp47))
@@ -455,42 +503,47 @@ export default async function PortalPage({
           {/* Electoral spending by formation */}
           <div className="px-5 py-5">
             <p className="eyebrow">{P.bandSpendTitle}</p>
-            <Bar
-              className="mt-4"
-              segments={ranked.map(
-                (f): Segment => ({
-                  value: f.ordinary.declared,
-                  color: formationColor(f.name),
-                  label: f.name,
-                }),
-              )}
-              total={totals.declared}
-              scale="share"
-              size="xl"
-            />
-            <ul className="mt-3 flex flex-col gap-1">
-              {ranked.map((f) => (
-                <li key={f.name} className="flex items-center gap-2">
-                  <span
-                    aria-hidden
-                    style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: 1,
-                      flex: "none",
-                      background: formationColor(f.name),
-                    }}
-                  />
-                  {/* Wraps rather than truncating: a cut coalition name names nobody. */}
-                  <span className="min-w-0 flex-1 break-words" style={{ fontSize: "11.5px" }}>
-                    {f.name}
-                  </span>
-                  <span className="mono" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-                    {percent(f.ordinary.declared / totals.declared, bcp47)}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <ChartReader
+              items={spendItems}
+              {...readerProps(t.charts, bcp47, { title: P.bandSpendTitle, count: spendItems.length })}
+            >
+              <Bar
+                className="mt-4"
+                segments={ranked.map(
+                  (f): Segment => ({
+                    value: f.ordinary.declared,
+                    color: formationColor(f.name),
+                    label: f.name,
+                  }),
+                )}
+                total={totals.declared}
+                scale="share"
+                size="xl"
+              />
+              <ul className="mt-3 flex flex-col gap-1">
+                {ranked.map((f, i) => (
+                  <li key={f.name} className="flex items-center gap-2" data-chart-item={i}>
+                    <span
+                      aria-hidden
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 1,
+                        flex: "none",
+                        background: formationColor(f.name),
+                      }}
+                    />
+                    {/* Wraps rather than truncating: a cut coalition name names nobody. */}
+                    <span className="min-w-0 flex-1 break-words" style={{ fontSize: "11.5px" }}>
+                      {f.name}
+                    </span>
+                    <span className="mono" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
+                      {percent(f.ordinary.declared / totals.declared, bcp47)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </ChartReader>
             <DataTable
               summary={t.charts.showTable}
               caption={P.bandSpendTable}

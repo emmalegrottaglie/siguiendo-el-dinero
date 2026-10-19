@@ -59,8 +59,13 @@ export type Stripe = boolean | "light";
 export function stripeImage(striped: Stripe | undefined, period = 6): string | undefined {
   if (!striped) return undefined;
   const line = period / 2;
-  const ink = striped === "light" ? "rgba(243,242,242,0.5)" : "rgba(32,31,29,0.22)";
+  const ink = stripeInk(striped);
   return `repeating-linear-gradient(45deg, ${ink} 0 ${line}px, transparent ${line}px ${period}px)`;
+}
+
+/** The hatch's line colour, shared with the exported image so the two match. */
+export function stripeInk(striped: Stripe): string {
+  return striped === "light" ? "rgba(243,242,242,0.5)" : "rgba(32,31,29,0.22)";
 }
 
 /** Named heights, so a bar's weight is a decision and not an accident. */
@@ -139,17 +144,27 @@ export default function Bar({
 export function BarLegend({
   segments,
   formatValue,
+  readable = false,
   className = "",
 }: {
   segments: Segment[];
   /** Prints each segment's figure, if the legend should carry one. */
   formatValue?: (s: Segment) => string;
+  /**
+   * Marks each entry as a `ChartReader` item, in segment order, for a chart
+   * whose legend is where its values are printed.
+   */
+  readable?: boolean;
   className?: string;
 }) {
   return (
     <ul className={`flex flex-wrap gap-x-5 gap-y-1.5 ${className}`}>
-      {segments.map((s) => (
-        <li key={s.label} className="flex items-center gap-2">
+      {segments.map((s, i) => (
+        <li
+          key={s.label}
+          className="flex items-center gap-2"
+          data-chart-item={readable ? i : undefined}
+        >
           <span
             aria-hidden
             style={{

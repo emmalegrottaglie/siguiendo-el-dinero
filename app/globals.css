@@ -423,6 +423,106 @@ body {
   stroke-width: 2.4;
 }
 
+/* Keyboard reading of a chart (components/chart/ChartReader.tsx).
+
+   The chart is one tab stop; arrow keys move a cursor over its marks. The
+   cursor is an outline (or, on an SVG mark, a stroke), never a border or a
+   size change, so drawing it moves nothing and nothing is redrawn under the
+   reader. It shows only while the chart has focus, including focus from a
+   click (which `:focus-visible` would miss, as with `.region:focus` above);
+   `data-focused` is set from focus events, so it also survives the window
+   losing focus. The ink outline is 14.74:1 on --bg and 13.59:1 on --surface;
+   the readout is --bg on --ink, also 14.74:1. */
+.chart-reader-wrap {
+  position: relative;
+}
+.chart-reader:focus {
+  outline: none;
+}
+.chart-reader:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.chart-reader[data-focused] [data-chart-active] {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.chart-reader[data-focused] svg [data-chart-active] {
+  outline: none;
+  stroke: var(--ink);
+  stroke-width: 2.4px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The live region. Visually hidden until the chart has focus and something has
+   been read; then the same text shows below the chart, for a sighted keyboard
+   user on a chart whose marks carry no text (the ballot grid's cells). It is
+   positioned over what follows rather than pushing it down, so focusing the
+   chart does not shift the page. */
+.chart-readout {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.chart-reader[data-focused] + .chart-readout:not(:empty) {
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 52ch);
+  margin-top: 6px;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+  padding: 5px 9px;
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* "Descargar imagen". 32px tall, over the 24px minimum for a small control. */
+.chart-export {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.chart-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.chart-export-btn:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.chart-export-btn:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+.chart-export-status:not(:empty) {
+  color: var(--red);
+  font-size: 12px;
+}
+
 /* Never the browser default. */
 :focus-visible {
   outline: 2px solid var(--gold);

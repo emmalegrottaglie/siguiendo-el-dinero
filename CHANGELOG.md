@@ -5,6 +5,69 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-19 — Charts can be read from the keyboard and downloaded as images
+
+Two items the chart audit left open are done: reading a chart value by value from the keyboard,
+and a PNG export that carries its own source and date.
+
+**Keyboard reading.** Until now a keyboard or screen-reader user could reach a chart's numbers
+only through the text beside the bars or the data table below; there was no way to point at one
+mark and hear what it is. A new component, `ChartReader`, makes each chart one tab stop with a
+descriptive label (what it shows, its range, how many values, which keys). The arrow keys step
+through the values, Home and End jump to the ends, and a polite live region announces the value
+with its context, for example "PSOE · 83.852.842,14 € · 27,9 % del total · 2 de 28". The current
+mark gets a visible outline (ink, 14.74:1 on the page), and the same text appears in a small
+readout under the chart while it has focus, which matters for the ballot grid, whose cells carry
+no text. The cursor is an attribute on the existing mark, so nothing is redrawn while someone is
+reading. Pointer hover announces too, but only while the chart does not have keyboard focus.
+
+It is applied to every chart with discrete values: the subsidy ranking, electoral spending by
+formation and by line, the money-and-vote flow (formations, then outcomes, with the box scrolling
+to keep the current one in view), the pay distribution and minimum-wage position on profiles, the
+three `/contexto` charts, the coverage chart, the three front-page summaries, each division's
+result bar, and the small bars on party and comunidad pages. The ballot grid and the map follow
+the ARIA grid pattern. The map used to make all nineteen territories separate tab stops; it is now
+one, with the arrow keys moving between territories along rows built from their positions (north
+to south, then west to east) and the fact sheet following the cursor. The fact sheet is no longer a
+live region, since it read the whole sheet aloud on every move.
+
+**Image export.** Each main chart has a "Descargar imagen" button that produces a 1200 × 675 PNG
+drawn at 2× (2400 × 1350 pixels). The image carries the title, a caption, "Datos a <fecha>", every
+source with its period and host, and the site address with the page's path, all drawn into the
+pixels, so a shared or cropped post still says where its figures came from. Most charts here are
+HTML, not SVG, so instead of serialising markup each chart describes itself as data (labelled bars,
+a grid of cells, or SVG path data for the flow diagram, the map and the histogram) and one small
+canvas renderer draws it. No dependency was added: an HTML-to-image library would have had to
+reproduce the page's layout, fonts and hatches, which is more code and more ways to be wrong than
+drawing the same data directly. Colours are read from the page's CSS variables when the button is
+pressed, so the image follows the reader's theme, and the site's own faces are used once loaded.
+
+The honesty rules hold in the image. The footer is laid out before the chart, so the source and
+the date can never be squeezed out; long text wraps and is never cut; a chart with more rows than
+fit flows into two or three columns instead of losing its tail; rows keep the page's order; unknown
+values print "—"; the flow diagram's image keeps its caveat and names the formations it excludes;
+the ballot grid's image names each division and the ballot in words; and the map's image lists
+every territory's value beside the map, in the table's order. Where sources have different dates
+(the flow diagram sets a 2020 report beside a 2026 division) each date is named with its publisher.
+
+**A font fix found on the way.** The site was not rendering in Cormorant Garamond and Lora at all.
+`--font-heading` and `--font-body` are declared on `:root` and refer to the next/font variables,
+which were set on `<body>`; a custom property resolves where it is declared, so both were invalid
+and every page fell back to the system sans stack. The variables are now on `<html>`. This changes
+the look of every page, back to the design the rest of this file describes.
+
+Also: the `/contexto` minimum-wage ladder and sector ladder print "—" for a tranche or sector INE
+leaves empty, where they printed 0 before.
+
+Left out: the tables (`GroupBreakdown`, `DonationsTable`, the per-formation and per-territory
+tables) get no reader, because table navigation already reads them cell by cell. The foundation
+cards on `/fundaciones` are links and stay so. The front-page summaries, the division cards and
+the small bars on party and comunidad pages have keyboard reading but no export; they summarise
+charts that have one. The light hatch inks are still literals and will need tokens when dark mode
+lands.
+
+---
+
 ## 2026-10-19 — Every chart says where it came from, and none relies on colour alone
 
 An audit of the site's charts against the checklist in `RESEARCH-DATAVIZ/` (research carried over

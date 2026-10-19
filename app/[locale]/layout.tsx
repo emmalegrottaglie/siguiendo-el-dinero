@@ -71,8 +71,18 @@ export default async function RootLayout({
   return (
     // suppressHydrationWarning: browser extensions (e.g. Dark Reader) inject
     // attributes onto <html> before React hydrates; that mismatch is benign.
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${cormorant.variable} ${lora.variable}`}>
+    //
+    // The font variables go on <html>, not <body>. `--font-heading` and
+    // `--font-body` are declared on :root and refer to them, and a custom
+    // property is resolved where it is declared: with the variables on <body>
+    // both resolved as invalid at :root, and every page fell back to the
+    // system sans stack instead of Cormorant Garamond and Lora.
+    <html
+      lang={locale}
+      className={`${cormorant.variable} ${lora.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
         {/* Skip link: the nav repeats eight links before the content on every
             page, so a keyboard or screen-reader user had to pass all of them
             each time.

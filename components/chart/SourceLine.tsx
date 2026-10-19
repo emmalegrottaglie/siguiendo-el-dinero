@@ -31,6 +31,12 @@ export interface ChartSource {
   /** Period the figures cover, as the source states it. */
   period: string;
   url: string;
+  /**
+   * The data date as ISO (YYYY-MM-DD), where the source has one: the fetch,
+   * the register's own update or the report's approval. The exported image
+   * prints it as "Datos a …"; a source without one prints its `period`.
+   */
+  asOf?: string;
 }
 
 export default function SourceLine({

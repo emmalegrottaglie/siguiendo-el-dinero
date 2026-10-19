@@ -300,11 +300,39 @@ ones that do, and how this site meets them:
 - **No horizontal page scroll at 375px.** A chart wider than that (`VoteFlow`) scrolls inside its
   own focusable box and says so above it.
 - **No label is truncated.** Names wrap.
+- **Every new chart with discrete values is readable from the keyboard.** Wrap its marks in
+  `ChartReader` (`components/chart/ChartReader.tsx`): give each mark `data-chart-item={index}` and
+  pass one announcement per mark as `items`, built with `say()` and labelled with `readerProps()`
+  from `lib/chart-reader.ts`. The chart becomes one tab stop with an `aria-label` naming what it
+  shows, its range, its count and its keys; arrow keys move a cursor, Home and End jump to the
+  ends, and a polite live region announces the value with its context ("PSOE · 83.852.842,14 € ·
+  27,9 % del total · 2 de 28"). The cursor is an outline set as an attribute, so nothing is
+  redrawn under the reader. A chart laid out in rows and columns passes `rows` and gets the ARIA
+  grid pattern (`BallotGrid`, and `RightsMap`, whose rows are banded from the centroids). Real
+  tables (`GroupBreakdown`, `DonationsTable`, the per-formation and per-territory tables) are left
+  to table navigation and do not get a reader.
+- **Every main chart has a "Descargar imagen" button, and the image carries its source and date.**
+  Describe the chart as data (`ChartExport` in `lib/chart-export.ts`: `bars`, `grid` or `shapes`,
+  the last taking SVG path data) and render `ExportButton`. Always build the frame with
+  `exportMeta()`, which fills the title, caption, "Datos a …" line and sources; the renderer
+  (`components/chart/renderChartImage.ts`) lays the footer out first, so the source and date are
+  never squeezed out, wraps rather than truncates, and flows rows into columns rather than dropping
+  them. Colours are CSS variables resolved at export time, so the image takes the reader's theme.
+  Pass rows in the order the page shows them and "—" for an unknown value: the image may not rank
+  or compare anything the page does not. The main charts with an export today: the subsidy
+  ranking, electoral spending by formation and by line, the money-and-vote flow, the map (either
+  layer), a profile's pay distribution and ballot grid, the three `/contexto` charts and the
+  coverage chart. The front-page summaries, `StanceByGroup` and the small single-bar readouts have
+  keyboard reading but no export; they summarise charts that have one.
+- **Fonts are on `<html>`.** `--font-heading` and `--font-body` are declared on `:root` and refer to
+  the next/font variables, so those variables must be set on `<html>` too; set on `<body>`, both
+  resolved as invalid and the site and the exported images fell back to the system sans.
 
 Not applicable here, because nothing on this site is a time series or a before-and-after study:
 the index-chart, event-marker, chance-band, control-group, smoothing, fixed-y-range-while-zooming,
-gap-detection and complete-period items. Still open, and planned for follow-up work: keyboard
-reading of values with a live region, PNG export with the caption block, and dark mode.
+gap-detection and complete-period items. Still open: dark mode (in progress separately; the hatch
+inks in `stripeInk()` and the map's hatch constants are still light-theme literals and will need
+tokens).
 
 ## Architecture / where things live
 

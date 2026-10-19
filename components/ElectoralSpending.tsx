@@ -13,6 +13,11 @@ import Caveat from "./Caveat";
 import type { Dict } from "@/lib/i18n";
 import SpendShares, { type ShareRow } from "./SpendShares";
 import { spendingSource } from "@/lib/chart-sources";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import SourceLine from "./chart/SourceLine";
 
 /**
  * What an election's money was declared to have bought.
@@ -78,6 +83,46 @@ export default function ElectoralSpending({
     },
   ];
 
+  const source = spendingSource(data, t.charts, bcp47);
+  const mailingsNote = s.lineMailingsNote.replace("{count}", integer(totals.mailingCount, bcp47));
+
+  // The four lines as the reader and the image read them. Mailings have no
+  // share: they sit outside the declared total, so the share is "—".
+  const lineItems = [
+    ...lines.map((l) =>
+      say(l.label, euroExact(l.value, bcp47), `${percent(l.share, bcp47)} ${s.ofDeclared}`),
+    ),
+    say(s.lineMailings, euroExact(totals.mailings, bcp47), mailingsNote),
+  ];
+
+  const linesImage: ChartExport = {
+    ...exportMeta(t.charts, bcp47, {
+      title: s.linesTitle,
+      caption: `${s.lineResidualNote} ${mailingsNote}`,
+      sources: [source],
+      file: "gasto-electoral-por-concepto",
+    }),
+    body: {
+      kind: "bars",
+      rows: [
+        ...lines.map((l) => ({
+          label: l.label,
+          value: `${euroExact(l.value, bcp47)} · ${percent(l.share, bcp47)}`,
+          segments: [{ value: l.value, color: l.color }],
+          total: totals.declared,
+          scale: "share" as const,
+        })),
+        {
+          label: s.lineMailings,
+          value: `${euroExact(totals.mailings, bcp47)} · —`,
+          segments: [{ value: totals.mailings, color: SPEND_COLORS.mailings }],
+          total: totals.mailings,
+          scale: "share" as const,
+        },
+      ],
+    },
+  };
+
   return (
     <section className="pt-10">
       <p className="eyebrow">{s.eyebrow}</p>
@@ -101,8 +146,8 @@ export default function ElectoralSpending({
           totalLabel={s.sharesTotal}
           caption={s.sharesCaption}
           scaleNote={s.sharesNote}
-          source={spendingSource(data, t.charts, bcp47)}
-          sourceLabel={t.charts.source}
+          source={source}
+          charts={t.charts}
           bcp47={bcp47}
         />
       </div>
@@ -112,56 +157,68 @@ export default function ElectoralSpending({
         <h3 className="display text-[22px] font-semibold" style={{ letterSpacing: "-0.015em" }}>
           {s.linesTitle}
         </h3>
-        <ul className="mt-5 flex flex-col gap-5">
-          {lines.map((l) => (
-            <li key={l.label}>
+        <ChartReader
+          className="mt-5"
+          items={lineItems}
+          {...readerProps(t.charts, bcp47, { title: s.linesTitle, count: lineItems.length })}
+        >
+          <ul className="flex flex-col gap-5">
+            {lines.map((l, i) => (
+              <li key={l.label} data-chart-item={i}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <span style={{ fontSize: "14px" }}>{l.label}</span>
+                  <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
+                    {euroExact(l.value, bcp47)} ·{" "}
+                    <span style={{ color: "var(--ink-3)" }}>{percent(l.share, bcp47)}</span>
+                  </span>
+                </div>
+                <Bar
+                  className="mt-1.5"
+                  segments={[{ value: l.value, color: l.color, label: l.label }]}
+                  total={totals.declared}
+                  scale="share"
+                  size="sm"
+                />
+                <p className="mt-1.5" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
+                  {l.note}
+                </p>
+              </li>
+            ))}
+
+            {/* A different denominator, shown full width on purpose. */}
+            <li data-chart-item={lines.length}>
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                <span style={{ fontSize: "14px" }}>{l.label}</span>
+                <span style={{ fontSize: "14px" }}>{s.lineMailings}</span>
                 <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                  {euroExact(l.value, bcp47)} ·{" "}
-                  <span style={{ color: "var(--ink-3)" }}>{percent(l.share, bcp47)}</span>
+                  {euroExact(totals.mailings, bcp47)} · <span style={{ color: "var(--ink-3)" }}>—</span>
                 </span>
               </div>
+              {/* A different denominator, so the bar is its own whole. */}
               <Bar
                 className="mt-1.5"
-                segments={[{ value: l.value, color: l.color, label: l.label }]}
-                total={totals.declared}
+                segments={[
+                  {
+                    value: totals.mailings,
+                    color: SPEND_COLORS.mailings,
+                    label: s.lineMailings,
+                  },
+                ]}
+                total={totals.mailings}
                 scale="share"
                 size="sm"
               />
               <p className="mt-1.5" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-                {l.note}
+                {mailingsNote}
               </p>
             </li>
-          ))}
-
-          {/* A different denominator, shown full width on purpose. */}
-          <li>
-            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <span style={{ fontSize: "14px" }}>{s.lineMailings}</span>
-              <span className="mono whitespace-nowrap" style={{ fontSize: "13px" }}>
-                {euroExact(totals.mailings, bcp47)} · <span style={{ color: "var(--ink-3)" }}>—</span>
-              </span>
-            </div>
-            {/* A different denominator, so the bar is its own whole. */}
-            <Bar
-              className="mt-1.5"
-              segments={[
-                {
-                  value: totals.mailings,
-                  color: SPEND_COLORS.mailings,
-                  label: s.lineMailings,
-                },
-              ]}
-              total={totals.mailings}
-              scale="share"
-              size="sm"
-            />
-            <p className="mt-1.5" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-              {s.lineMailingsNote.replace("{count}", integer(totals.mailingCount, bcp47))}
-            </p>
-          </li>
-        </ul>
+          </ul>
+        </ChartReader>
+        <SourceLine sources={[source]} label={t.charts.source} />
+        <ExportButton
+          className="mt-3"
+          spec={linesImage}
+          {...exportLabels(t.charts, s.linesTitle)}
+        />
       </div>
 
       {/* Per formation */}

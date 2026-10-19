@@ -6,11 +6,15 @@ import { motion } from "motion/react";
 import type { Aggregation, SubsidyKind } from "@/lib/types";
 import { BCP47, type Dict, type Locale } from "@/lib/i18n";
 import { filterAggregation } from "@/lib/normalize";
-import { euroCompact, euroExact, integer, percent, formatDate } from "@/lib/format";
+import { euroCompact, euroExact, fill, integer, percent, formatDate } from "@/lib/format";
 import { SUBSIDY_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
+import ChartReader from "./chart/ChartReader";
+import ExportButton from "./chart/ExportButton";
+import { readerProps, say } from "@/lib/chart-reader";
+import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import { stagger } from "@/lib/motion";
 import CountUp from "./CountUp";
 
@@ -92,6 +96,52 @@ export default function Dashboard({
     ...kinds,
     ordinaria: home.perPartyColour,
   });
+
+  // What the reader announces and the image prints, for the current filters.
+  const filterStatus = home.filterStatus
+    .replace("{parties}", integer(agg.parties.length, bcp47))
+    .replace("{grants}", integer(totalGrants, bcp47))
+    .replace("{total}", euroCompact(agg.grandTotal, bcp47));
+  const selection = [
+    kindTabs.find((k) => k.key === kind)?.label,
+    years.length ? [...years].sort((a, b) => a - b).join(", ") : undefined,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const items = agg.parties.map((p) =>
+    say(
+      p.shortName,
+      euroExact(p.total, bcp47),
+      fill(charts.ofTotal, { share: percent(p.share, bcp47) }),
+    ),
+  );
+  const image: ChartExport = {
+    ...exportMeta(charts, bcp47, {
+      title: `${home.channelTitle}: ${home.distribution.toLowerCase()}`,
+      caption: `${selection}. ${filterStatus}.`,
+      sources: [source],
+      file: "subvenciones-por-partido",
+    }),
+    legend: subsidySegments(
+      { ordinaria: 1, seguridad: 1, otra: 1 },
+      agg.parties[0]?.color ?? "var(--grey-500)",
+      { ...kinds, ordinaria: home.perPartyColour },
+    ).map((s) => ({ label: s.label, color: s.color, striped: s.striped })),
+    body: {
+      kind: "bars",
+      rows: agg.parties.map((p) => ({
+        label: p.shortName,
+        value: `${euroCompact(p.total, bcp47)} · ${percent(p.share, bcp47)}`,
+        segments: subsidySegments(p.byKind, p.color, kinds).map((s) => ({
+          value: s.value,
+          color: s.color,
+          striped: s.striped,
+        })),
+        total: maxTotal,
+        scale: "compare",
+      })),
+    },
+  };
 
   const toggleYear = (y: number) =>
     setYears((prev) => (prev.includes(y) ? prev.filter((v) => v !== y) : [...prev, y]));
@@ -194,59 +244,70 @@ export default function Dashboard({
             anything happened. The search forms elsewhere on the site navigate,
             which announces itself, and so need no equivalent. */}
         <p role="status" className="label-mono mb-4 text-[var(--ink-2)]">
-          {home.filterStatus
-            .replace("{parties}", integer(agg.parties.length, bcp47))
-            .replace("{grants}", integer(totalGrants, bcp47))
-            .replace("{total}", euroCompact(agg.grandTotal, bcp47))}
+          {filterStatus}
         </p>
 
-        <ol className="flex flex-col">
-          {agg.parties.map((p, i) => {
-            const segments = subsidySegments(p.byKind, p.color, kinds);
-            return (
-              // initial={false} so the row is visible in the server-rendered HTML;
-              // `layout` still animates reordering when a filter changes.
-              <motion.li key={p.nif} layout initial={false}>
-                <Link
-                  href={`/${locale}/party/${p.nif}`}
-                  className="group enter grid grid-cols-[2rem_1fr] items-center gap-x-4 gap-y-2 rounded-md px-2 py-4 transition-colors hover:bg-[var(--surface)] sm:grid-cols-[2rem_11rem_1fr_9rem]"
-                  style={
-                    { "--enter-y": "0", "--enter-delay": `${stagger(i)}s` } as CSSProperties
-                  }
-                >
-                  <span className="mono text-sm text-[var(--ink-3)]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
-                  <span className="flex items-center gap-2 font-medium">
-                    <span
-                      className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: p.color }}
-                    />
-                    <span className="truncate group-hover:text-[var(--gold-deep)]">
-                      {p.shortName}
-                    </span>
-                  </span>
-
-                  <span className="col-span-2 sm:col-span-1">
-                    <Bar
-                      segments={segments}
-                      total={maxTotal}
-                      scale="compare"
-                      size="lg"
-                    />
-                  </span>
-
-                  <span className="col-start-2 flex items-baseline justify-between gap-3 sm:col-start-4 sm:justify-end">
-                    <span className="mono text-sm text-[var(--ink)]">{euroCompact(p.total, bcp47)}</span>
-                    <span className="mono text-xs text-[var(--ink-3)]">{percent(p.share, bcp47)}</span>
-                  </span>
-                </Link>
-                <hr className="hairline" />
-              </motion.li>
-            );
+        <ChartReader
+          items={items}
+          {...readerProps(charts, bcp47, {
+            title: home.distribution,
+            count: items.length,
+            range: agg.parties.length
+              ? {
+                  min: euroExact(agg.parties[agg.parties.length - 1].total, bcp47),
+                  max: euroExact(agg.parties[0].total, bcp47),
+                }
+              : undefined,
           })}
-        </ol>
+        >
+          <ol className="flex flex-col">
+            {agg.parties.map((p, i) => {
+              const segments = subsidySegments(p.byKind, p.color, kinds);
+              return (
+                // initial={false} so the row is visible in the server-rendered HTML;
+                // `layout` still animates reordering when a filter changes.
+                <motion.li key={p.nif} layout initial={false} data-chart-item={i}>
+                  <Link
+                    href={`/${locale}/party/${p.nif}`}
+                    className="group enter grid grid-cols-[2rem_1fr] items-center gap-x-4 gap-y-2 rounded-md px-2 py-4 transition-colors hover:bg-[var(--surface)] sm:grid-cols-[2rem_11rem_1fr_9rem]"
+                    style={
+                      { "--enter-y": "0", "--enter-delay": `${stagger(i)}s` } as CSSProperties
+                    }
+                  >
+                    <span className="mono text-sm text-[var(--ink-3)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+
+                    <span className="flex items-center gap-2 font-medium">
+                      <span
+                        className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: p.color }}
+                      />
+                      <span className="truncate group-hover:text-[var(--gold-deep)]">
+                        {p.shortName}
+                      </span>
+                    </span>
+
+                    <span className="col-span-2 sm:col-span-1">
+                      <Bar
+                        segments={segments}
+                        total={maxTotal}
+                        scale="compare"
+                        size="lg"
+                      />
+                    </span>
+
+                    <span className="col-start-2 flex items-baseline justify-between gap-3 sm:col-start-4 sm:justify-end">
+                      <span className="mono text-sm text-[var(--ink)]">{euroCompact(p.total, bcp47)}</span>
+                      <span className="mono text-xs text-[var(--ink-3)]">{percent(p.share, bcp47)}</span>
+                    </span>
+                  </Link>
+                  <hr className="hairline" />
+                </motion.li>
+              );
+            })}
+          </ol>
+        </ChartReader>
         {agg.parties.length === 0 && (
           <p className="label-mono py-10 text-center text-[var(--ink-3)]">
             {home.noResults}
@@ -271,6 +332,13 @@ export default function Dashboard({
           />
         )}
         <SourceLine sources={[source]} label={charts.source} />
+        {agg.parties.length > 0 && (
+          <ExportButton
+            className="mt-3"
+            spec={image}
+            {...exportLabels(charts, home.distribution)}
+          />
+        )}
       </section>
     </div>
   );
