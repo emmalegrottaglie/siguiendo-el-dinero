@@ -13,6 +13,16 @@ import {
 import { ITEM_MAX_AGE_DAYS, SOURCE_STALE_DAYS } from "@/lib/news";
 import { getCoverage } from "@/lib/coverage";
 import CoverageChart from "@/components/CoverageChart";
+import { getSalaries } from "@/lib/salaries";
+import { getVotes } from "@/lib/votes";
+import { getFoundations } from "@/lib/foundations";
+import { photoBuildDate, photoSource } from "@/lib/photos";
+import {
+  foundationsSource,
+  portraitsSource,
+  salariesSource,
+  votesSource,
+} from "@/lib/chart-sources";
 
 export const revalidate = 3600;
 
@@ -22,7 +32,15 @@ export default async function MetodologiaPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
-  const [agg, coverage] = await Promise.all([getAggregation(), getCoverage()]);
+  const [agg, coverage, salaries, votes, foundations, photos, photosDate] = await Promise.all([
+    getAggregation(),
+    getCoverage(),
+    getSalaries(),
+    getVotes(),
+    getFoundations(),
+    photoSource(),
+    photoBuildDate(),
+  ]);
   const { locale, bcp47, t } = getDict(localeParam);
   const m = t.method;
   const updated = formatDate(agg.generatedAt.slice(0, 10), bcp47);
@@ -36,7 +54,17 @@ export default async function MetodologiaPage({
       <h1 className="display mt-4 text-4xl sm:text-5xl">{m.title}</h1>
       <p className="mt-6 text-lg text-[var(--ink-2)]">{m.lead}</p>
 
-      <CoverageChart coverage={coverage} t={t} bcp47={bcp47} />
+      <CoverageChart
+        coverage={coverage}
+        t={t}
+        sources={[
+          salariesSource(salaries, t.charts, bcp47),
+          votesSource(votes, t.charts, bcp47),
+          ...(photos ? [portraitsSource(photos, photosDate, t.charts, bcp47)] : []),
+          foundationsSource(foundations, t.charts, bcp47),
+        ]}
+        bcp47={bcp47}
+      />
 
       <Block title={m.showTitle}>
         <p>

@@ -7,6 +7,9 @@ import { readSnapshot } from "./store";
 const TTL_MS = 60_000;
 let cache: { at: number; agg: Aggregation } | null = null;
 
+/** BDNS's own name for the party-subsidy listing this snapshot is read from. */
+export const SUBSIDIES_DATASET_NAME = "Concesiones a partidos políticos";
+
 export async function getAggregation(): Promise<Aggregation> {
   const now = Date.now();
   if (cache && now - cache.at < TTL_MS) return cache.agg;

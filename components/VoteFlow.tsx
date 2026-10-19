@@ -2,13 +2,25 @@ import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { euroExact, formatDate, integer } from "@/lib/format";
 import { stancesByParty, voteDateISO, type Stance, type KeyVote } from "@/lib/votes";
 import { PARTIES } from "@/lib/parties";
+import { STANCE_SWATCH } from "@/lib/chart-colors";
 import type { Dict } from "@/lib/i18n";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import DataTable from "./chart/DataTable";
 
+/**
+ * The site's standalone stance fills: each outcome node sits on the page, not
+ * between other segments, so abstention takes the darker swatch grey rather
+ * than --abst (1.8:1 on the page). No is also hatched (`HATCH_NO` below), as in
+ * every stance bar.
+ */
 const STANCE_COLOUR: Record<Stance, string> = {
-  si: "var(--verd)",
-  no: "var(--red)",
-  ab: "var(--abst)",
+  si: STANCE_SWATCH.si,
+  no: STANCE_SWATCH.no,
+  ab: STANCE_SWATCH.abstention,
 };
+
+/** One page shows one flow diagram, so a fixed pattern id cannot collide. */
+const HATCH_NO = "voteflow-hatch-no";
 
 const W = 980;
 const H = 530;
@@ -41,14 +53,23 @@ const NODE_W = 13;
  *
  * Each outcome node is exactly as tall as the ribbons it receives, so the two
  * columns reconcile without a second scale.
+ *
+ * The diagram needs about 62rem to keep its labels apart, so on a narrower
+ * screen it scrolls inside its own box — never the page — and says so above
+ * the box. The table under it holds every figure the ribbons draw, for anyone
+ * who would rather not scroll, and for screen readers, since the drawing is
+ * aria-hidden.
  */
 export default function VoteFlow({
   vote,
   t,
+  sources,
   bcp47,
 }: {
   vote: KeyVote;
   t: Dict;
+  /** The donations report and the division's own record. */
+  sources: ChartSource[];
   bcp47: string;
 }) {
   const V = t.voteFlow;
@@ -136,9 +157,29 @@ export default function VoteFlow({
         </p>
       </div>
 
-      <div className="mt-5 overflow-x-auto">
+      {/* Shown only below the width at which the diagram fits. */}
+      <p className="label-mono mt-5 lg:hidden">{t.charts.scrollHint}</p>
+      {/* Focusable, so a keyboard user can scroll it with the arrow keys. */}
+      <div
+        className="mt-2 overflow-x-auto lg:mt-5"
+        tabIndex={0}
+        role="region"
+        aria-label={`${V.title}: ${t.charts.scrollRegion}`}
+      >
         <div className="relative min-w-[62rem]">
           <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" aria-hidden>
+            <defs>
+              <pattern
+                id={HATCH_NO}
+                width={6}
+                height={6}
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(45)"
+              >
+                <rect width={6} height={6} fill={STANCE_COLOUR.no} />
+                <rect width={3} height={6} fill="rgba(243,242,242,0.5)" />
+              </pattern>
+            </defs>
             {/* Source: all declared donations, as one bar */}
             <rect x={SOURCE_X} y={TOP} width={SOURCE_W} height={band} fill="var(--ink)" />
 
@@ -185,7 +226,7 @@ export default function VoteFlow({
                 y={o.y}
                 width={NODE_W}
                 height={o.h}
-                fill={STANCE_COLOUR[o.s]}
+                fill={o.s === "no" ? `url(#${HATCH_NO})` : STANCE_COLOUR[o.s]}
               />
             ))}
           </svg>
@@ -296,6 +337,19 @@ export default function VoteFlow({
           </>
         )}
       </p>
+
+      <DataTable
+        summary={t.charts.showTable}
+        caption={V.tableCaption.replace("{total}", euroExact(sum, bcp47))}
+        rows={nodes}
+        rowKey={(n) => n.d.nif!}
+        columns={[
+          { header: V.colFormation, cell: (n) => n.d.label },
+          { header: V.colDonations, cell: (n) => euroExact(n.d.total.amount, bcp47), numeric: true },
+          { header: V.colVote, cell: (n) => label[n.stance] },
+        ]}
+      />
+      <SourceLine sources={sources} label={t.charts.source} />
     </section>
   );
 }

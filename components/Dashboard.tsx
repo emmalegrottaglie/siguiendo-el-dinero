@@ -6,23 +6,56 @@ import { motion } from "motion/react";
 import type { Aggregation, SubsidyKind } from "@/lib/types";
 import { BCP47, type Dict, type Locale } from "@/lib/i18n";
 import { filterAggregation } from "@/lib/normalize";
-import { euroCompact, integer, percent, formatDate } from "@/lib/format";
+import { euroCompact, euroExact, integer, percent, formatDate } from "@/lib/format";
 import { SUBSIDY_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
+import DataTable from "./chart/DataTable";
 import { stagger } from "@/lib/motion";
 import CountUp from "./CountUp";
 
 type KindFilter = SubsidyKind | "all";
 
+/**
+ * A party's subsidy bar, by kind. The legend is built by calling this same
+ * function, so the swatches cannot say something the bars do not.
+ *
+ * It used to be hand-written, and it was wrong: the header legend said
+ * ordinary funding was gold and security costs red, while the bars drew
+ * ordinary funding in each party's own colour and security costs as a hatched
+ * dark ink.
+ */
+function subsidySegments(
+  byKind: Record<SubsidyKind, number>,
+  partyColor: string,
+  labels: Record<SubsidyKind, string>,
+): Segment[] {
+  return [
+    { value: byKind.ordinaria, color: partyColor, label: labels.ordinaria },
+    {
+      value: byKind.seguridad,
+      color: SUBSIDY_COLORS.seguridad,
+      label: labels.seguridad,
+      striped: true,
+    },
+    { value: byKind.otra, color: SUBSIDY_COLORS.otra, label: labels.otra },
+  ];
+}
+
 export default function Dashboard({
   base,
   home,
   kinds,
+  charts,
+  source,
   locale,
 }: {
   base: Aggregation;
   home: Dict["home"];
   kinds: Dict["kinds"];
+  charts: Dict["charts"];
+  /** The BDNS snapshot this ranking is read from, built on the server. */
+  source: ChartSource;
   locale: Locale;
 }) {
   const bcp47 = BCP47[locale];
@@ -43,6 +76,22 @@ export default function Dashboard({
   const maxTotal = agg.parties[0]?.total ?? 1;
   const totalGrants = agg.parties.reduce((s, p) => s + p.grants.length, 0);
   const updated = formatDate(base.generatedAt.slice(0, 10), bcp47);
+
+  // The ordinary-funding swatch cannot be one colour, because the bars use each
+  // party's own. It shows the first three parties' colours side by side and its
+  // label says "in the party's colour"; the other two kinds are fixed.
+  const partySwatch = (() => {
+    const cs = agg.parties.slice(0, 3).map((p) => p.color);
+    if (cs.length < 2) return cs[0] ?? "var(--grey-500)";
+    const step = 100 / cs.length;
+    return `linear-gradient(90deg, ${cs
+      .map((c, i) => `${c} ${i * step}% ${(i + 1) * step}%`)
+      .join(", ")})`;
+  })();
+  const legend = subsidySegments({ ordinaria: 1, seguridad: 1, otra: 1 }, partySwatch, {
+    ...kinds,
+    ordinaria: home.perPartyColour,
+  });
 
   const toggleYear = (y: number) =>
     setYears((prev) => (prev.includes(y) ? prev.filter((v) => v !== y) : [...prev, y]));
@@ -134,13 +183,11 @@ export default function Dashboard({
 
       {/* ---------- Ranked bars ---------- */}
       <section className="mx-auto max-w-6xl pt-14">
-        <div className="mb-8 flex items-end justify-between">
-          <h2 className="display section-tick text-2xl">{home.distribution}</h2>
-          <div className="label-mono hidden items-center gap-4 sm:flex">
-            <Legend color="var(--gold)" label={kinds.ordinaria} />
-            <Legend color="var(--red)" label={kinds.seguridad} />
-          </div>
-        </div>
+        <h2 className="display section-tick text-2xl">{home.distribution}</h2>
+        {/* Generated from the bars' own segments. The hatched segment is
+            security costs, in a neutral ink: it once had no legend and was
+            drawn in the alert red, so an ordinary category read as a warning. */}
+        <BarLegend className="mb-8 mt-5" segments={legend} />
 
         {/* Filtering here mutates the list in place with no navigation, so without
             a status region a screen reader user gets no confirmation that
@@ -155,16 +202,7 @@ export default function Dashboard({
 
         <ol className="flex flex-col">
           {agg.parties.map((p, i) => {
-            const segments: Segment[] = [
-              { value: p.byKind.ordinaria, color: p.color, label: kinds.ordinaria },
-              {
-                value: p.byKind.seguridad,
-                color: SUBSIDY_COLORS.seguridad,
-                label: kinds.seguridad,
-                striped: true,
-              },
-              { value: p.byKind.otra, color: SUBSIDY_COLORS.otra, label: kinds.otra },
-            ];
+            const segments = subsidySegments(p.byKind, p.color, kinds);
             return (
               // initial={false} so the row is visible in the server-rendered HTML;
               // `layout` still animates reordering when a filter changes.
@@ -215,25 +253,24 @@ export default function Dashboard({
           </p>
         )}
 
-        {/* The hatched segment had no legend anywhere, and it was drawn in the
-            alert red this site uses for `against` and for the unaccounted
-            residual — so an ordinary category of subsidy read as a warning on
-            every row. It is a neutral ink now, and named here. */}
         {agg.parties.length > 0 && (
-          <BarLegend
-            className="mt-5"
-            segments={[
-              { value: 1, color: "var(--grey-500)", label: home.perPartyColour },
-              {
-                value: 1,
-                color: SUBSIDY_COLORS.seguridad,
-                label: kinds.seguridad,
-                striped: true,
-              },
-              { value: 1, color: SUBSIDY_COLORS.otra, label: kinds.otra },
+          <DataTable
+            summary={charts.showTable}
+            caption={home.tableCaption}
+            rows={agg.parties}
+            rowKey={(p) => p.nif}
+            columns={[
+              { header: home.colParty, cell: (p) => p.shortName },
+              { header: kinds.ordinaria, cell: (p) => euroExact(p.byKind.ordinaria, bcp47), numeric: true },
+              { header: kinds.seguridad, cell: (p) => euroExact(p.byKind.seguridad, bcp47), numeric: true },
+              { header: kinds.otra, cell: (p) => euroExact(p.byKind.otra, bcp47), numeric: true },
+              { header: home.colTotal, cell: (p) => euroExact(p.total, bcp47), numeric: true },
+              { header: home.colShare, cell: (p) => percent(p.share, bcp47), numeric: true },
             ]}
+            className="mt-5"
           />
         )}
+        <SourceLine sources={[source]} label={charts.source} />
       </section>
     </div>
   );
@@ -245,14 +282,5 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dt className="label-mono mb-1">{label}</dt>
       <dd className="mono text-lg text-[var(--ink)]">{value}</dd>
     </div>
-  );
-}
-
-function Legend({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="flex items-center gap-2">
-      <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: color }} />
-      {label}
-    </span>
   );
 }

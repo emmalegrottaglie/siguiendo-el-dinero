@@ -11,7 +11,8 @@ import { SPEND_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict } from "@/lib/i18n";
-import SpendDonut, { type DonutSlice } from "./SpendDonut";
+import SpendShares, { type ShareRow } from "./SpendShares";
+import { spendingSource } from "@/lib/chart-sources";
 
 /**
  * What an election's money was declared to have bought.
@@ -42,7 +43,7 @@ export default function ElectoralSpending({
   const totals = spendingTotals(data);
   const ranked = rankedBySpending(data);
 
-  const slices: DonutSlice[] = ranked.map((f) => ({
+  const rows: ShareRow[] = ranked.map((f) => ({
     name: f.name,
     value: f.ordinary.declared,
     // The report's formation names are coalition labels, so they resolve
@@ -94,11 +95,14 @@ export default function ElectoralSpending({
       </p>
 
       <div className="mt-9 border-t border-[var(--line)] pt-8">
-        <SpendDonut
-          slices={slices}
+        <SpendShares
+          rows={rows}
           total={totals.declared}
-          centreLabel={s.donutCentre}
-          caption={s.donutCaption}
+          totalLabel={s.sharesTotal}
+          caption={s.sharesCaption}
+          scaleNote={s.sharesNote}
+          source={spendingSource(data, t.charts, bcp47)}
+          sourceLabel={t.charts.source}
           bcp47={bcp47}
         />
       </div>

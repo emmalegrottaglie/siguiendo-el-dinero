@@ -6,10 +6,13 @@ import { getSpending, spendingTotals, rankedBySpending } from "@/lib/spending";
 import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { fetchTopicNews } from "@/lib/news";
 import { formationColor } from "@/lib/spending";
-import { STANCE_COLORS, TRANCHE_COLORS } from "@/lib/chart-colors";
+import { stanceSegments, TRANCHE_COLORS } from "@/lib/chart-colors";
+import { donationsSource, spendingSource, voteRecordSource, votesSource } from "@/lib/chart-sources";
 import { getDict, relativeTime } from "@/lib/i18n";
 import { euroExact, euroM, integer, percent } from "@/lib/format";
 import Bar, { BarLegend, type Segment } from "@/components/chart/Bar";
+import SourceLine from "@/components/chart/SourceLine";
+import DataTable from "@/components/chart/DataTable";
 import StatStrip, { type StatItem } from "@/components/StatStrip";
 import WhereYouLive from "@/components/WhereYouLive";
 import { getProvinces } from "@/lib/provinces";
@@ -43,6 +46,11 @@ export default async function PortalPage({
   const { locale, bcp47, t } = getDict(localeParam);
   const P = t.portal;
   const L = t.lead;
+  const stanceLabels = {
+    si: t.votes.inFavour,
+    no: t.votes.against,
+    abstention: t.votes.abstention,
+  };
 
   const [agg, salaries, votes, spend, news, housing, provinceFile] = await Promise.all([
     getAggregation(),
@@ -285,23 +293,14 @@ export default async function PortalPage({
                       </p>
                       <Bar
                         className="mt-1"
-                        segments={[
+                        segments={stanceSegments(
                           {
-                            value: vote.totals.afavor,
-                            color: STANCE_COLORS.si,
-                            label: t.votes.inFavour,
+                            si: vote.totals.afavor,
+                            no: vote.totals.enContra,
+                            abstention: vote.totals.abstenciones,
                           },
-                          {
-                            value: vote.totals.enContra,
-                            color: STANCE_COLORS.no,
-                            label: t.votes.against,
-                          },
-                          {
-                            value: vote.totals.abstenciones,
-                            color: STANCE_COLORS.abstention,
-                            label: t.votes.abstention,
-                          },
-                        ]}
+                          stanceLabels,
+                        )}
                         total={Math.max(1, cast)}
                         scale="share"
                         size="sm"
@@ -319,12 +318,31 @@ export default async function PortalPage({
             </ul>
             <BarLegend
               className="mt-4"
-              segments={[
-                { value: 1, color: STANCE_COLORS.si, label: t.votes.inFavour },
-                { value: 1, color: STANCE_COLORS.no, label: t.votes.against },
-                { value: 1, color: STANCE_COLORS.abstention, label: t.votes.abstention },
+              segments={stanceSegments({ si: 1, no: 1, abstention: 1 }, stanceLabels)}
+            />
+            {/* The bars carry no figures of their own, so the counts are here. */}
+            <DataTable
+              summary={t.charts.showTable}
+              caption={P.bandVotesTable}
+              rows={newestFirst(votes.votes)}
+              rowKey={(v) => v.id}
+              columns={[
+                { header: P.colVote, cell: (v) => v.law },
+                { header: P.colDate, cell: (v) => v.date },
+                { header: t.votes.inFavour, cell: (v) => integer(v.totals.afavor, bcp47), numeric: true },
+                { header: t.votes.against, cell: (v) => integer(v.totals.enContra, bcp47), numeric: true },
+                {
+                  header: t.votes.abstention,
+                  cell: (v) => integer(v.totals.abstenciones, bcp47),
+                  numeric: true,
+                },
+                {
+                  header: P.colResult,
+                  cell: (v) => (v.totals.afavor > v.totals.enContra ? P.carried : P.rejected),
+                },
               ]}
             />
+            <SourceLine sources={[votesSource(votes, t.charts, bcp47)]} label={t.charts.source} />
           </div>
 
           {/* Many donors, little money */}
@@ -398,6 +416,40 @@ export default async function PortalPage({
                 .replace("{year}", String(DONATIONS_SOURCE.year))
                 .replace("{moneyShare}", percent(tranche.largeMoney / moneyTotal, bcp47))}
             </p>
+            <DataTable
+              summary={t.charts.showTable}
+              caption={P.bandDonorsTable.replace("{year}", String(DONATIONS_SOURCE.year))}
+              rows={[
+                {
+                  l: t.donationsTable.trancheSmall,
+                  donors: tranche.smallDonors,
+                  money: tranche.smallMoney,
+                },
+                { l: t.donationsTable.trancheMid, donors: tranche.midDonors, money: tranche.midMoney },
+                {
+                  l: t.donationsTable.trancheLarge,
+                  donors: tranche.largeDonors,
+                  money: tranche.largeMoney,
+                },
+              ]}
+              rowKey={(r) => r.l}
+              columns={[
+                { header: P.colTranche, cell: (r) => r.l },
+                { header: P.colDonors, cell: (r) => integer(r.donors, bcp47), numeric: true },
+                {
+                  header: P.colDonorShare,
+                  cell: (r) => percent(r.donors / donorTotal, bcp47),
+                  numeric: true,
+                },
+                { header: P.colAmount, cell: (r) => euroExact(r.money, bcp47), numeric: true },
+                {
+                  header: P.colMoneyShare,
+                  cell: (r) => percent(r.money / moneyTotal, bcp47),
+                  numeric: true,
+                },
+              ]}
+            />
+            <SourceLine sources={[donationsSource(t.charts, bcp47)]} label={t.charts.source} />
           </div>
 
           {/* Electoral spending by formation */}
@@ -429,7 +481,8 @@ export default async function PortalPage({
                       background: formationColor(f.name),
                     }}
                   />
-                  <span className="min-w-0 flex-1 truncate" style={{ fontSize: "11.5px" }}>
+                  {/* Wraps rather than truncating: a cut coalition name names nobody. */}
+                  <span className="min-w-0 flex-1 break-words" style={{ fontSize: "11.5px" }}>
                     {f.name}
                   </span>
                   <span className="mono" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
@@ -438,6 +491,26 @@ export default async function PortalPage({
                 </li>
               ))}
             </ul>
+            <DataTable
+              summary={t.charts.showTable}
+              caption={P.bandSpendTable}
+              rows={ranked}
+              rowKey={(f) => f.name}
+              columns={[
+                { header: P.colFormation, cell: (f) => f.name },
+                {
+                  header: P.colDeclared,
+                  cell: (f) => euroExact(f.ordinary.declared, bcp47),
+                  numeric: true,
+                },
+                {
+                  header: P.colShare,
+                  cell: (f) => percent(f.ordinary.declared / totals.declared, bcp47),
+                  numeric: true,
+                },
+              ]}
+            />
+            <SourceLine sources={[spendingSource(spend, t.charts, bcp47)]} label={t.charts.source} />
           </div>
         </div>
       </section>
@@ -499,7 +572,13 @@ export default async function PortalPage({
             </h3>
             <div className="mt-5 flex flex-col gap-5">
               {tracked.slice(0, 2).map((vote) => (
-                <StanceByGroup key={vote.id} vote={vote} t={t} />
+                <StanceByGroup
+                  key={vote.id}
+                  vote={vote}
+                  t={t}
+                  source={voteRecordSource(votes, vote, t.charts, bcp47)}
+                  bcp47={bcp47}
+                />
               ))}
             </div>
             <p className="mt-4" style={{ fontSize: "12px", lineHeight: 1.5, color: "var(--ink-3)" }}>

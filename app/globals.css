@@ -51,6 +51,33 @@
   /* Against / No / warnings. 5.32:1 on --bg. */
   --red: #b23a2c;
 
+  /* Ballot stances in charts: votó Sí, votó No.
+
+     These replaced --verd and --red as the sí and no fills. That pair differs
+     in hue but hardly in lightness (CIELAB L* 47.5 against 42.3), so for a
+     reader with deuteranopia it collapsed: simulated with the Machado (2009)
+     full-severity matrix, both come out at L* 46.1, a lightness difference of
+     0.1. These two are pulled apart in lightness instead, so they separate
+     without relying on hue at all:
+
+       --stance-si  #3b8f8a  L* 54.5  3.43:1 on --bg, 3.16:1 on --surface,
+                                      3.51:1 on --card. A fill only, never
+                                      text: sí text keeps --verd-text.
+       --stance-no  #6a1b12  L* 23.3  10.57:1 on --bg, 9.75:1 on --surface,
+                                      10.82:1 on --card. Passes as text too.
+       sí against no: 3.08:1, so each segment clears 3:1 against the other
+                     where they meet inside a stacked bar.
+
+     Simulated, sí against no: deuteranopia ΔL* 26.8 and ΔE2000 34.6;
+     protanopia ΔL* 38.5 and ΔE2000 35.9 (normal vision: ΔE2000 52.6).
+
+     Lightness is still a property of colour, so it is not the only cue: every
+     no segment and swatch also carries a light diagonal hatch (see
+     `stripeImage` in components/chart/Bar.tsx), and the legends say which is
+     which in words. */
+  --stance-si: #3b8f8a;
+  --stance-no: #6a1b12;
+
   /* Neutrals. --grey-500 and --abst are 2.59:1 and 1.80:1: bar segments
      and swatches only, never text and never a control boundary. */
   --grey-300: #d7d3d3;
@@ -422,7 +449,8 @@ a {
    drawn with `content` rather than the default triangle so it reads as text,
    not as a tree control, and matches `.src`'s gold rather than the browser's
    own disclosure-widget colour. */
-.caveat > summary {
+.caveat > summary,
+.data-table > summary {
   cursor: pointer;
   list-style: none;
   color: var(--gold-deep);
@@ -433,8 +461,24 @@ a {
   letter-spacing: 0.02em;
 }
 
-.caveat > summary::-webkit-details-marker {
+.caveat > summary::-webkit-details-marker,
+.data-table > summary::-webkit-details-marker {
   display: none;
+}
+
+/* A chart's data as a table, collapsed under the chart — see
+   components/chart/DataTable.tsx. The summary reads like a caveat's, so the
+   two disclosures look like one family; the table itself takes hairlines,
+   like every other table here. */
+.data-table table th,
+.data-table table td {
+  border-top: 1px solid var(--line-soft);
+  padding: 6px 12px 6px 0;
+  vertical-align: baseline;
+}
+
+.data-table table thead th {
+  border-top: none;
 }
 
 .caveat > summary::before {

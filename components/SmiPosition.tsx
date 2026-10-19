@@ -2,6 +2,7 @@ import { euro, fill, percent } from "@/lib/format";
 import { trancheFor, type SmiTranche } from "@/lib/indicators";
 import type { SmiYear } from "@/lib/smi";
 import Bar from "./chart/Bar";
+import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import type { Dict } from "@/lib/i18n";
 
 /**
@@ -23,12 +24,17 @@ export default function SmiPosition({
   tranches,
   smi,
   t,
+  sources,
+  sourceLabel,
   bcp47,
 }: {
   gross: number | null;
   tranches: SmiTranche[];
   smi: SmiYear;
   t: Dict["smiPosition"];
+  /** The INE table the tranches come from, and the decree fixing the SMI. */
+  sources: ChartSource[];
+  sourceLabel: string;
   bcp47: string;
 }) {
   if (gross === null || !(gross > 0)) {
@@ -92,6 +98,7 @@ export default function SmiPosition({
       </figcaption>
 
       <p className="mt-2 text-sm leading-relaxed text-[var(--ink-3)]">{t.caveat}</p>
+      <SourceLine sources={sources} label={sourceLabel} />
     </figure>
   );
 }

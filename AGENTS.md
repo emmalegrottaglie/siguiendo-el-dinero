@@ -272,9 +272,47 @@ never the label.
 
 Two traps this replaced, both worth knowing: `partyMeta` picked its fallback colour with
 `nif.charCodeAt(1)`, which is `NaN` for an empty NIF, and `FALLBACK_COLORS[NaN]` is `undefined` —
-which an SVG `fill` paints **black**, silently, so the donut was monochrome and looked deliberate.
-And a label wrapper that is `absolute` with no width collapses to 0×0, so absolutely-positioned
-children resolve their percentages against nothing and stack at one point.
+which an SVG `fill` paints **black**, silently, so the donut (since replaced by labelled bars) was
+monochrome and looked deliberate. And a label wrapper that is `absolute` with no width collapses to
+0×0, so absolutely-positioned children resolve their percentages against nothing and stack at one
+point.
+
+## Charts: what every chart must carry
+
+Run `RESEARCH-DATAVIZ/05-checklist.md` before a chart ships; the reasoning and sources are in the
+rest of that folder. It was written for a time-series study, so not every line applies here. The
+ones that do, and how this site meets them:
+
+- **Source and data date inside the chart's frame.** Every chart renders `SourceLine`
+  (`components/chart/SourceLine.tsx`) inside its own `<figure>` or panel, not further down the page:
+  publisher, dataset or report, the period or fetch date, and the link. Build the source with
+  `lib/chart-sources.ts`, which reads it from the loaded data file or the module constant the figures
+  came from. Never type a URL or a date at the chart.
+- **Colour is never the only cue, and there is no red/green-only pair.** Sí and No are
+  `--stance-si` and `--stance-no`, chosen to differ in lightness (deuteranopia ΔL* 26.8 when
+  simulated; the old `--verd`/`--red` pair came out at 0.1), and No is hatched everywhere it is
+  drawn. Build stance bars with `stanceSegments()` from `lib/chart-colors.ts`, which applies both.
+  Legends say what each colour is in words; where a category has no single colour (ordinary
+  subsidies use each party's own), the legend says so.
+- **Text 4.5:1, graphics 3:1,** measured on `--bg`, `--surface` and `--card`. Record the measured
+  ratio in the comment beside the token in `app/globals.css`.
+- **Every `aria-hidden` chart has its numbers somewhere a screen reader can reach.** Either the
+  figures are printed beside the marks as text (most `Bar` rows), or a full table is on the page
+  (`GroupBreakdown`, the per-formation table in `ElectoralSpending`, `RightsMap`), or the chart gets
+  a `DataTable` (`components/chart/DataTable.tsx`): a closed "Ver los datos en una tabla"
+  disclosure holding a real table with a caption, column and row headers, and every number the
+  chart draws.
+- **A value axis has a title with its unit,** horizontal, in small capitals above the top-left of
+  the plot ("Nº DE CARGOS EN CADA TRAMO"), and a non-linear axis says so on the chart.
+- **Bars start at zero.** They all do: `Bar` has no baseline option.
+- **No horizontal page scroll at 375px.** A chart wider than that (`VoteFlow`) scrolls inside its
+  own focusable box and says so above it.
+- **No label is truncated.** Names wrap.
+
+Not applicable here, because nothing on this site is a time series or a before-and-after study:
+the index-chart, event-marker, chance-band, control-group, smoothing, fixed-y-range-while-zooming,
+gap-detection and complete-period items. Still open, and planned for follow-up work: keyboard
+reading of values with a live region, PNG export with the caption block, and dark mode.
 
 ## Architecture / where things live
 
@@ -283,7 +321,7 @@ children resolve their percentages against nothing and stack at one point.
 | Path | Role |
 |------|------|
 | `page.tsx` | The front page: ticker, lead investigation, the organisations' rail, the three registers, three columns |
-| `financiacion/page.tsx` | The three declared money flows: electoral spending (donut + the report's lines), 2020 donations by tranche, subsidies |
+| `financiacion/page.tsx` | The three declared money flows: electoral spending (each formation's share + the report's lines), 2020 donations by tranche, subsidies |
 | `fundaciones/page.tsx` | The foundation channel: who pays the party foundations and who governs them |
 | `fundacion/[slug]/page.tsx` | One party-linked entity: money in by source, public money by grantor, findings |
 | `mapa/page.tsx` | The territorial map: which party governs each community, and the recorded hate-crime rate there |
@@ -356,7 +394,8 @@ ordinary browser one, so `FEED_HEADERS` in the registry sends the browser string
 | `lib/governments.ts` | Curated: who holds each community's presidency, and since when. Free of Node imports, so the map's client component can read it |
 | `lib/court-records.ts` | The four verified judicial and electoral-board resolutions, with the status as a **type** |
 | `lib/officeholder-ties.ts` | The board-member → public-office join, gated on one-post-per-name **and** party agreement |
-| `lib/chart-colors.ts` | Each chart category's colour, decided once |
+| `lib/chart-colors.ts` | Each chart category's colour, decided once; `stanceSegments()` for every sí/no/abstention bar |
+| `lib/chart-sources.ts` | Each chart's source line (publisher, dataset, date, link), built from the data it charts |
 | `lib/investitures.ts` | Per community: the investiture arithmetic, and the recorded tally where verified |
 | `lib/spending.ts` | Electoral spending, plus `formationNif`/`formationColor` for the report's coalition labels |
 | `lib/photos.ts` | Portrait lookup, `portraitKeys` for bulk tests |
@@ -385,7 +424,8 @@ the build checked must be the totals the page prints.
 ### Components
 
 `Masthead` (the ink bar, masthead row and tab nav — replaced `Sidebar`), `StatStrip` (the ticker
-and the section stat strips, one component because the anatomy is identical), `SpendDonut`,
+and the section stat strips, one component because the anatomy is identical), `SpendShares`
+(each formation's share of declared electoral spending, as labelled bars),
 `DonationsTable`, `ElectoralSpending`, `VoteFlow` (the money→party→vote ribbons), `RightsMap`
 (the only client-side chart), `CourtRecords`, `PartySwitcher`, `FoundationChannel` +
 `FoundationGovernance`, `Dashboard` (party funding, client), `StanceByGroup`, `ArticleCard`,
@@ -393,6 +433,8 @@ and the section stat strips, one component because the anatomy is identical), `S
 `<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
 it is the standard way to collapse a limitation without deleting it; see the "Every caveat is
 still there" entry in `CHANGELOG.md` for which caveats were and were not converted, and why).
+`components/chart/` holds the chart primitives: `Bar` + `BarLegend`, `SourceLine`, and `DataTable`
+(a chart's numbers as a table, in a closed `<details>`).
 
 Data files in `data/`: `subsidies.json` (live), `salaries.json` (~1.7 MB), `votes.json`,
 `photos.json`, `foundations.json`, `electoral-spending.json`, `regions.json` (projected SVG
@@ -595,8 +637,10 @@ paying a permanent prefix cost to chase it would be the wrong trade.
   `2026-09-09`. There is no machine-readable national register of them; each community's own
   official gazette is the primary route and has not been walked.
 - **Small phones.** Not designed for. Every multi-column section is `auto-fit` with a stated
-  minimum so columns drop one at a time, but the flow diagram in particular needs a rethink below
-  ~600px — probably a sorted list rather than ribbons.
+  minimum so columns drop one at a time. The flow diagram needs about 62rem: below that it scrolls
+  inside its own box (with a line saying so, and its data table underneath), and the page itself
+  does not scroll sideways. It still needs a rethink below ~600px — probably a sorted list rather
+  than ribbons.
 - **Images.** Both slots on the front page are hatched placeholders awaiting licensed imagery. A
   placeholder that looked like a photograph would be a claim about something never photographed.
 - **News registry.** 15 sources, no Catalan-language feed among them, so `/ca` readers are

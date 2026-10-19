@@ -1,5 +1,5 @@
-import { getAggregation } from "./data";
-import { getSalaries } from "./salaries";
+import { getAggregation, SUBSIDIES_DATASET_NAME } from "./data";
+import { getSalaries, SALARIES_SOURCE_URL } from "./salaries";
 import { getVotes, voteDateISO } from "./votes";
 import { getFoundations } from "./foundations";
 import { ROLES, TIES } from "./foundation-people";
@@ -87,7 +87,7 @@ const subsidios = dataset({
     return [
       {
         publisher: agg.source.system,
-        name: "Concesiones a partidos políticos",
+        name: SUBSIDIES_DATASET_NAME,
         period: `actualizado ${agg.generatedAt.slice(0, 10)}`,
         url: agg.source.url,
       },
@@ -251,7 +251,7 @@ const salarios = dataset({
         publisher: data.source.name,
         name: data.source.via,
         period: data.source.updated ?? "",
-        url: "https://transparencia.gob.es",
+        url: SALARIES_SOURCE_URL,
       },
     ];
   },

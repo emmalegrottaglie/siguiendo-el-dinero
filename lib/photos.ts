@@ -59,6 +59,11 @@ export async function portraitKeys(): Promise<Set<string>> {
   return new Set(Object.keys(data.photos));
 }
 
+/** When the portrait build last ran, as ISO; empty when there is no build. */
+export async function photoBuildDate(): Promise<string> {
+  return (await load()).generatedAt;
+}
+
 export async function photoSource(): Promise<PhotosFile["source"] | null> {
   const { source } = await load();
   return source.name && source.url ? source : null;
