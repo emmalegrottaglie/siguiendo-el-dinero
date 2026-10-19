@@ -202,15 +202,15 @@ sourced proceedings, with status and outcome stated, are the defensible form.
 transcribed and checked, so each profile shows what the deputy declared rather than only a link to
 the scan.
 
-**Where it stands (2026-10-19).** 64 of the 349 filings are published: 43 checked against RTVE and
-21 by a second reading. None is waiting for a second reading. The method, the checks and what they
+**Where it stands (2026-10-20).** 84 of the 349 filings are published: 57 checked against RTVE and
+27 by a second reading. None is waiting for a second reading. The method, the checks and what they
 do not cover are in `AGENTS.md` ("The deputies' declarations are transcribed, and nothing is
 published unchecked"); the reader instructions are in `scripts/declaration-transcription.md`.
 
-Remaining: 285 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
+Remaining: 265 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
 and `data/_declaraciones/<cod>.pdf` holds each scan (`npm run build:deputies` downloads them again
 if the cache is gone). The batches take them in Congreso's surname order; the next starts after
-Félix Bolaños García.
+Raquel Clemente Muñoz.
 
 **Procedure.** The second batch settled the settings: a little under one point of the five-hour
 usage window per reading, against two per declaration in the pilot. Run the rest in batches of
@@ -241,6 +241,12 @@ about 20 filings, each its own pull request:
   well as assets, and its items all count towards the "deposits and other assets" total. Splitting
   them would mean judging each item; if that is ever done, it needs a written rule a second reader
   can apply the same way.
+- **Indirect holdings** (open). The form's "Sociedades participadas en más de un 5% por otras
+  sociedades…" block lists companies held by companies the deputy owns. It is transcribed as free
+  text (`holdingsOver5pct`) and counted in no total, since its value may already sit inside the
+  deputy's own stake in the parent company; RTVE adds any amounts in it to financial assets (Pilar
+  Calvo Gómez, fourth batch). Counting it would need the amounts parsed out of the free text, by a
+  written rule.
 - **IRPF** (open). RTVE's listing has no IRPF figure, so an RTVE-checked declaration's IRPF rests on one
   reading. A second reading of the IRPF box alone, which is quick, would close that gap.
 
