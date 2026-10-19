@@ -87,6 +87,10 @@ The form is identical for every deputy.
   - `granted` is "FECHA CONCESIÓN", as written.
   - `amount` is "IMPORTE CONCEDIDO", and `pending` is "SALDO PENDIENTE".
 - **"Otras deudas y obligaciones…"**: its free text is `otherDebts`.
+  - When the deputy runs out of loan rows and continues the loan table in this box, with rows that
+    give a description, a date, an amount granted and a pending balance like the table's own rows,
+    transcribe each such row as a further `loans` entry, in order, and keep only the remaining
+    text, if any, in `otherDebts`.
 - **"OBSERVACIONES"**: this box, together with any text in the large unlabelled box on page 5, is
   `observations`. Join the two with "\n" if both have text.
 
@@ -117,6 +121,7 @@ The form is identical for every deputy.
   - An empty block is `[]`, or null for the free-text fields.
   - Keep a row that has text in its first cell even if its other cells are empty, with null in
     those cells.
+  - Keep a row whose amount is filled even if its first cell is empty, with null in that cell.
 - **Never infer, compute or fill in** anything that is not written on the form.
   - If a cell is genuinely illegible, write null and add its path (for example `loans[0].pending`)
     to `illegible`.

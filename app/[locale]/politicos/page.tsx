@@ -3,6 +3,7 @@ import { getBadges, featuredSlugs, getProfile, placeOf, queryPeople } from "@/li
 import { getDict } from "@/lib/i18n";
 import { euroCompact, integer } from "@/lib/format";
 import Avatar from "@/components/Avatar";
+import PeopleTabs from "@/components/PeopleTabs";
 
 // Search and paging come from the query string.
 export const dynamic = "force-dynamic";
@@ -48,6 +49,7 @@ export default async function PoliticosPage({
     <main className="mx-auto max-w-5xl pb-8">
       <h1 className="display mt-6 text-4xl sm:text-5xl">{P.title}</h1>
       <p className="mt-5 max-w-2xl text-[var(--ink-2)]">{P.intro}</p>
+      <PeopleTabs locale={locale} current="directory" labels={t.assets.tabs} />
 
       {/* Featured: rich profiles */}
       {featuredProfiles.length > 0 && (

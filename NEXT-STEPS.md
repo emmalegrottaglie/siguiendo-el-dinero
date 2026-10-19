@@ -202,31 +202,31 @@ sourced proceedings, with status and outcome stated, are the defensible form.
 transcribed and checked, so each profile shows what the deputy declared rather than only a link to
 the scan.
 
-**Where it stands (2026-10-06).** 18 of the 349 filings are published, all checked against RTVE.
-The method, the checks and what they do not cover are in `AGENTS.md` ("The deputies' declarations
-are transcribed, and nothing is published unchecked"); the reader instructions are in
-`scripts/declaration-transcription.md`. Remaining:
+**Where it stands (2026-10-06).** 44 of the 349 filings are published: 31 checked against RTVE and
+13 by a second reading. None is waiting for a second reading. The method, the checks and what they
+do not cover are in `AGENTS.md` ("The deputies' declarations are transcribed, and nothing is
+published unchecked"); the reader instructions are in `scripts/declaration-transcription.md`.
 
-- 325 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`, and
-  `data/_declaraciones/<cod>.pdf` holds each scan (`npm run build:deputies` downloads them again if
-  the cache is gone).
-- 6 awaiting a second reading:
-  - three whose first reading differed from RTVE: 317 (Abascal Conde, income), 300 (Aizpurua
-    Arzallus, financial assets) and 12 (Rojas García, debts);
-  - three who took their seats after RTVE's August 2023 snapshot, so only a second reading can
-    check them: 365 (López Zamora), 391 (Molina León) and 405 (Jódar Pérez).
+Remaining: 305 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
+and `data/_declaraciones/<cod>.pdf` holds each scan (`npm run build:deputies` downloads them again
+if the cache is gone). The batches take them in Congreso's surname order; the next starts after
+Francisco Aranda Vargas.
 
-**Procedure.** The pilot cost two to three times the estimate per declaration, mostly from readers
-zooming into single cells. Run the rest in small batches, each its own pull request:
+**Procedure.** The second batch settled the settings: a little under one point of the five-hour
+usage window per reading, against two per declaration in the pilot. Run the rest in batches of
+about 20 filings, each its own pull request:
 
 1. Give each reader two declarations and a reading letter ("a", or "b" for a second reading), and
    point it at `scripts/declaration-transcription.md` rather than restating the rules.
 2. Use a lighter model for the readers, and have them read each page at full-page scale, cropping
    only a cell they cannot read that way.
-3. After each batch, run `npm run build:declarations` and `npm run check:declarations`. A reading
+3. Deputies who took their seats after RTVE's August 2023 snapshot get their "a" and "b" readings
+   in the same pass, from different readers, since only a second reading can check them.
+4. After each pass, run `npm run build:declarations` and `npm run check:declarations`. A reading
    that disagrees with RTVE gets a "b" reading from a different reader, made without sight of the
-   "a".
-4. Record in the batch's CHANGELOG entry how many were published, by which check, and which were
+   "a". Where the two readings then agree with each other and not with RTVE, look at the scan for
+   the largest difference before publishing: RTVE has been wrong in every case checked so far.
+5. Record in the batch's CHANGELOG entry how many were published, by which check, and which were
    left out and why.
 
 **Settled, and still open.**
@@ -235,6 +235,10 @@ zooming into single cells. Run the rest in small batches, each its own pull requ
   is a thousands separator, since euro amounts never carry three decimals, and an apostrophe is a
   decimal mark. Each such cell is noted and shown as written beneath its figure. A figure the rules
   still do not settle is illegible, so its declaration waits.
+- **Income in the form's last block** (open). "Otros bienes, rentas o derechos…" holds rents as
+  well as assets, and its items all count towards the "deposits and other assets" total. Splitting
+  them would mean judging each item; if that is ever done, it needs a written rule a second reader
+  can apply the same way.
 - **IRPF** (open). RTVE's listing has no IRPF figure, so an RTVE-checked declaration's IRPF rests on one
   reading. A second reading of the IRPF box alone, which is quick, would close that gap.
 

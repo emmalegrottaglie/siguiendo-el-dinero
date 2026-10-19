@@ -229,6 +229,11 @@ a false match is caught on review. An amount written other than in Spanish forma
 fixed rule (a comma followed by exactly three digits is a thousands separator, since euro amounts
 never carry three decimals; an apostrophe is a decimal mark) and recorded in `notes` with the cell
 exactly as written; the page shows that written form beneath the figure, and `/datos` carries it.
+Two layout rules come from the second batch: a row with an amount and an empty first cell is kept
+with that cell null, and loan rows a deputy continued into the "otras deudas" box are transcribed
+as loans. The form's last block, "otros bienes, rentas o derechos", holds rents as well as assets;
+its items count towards the deposits-and-other-assets total, and the page labels them with the
+block's own title rather than calling them assets.
 The deposits block asks for one balance across all accounts, so a
 figure may sit beside one account line with null on the rest, and the page says so. A deputy with
 no rows in the interests file gets a stated gap rather than a missing section.
@@ -237,7 +242,9 @@ no rows in the interests file gets a stated gap rather than a missing section.
 and a "net worth" would leave out what is often the largest asset. There is no ranking of deputies
 by anything declared, and no tally of how the owners of N properties voted. The declaration sits
 directly above the recorded votes on the profile, with the juxtaposition line, and that is the
-whole link.
+whole link. The side-by-side table at `/politicos/declaraciones` keeps the same rules: Congreso's
+surname order, no sorting by any amount, properties and vehicles counted rather than valued, and no
+column summed across deputies.
 
 ## Every bar goes through one primitive, and its scale is a required prop
 
@@ -280,6 +287,7 @@ children resolve their percentages against nothing and stack at one point.
 | `fundacion/[slug]/page.tsx` | One party-linked entity: money in by source, public money by grantor, findings |
 | `mapa/page.tsx` | The territorial map: which party governs each community, and the recorded hate-crime rate there |
 | `politicos/page.tsx` | Politician directory: featured record-holders + everyone with a profile (the pay register, plus the sitting deputies it does not carry) |
+| `politicos/declaraciones/page.tsx` | What the sitting deputies declared, side by side: each transcribed declaration's totals by section in surname order, a party filter, and the deputies still waiting for a transcription. Shares the `PeopleTabs` sub-navigation with the directory |
 | `politico/[slug]/page.tsx` | One person: pay, party funding, what a deputy declared to Congreso, recorded ballots, social, news |
 | `party/[nif]/page.tsx` | Party detail: formation switcher, public + private money, faces, ledger, group stances, court record, news |
 | `votaciones/page.tsx` | Tracked votes: the money→party→vote flow, then result, per-group breakdown, deputy search |
