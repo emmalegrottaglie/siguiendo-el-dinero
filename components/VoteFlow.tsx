@@ -2,7 +2,7 @@ import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
 import { euroExact, fill, formatDate, integer } from "@/lib/format";
 import { stancesByParty, voteDateISO, type Stance, type KeyVote } from "@/lib/votes";
 import { PARTIES } from "@/lib/parties";
-import { STANCE_SWATCH } from "@/lib/chart-colors";
+import { STANCE_SWATCH, svgFillEdge } from "@/lib/chart-colors";
 import type { Dict } from "@/lib/i18n";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
@@ -28,6 +28,28 @@ const STANCE_COLOUR: Record<Stance, string> = {
   no: STANCE_SWATCH.no,
   ab: STANCE_SWATCH.abstention,
 };
+
+/**
+ * A ribbon's fill and its edge.
+ *
+ * The fill stays at 42% so that where ribbons cross, the one underneath still
+ * shows through. At that strength no party colour reaches the 3:1 a graphic
+ * needs against the page, in either theme (measured on this diagram: 1.32 to
+ * 1.76:1 in the light theme, 1.67 to 2.46:1 in the dark), so each ribbon also
+ * carries a 1px edge: its own party colour mixed 45% with --ink, which darkens
+ * it in the light theme and lightens it in the dark one, so the edge keeps the
+ * party's hue and a ribbon is still matched to its node by colour as well as
+ * by position.
+ *
+ * Measured against the page, the weakest edge is 6.08:1 in the light theme and
+ * 8.68:1 in the dark for the parties drawn today, and 4.75:1 and 7.00:1 across
+ * every colour in lib/parties.ts on --bg, --surface and --card. Against its own
+ * fill it is at least 4.62:1. Where one ribbon crosses another the edge sits on
+ * the other ribbon's fill; there the weakest case is 3.29:1 in the light theme
+ * and 2.67:1 in the dark.
+ */
+const RIBBON_FILL_OPACITY = 0.42;
+const ribbonEdge = (colour: string) => `color-mix(in oklab, ${colour} 45%, var(--ink))`;
 
 /** One page shows one flow diagram, so a fixed pattern id cannot collide. */
 const HATCH_NO = "voteflow-hatch-no";
@@ -205,15 +227,15 @@ export default function VoteFlow({
   const shapes: ExportShape[] = [
     { d: rectPath(SOURCE_X, TOP, SOURCE_W, band), fill: "var(--ink)" },
     ...ribbons.flatMap((r) => [
-      { d: r.ribbonIn, fill: r.colour, opacity: 0.42 },
-      { d: r.ribbonOut, fill: r.colour, opacity: 0.42 },
-      { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour },
+      { d: r.ribbonIn, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
+      { d: r.ribbonOut, fill: r.colour, opacity: RIBBON_FILL_OPACITY, stroke: ribbonEdge(r.colour), strokeWidth: 1 },
+      { d: rectPath(PARTY_X, r.n.y, NODE_W, r.n.h), fill: r.colour, ...svgFillEdge(r.colour) },
     ]),
     ...outs.map((o) => ({
       d: rectPath(OUT_X, o.y, NODE_W, o.h),
       fill: STANCE_COLOUR[o.s],
       // The same light hatch as the page's pattern: No is never colour alone.
-      hatch: o.s === "no" ? { ink: "rgba(243,242,242,0.5)", line: 3, period: 6 } : undefined,
+      hatch: o.s === "no" ? { ink: "var(--hatch-inverse)", line: 3, period: 6 } : undefined,
     })),
   ];
   const labels: ExportLabel[] = [
@@ -285,7 +307,7 @@ export default function VoteFlow({
                 patternTransform="rotate(45)"
               >
                 <rect width={6} height={6} fill={STANCE_COLOUR.no} />
-                <rect width={3} height={6} fill="rgba(243,242,242,0.5)" />
+                <rect width={3} height={6} fill="var(--hatch-inverse)" />
               </pattern>
             </defs>
             {/* Source: all declared donations, as one bar */}
@@ -293,9 +315,30 @@ export default function VoteFlow({
 
             {ribbons.map(({ n, colour, ribbonIn, ribbonOut }) => (
               <g key={n.d.nif}>
-                <path d={ribbonIn} fill={colour} opacity={0.42} />
-                <path d={ribbonOut} fill={colour} opacity={0.42} />
-                <rect x={PARTY_X} y={n.y} width={NODE_W} height={n.h} fill={colour} />
+                {/* fillOpacity, not opacity, so the edge is drawn at full
+                    strength while the fill stays see-through. */}
+                <path
+                  d={ribbonIn}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
+                <path
+                  d={ribbonOut}
+                  fill={colour}
+                  fillOpacity={RIBBON_FILL_OPACITY}
+                  stroke={ribbonEdge(colour)}
+                  strokeWidth={1}
+                />
+                <rect
+                  x={PARTY_X}
+                  y={n.y}
+                  width={NODE_W}
+                  height={n.h}
+                  fill={colour}
+                  {...svgFillEdge(colour)}
+                />
               </g>
             ))}
 

@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { PARTIES } from "@/lib/parties";
+import { fillEdge } from "@/lib/chart-colors";
 import { GOVERNMENTS, GOVERNMENTS_SOURCE, shortName } from "@/lib/governments";
 import { investitureFor, type InvestitureStatus } from "@/lib/investitures";
 import type { HateTerritoryFile, RegionsFile } from "@/lib/regions";
@@ -20,6 +21,7 @@ import {
   type ExportShape,
 } from "@/lib/chart-export";
 import type { Dict } from "@/lib/i18n";
+import ScrollBox from "./chart/ScrollBox";
 
 type LayerId = "gov" | "hate";
 
@@ -48,8 +50,8 @@ interface Cell {
 }
 
 /** The two investiture hatches, as the page's SVG patterns draw them. */
-const HATCH_DECISIVE: ExportHatch = { ink: "rgba(32,31,29,0.34)", line: 2, period: 6 };
-const HATCH_SHORT: ExportHatch = { ink: "rgba(32,31,29,0.22)", line: 1.5, period: 10 };
+const HATCH_DECISIVE: ExportHatch = { ink: "var(--map-hatch)", line: 2, period: 6 };
+const HATCH_SHORT: ExportHatch = { ink: "var(--map-hatch)", line: 1.5, period: 10 };
 
 /**
  * Rows for the ARIA grid over the map.
@@ -148,7 +150,7 @@ export default function RightsMap({
         out[r.id] = {
           id: r.id,
           fill: h
-            ? `color-mix(in oklab, var(--gold) ${(k * 100).toFixed(1)}%, #f4f2ee)`
+            ? `color-mix(in oklab, var(--gold) ${(k * 100).toFixed(1)}%, var(--ramp-low))`
             : "var(--grey-300)",
           value: h ? rate(h.ratePer100k, bcp47) : M.noData,
         };
@@ -343,7 +345,7 @@ export default function RightsMap({
       shapes.push({
         d: r.tiny ? square(r) : r.d,
         fill: cells[r.id].fill,
-        stroke: "var(--bg)",
+        stroke: "var(--map-edge)",
         strokeWidth: 0.8,
       });
     }
@@ -401,7 +403,7 @@ export default function RightsMap({
             const rated = Object.values(hate.territories).map((h) => h.ratePer100k);
             const lo = Math.min(...rated);
             return [
-              { label: `${rate(lo, bcp47)} ${M.perHundredThousand}`, color: `color-mix(in oklab, var(--gold) ${((0.16 + (lo / maxRate) * 0.84) * 100).toFixed(1)}%, #f4f2ee)` },
+              { label: `${rate(lo, bcp47)} ${M.perHundredThousand}`, color: `color-mix(in oklab, var(--gold) ${((0.16 + (lo / maxRate) * 0.84) * 100).toFixed(1)}%, var(--ramp-low))` },
               { label: `${rate(maxRate, bcp47)} ${M.perHundredThousand}`, color: "var(--gold)" },
               ...(regions.regions.some((r) => !hate.territories[r.id])
                 ? [{ label: M.noData, color: "var(--grey-300)" }]
@@ -447,7 +449,7 @@ export default function RightsMap({
     const isSel = r.id === selected;
     const shared = {
       fill: c.fill,
-      stroke: isSel ? "var(--ink)" : "var(--bg)",
+      stroke: isSel ? "var(--ink)" : "var(--map-edge)",
       strokeWidth: isSel ? 1.8 : 0.8,
       className: "region",
       role: "gridcell",
@@ -531,12 +533,12 @@ export default function RightsMap({
             {
               label: M.hatchDecisive,
               bg:
-                "repeating-linear-gradient(45deg, rgba(32,31,29,0.34) 0 2px, transparent 2px 6px)",
+                "repeating-linear-gradient(45deg, var(--map-hatch) 0 2px, transparent 2px 6px)",
             },
             {
               label: M.hatchShort,
               bg:
-                "repeating-linear-gradient(45deg, rgba(32,31,29,0.22) 0 1.5px, transparent 1.5px 10px)",
+                "repeating-linear-gradient(45deg, var(--map-hatch) 0 1.5px, transparent 1.5px 10px)",
             },
           ].map((h) => (
             <li key={h.label} className="flex items-center gap-2">
@@ -588,12 +590,14 @@ export default function RightsMap({
                     the winning total needed; the sparse one marks a community
                     where only the seat arithmetic is verified here. Drawing
                     both the same would present the weaker claim as the
-                    stronger one. */}
+                    stronger one. The two differ in density only: both are
+                    --map-hatch, which clears 3:1 against the fill under it
+                    in both themes (app/globals.css). */}
                 <pattern id="hatch-decisive" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                  <rect width="2" height="6" fill="var(--ink)" opacity="0.34" />
+                  <rect width="2" height="6" fill="var(--map-hatch)" />
                 </pattern>
                 <pattern id="hatch-short" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                  <rect width="1.5" height="10" fill="var(--ink)" opacity="0.22" />
+                  <rect width="1.5" height="10" fill="var(--map-hatch)" />
                 </pattern>
               </defs>
 
@@ -850,7 +854,7 @@ export default function RightsMap({
       {/* Every value as text, in the order the active layer is read in. This is
           not a fallback for the map: a choropleth cannot be read to the
           precision of a number, and nineteen figures are worth having. */}
-      <div className="mt-6 overflow-x-auto">
+      <ScrollBox className="mt-6">
         <table className="w-full min-w-[40rem] border-collapse text-sm">
           <caption
             className="pb-3 text-left"
@@ -921,7 +925,7 @@ export default function RightsMap({
                     <span
                       className="dot"
                       aria-hidden
-                      style={{ width: 9, height: 9, background: row.cell.fill }}
+                      style={{ width: 9, height: 9, background: row.cell.fill, ...fillEdge(row.cell.fill) }}
                     />
                     {row.name}
                   </span>
@@ -942,7 +946,7 @@ export default function RightsMap({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBox>
 
       <ExportButton className="mt-4" spec={image} {...exportLabels(C, layerLabel)} />
 
@@ -1038,7 +1042,7 @@ function SortHeader({
         style={{ color: active ? "var(--gold-deep)" : undefined }}
       >
         {label}
-        <span aria-hidden style={{ opacity: active ? 1 : 0.55, fontSize: "10px" }}>
+        <span aria-hidden style={{ opacity: active ? 1 : 0.7, fontSize: "10px" }}>
           {active && sort!.dir === "asc" ? "\u25b2" : "\u25bc"}
         </span>
       </button>

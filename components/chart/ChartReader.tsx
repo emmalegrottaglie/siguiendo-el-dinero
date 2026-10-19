@@ -35,7 +35,9 @@ import {
  * - A polite live region beside the chart announces the item under the cursor,
  *   with its position ("3 de 12"). While the chart has focus the same text shows
  *   as a small readout below it, for sighted keyboard users of charts whose
- *   marks have no text of their own (the ballot grid's cells).
+ *   marks have no text of their own (the ballot grid's cells). The readout is
+ *   `aria-hidden`: it repeats the live region for the eye, and a screen reader
+ *   reading the page in browse mode should not meet the same text twice.
  * - Pointer hover announces too, but only while the chart does not have
  *   keyboard focus, so a stray mouse never moves or talks over the keyboard
  *   cursor. A click puts the cursor on the clicked item.
@@ -46,6 +48,16 @@ import {
  * follow the grid convention — left and right within a row, up and down to the
  * same column of the next row, Home and End to the ends of the row, Control
  * with Home or End to the first and last cell.
+ *
+ * In grid mode a cell is announced once, by its accessible name, and the live
+ * region stays quiet for keyboard moves. Moving `aria-activedescendant` already
+ * makes a screen reader speak the new cell's name; announcing the same move in
+ * the live region as well made each cell speak twice (the law, then the law
+ * again with its context). So the component sets each cell's `aria-label` to
+ * the full announcement, position included, and the live region is used only
+ * where nothing else speaks: list mode, and pointer hover in either mode. The
+ * chart should still render a short `aria-label` on each cell, so the grid has
+ * names before hydration; this replaces it.
  */
 export default function ChartReader({
   label,
@@ -75,7 +87,11 @@ export default function ChartReader({
   const box = useRef<HTMLDivElement>(null);
   const uid = useId();
   const [active, setActive] = useState(-1);
+  // `spoken` is what the live region says; `readout` is what the eye sees under
+  // the chart. They differ only in grid mode, where keyboard moves are spoken
+  // by the cell's own name and not by the live region.
   const [spoken, setSpoken] = useState("");
+  const [readout, setReadout] = useState("");
   // Tracked from focus events rather than read from `:focus`, which stops
   // matching whenever the window itself loses focus — the cursor and the
   // readout should stay where they are while the reader glances elsewhere.
@@ -98,17 +114,21 @@ export default function ChartReader({
     [items, positionLabel],
   );
 
-  // Grid cells need ids for aria-activedescendant. They are set on the existing
-  // nodes rather than passed down, so a server-rendered chart needs no client
-  // code of its own.
+  // Grid cells need ids for aria-activedescendant, and their accessible name is
+  // the full announcement (see above). Both are set on the existing nodes
+  // rather than passed down, so a server-rendered chart needs no client code of
+  // its own. This runs after the chart's own render has committed, so it wins
+  // over the short label the chart rendered, and runs again when the items
+  // change (the map's layer switch).
   useEffect(() => {
     if (!grid || !box.current) return;
-    box.current.querySelectorAll<HTMLElement>("[data-chart-item]").forEach((el) => {
-      const i = Number(el.dataset.chartItem);
+    box.current.querySelectorAll<Element>("[data-chart-item]").forEach((el) => {
+      const i = Number((el as HTMLElement).dataset.chartItem);
       if (!el.id) el.id = idFor(i);
+      if (i >= 0 && i < items.length) el.setAttribute("aria-label", announce(i));
     });
     // idFor depends only on uid.
-  }, [grid, items.length, uid]);
+  }, [grid, items, announce, uid]);
 
   // A chart whose items change (the subsidy ranking under a filter) keeps the
   // cursor inside the new range rather than pointing past its end.
@@ -143,7 +163,9 @@ export default function ChartReader({
     if (items.length === 0) return;
     const next = Math.max(0, Math.min(items.length - 1, i));
     setActive(next);
-    setSpoken(announce(next));
+    setReadout(announce(next));
+    // In grid mode the cell's name is spoken through aria-activedescendant.
+    if (!grid) setSpoken(announce(next));
     onActiveChange?.(next);
   };
 
@@ -244,7 +266,10 @@ export default function ChartReader({
   const onMouseOver = (e: MouseEvent<HTMLDivElement>) => {
     if (document.activeElement === box.current) return;
     const i = itemAt(e.target);
-    if (i >= 0 && i < items.length) setSpoken(announce(i));
+    if (i >= 0 && i < items.length) {
+      setSpoken(announce(i));
+      setReadout(announce(i));
+    }
   };
 
   const onClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -271,7 +296,10 @@ export default function ChartReader({
       >
         {children}
       </div>
-      <p className="chart-readout" aria-live="polite" aria-atomic="true">
+      <p className="chart-readout" aria-hidden="true">
+        {readout}
+      </p>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
         {spoken}
       </p>
     </div>

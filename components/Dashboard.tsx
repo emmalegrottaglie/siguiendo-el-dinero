@@ -7,7 +7,7 @@ import type { Aggregation, SubsidyKind } from "@/lib/types";
 import { BCP47, type Dict, type Locale } from "@/lib/i18n";
 import { filterAggregation } from "@/lib/normalize";
 import { euroCompact, euroExact, fill, integer, percent, formatDate } from "@/lib/format";
-import { SUBSIDY_COLORS } from "@/lib/chart-colors";
+import { fillEdge, SUBSIDY_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import SourceLine, { type ChartSource } from "./chart/SourceLine";
 import DataTable from "./chart/DataTable";
@@ -27,7 +27,7 @@ type KindFilter = SubsidyKind | "all";
  * It used to be hand-written, and it was wrong: the header legend said
  * ordinary funding was gold and security costs red, while the bars drew
  * ordinary funding in each party's own colour and security costs as a hatched
- * dark ink.
+ * dark ink (light ink in the dark theme).
  */
 function subsidySegments(
   byKind: Record<SubsidyKind, number>,
@@ -40,7 +40,11 @@ function subsidySegments(
       value: byKind.seguridad,
       color: SUBSIDY_COLORS.seguridad,
       label: labels.seguridad,
-      striped: true,
+      // The fill is --ink-2, dark in the light theme and light in the dark
+      // one, the same flip as votó No, so it takes the same inverse hatch.
+      // It used to take the dark hatch, which on a dark fill measured 1.12:1
+      // and could not be seen.
+      striped: "light",
     },
     { value: byKind.otra, color: SUBSIDY_COLORS.otra, label: labels.otra },
   ];
@@ -190,7 +194,7 @@ export default function Dashboard({
                 aria-pressed={kind === tab.key}
                 className={`label-mono inline-flex min-h-11 items-center rounded-full border px-4 transition-all ${
                   kind === tab.key
-                    ? "border-[var(--gold)] bg-[var(--gold)] text-[var(--ink)]"
+                    ? "border-[var(--gold)] bg-[var(--gold)] text-[var(--on-gold)]"
                     : "border-[var(--line)] text-[var(--ink-2)] hover:border-[var(--gold)] hover:text-[var(--ink)]"
                 }`}
               >
@@ -281,7 +285,7 @@ export default function Dashboard({
                     <span className="flex items-center gap-2 font-medium">
                       <span
                         className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{ backgroundColor: p.color }}
+                        style={{ backgroundColor: p.color, ...fillEdge(p.color) }}
                       />
                       <span className="truncate group-hover:text-[var(--gold-deep)]">
                         {p.shortName}

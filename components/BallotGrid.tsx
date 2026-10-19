@@ -134,8 +134,10 @@ export default function BallotGrid({
   return (
     <figure className="mt-6">
       {/* The ARIA grid pattern: one row per topic, one cell per division. The
-          cell's own name is the law, so focus says where the cursor is; the
-          live region adds the topic, the date and the ballot. */}
+          cell is rendered named by its law; once hydrated, ChartReader renames
+          it with the full announcement (law, topic, date, ballot, position), so
+          a screen reader hears each cell once, through aria-activedescendant,
+          and the live region stays quiet for keyboard moves. */}
       <ChartReader
         items={flat.map((v) =>
           say(v.law, v.topicLabel, formatDate(voteDateISO(v), bcp47), said(v)),

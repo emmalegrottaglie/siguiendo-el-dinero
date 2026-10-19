@@ -97,8 +97,9 @@ dossier — the absence is a finding, because apartado Seis requires publication
 
 ## The design system, and the two accents that are not text colours
 
-The visual system is light newsprint: ground `#f3f2f2`, ink `#201f1d`, Cormorant Garamond for
-every heading and display figure and Lora for everything else. Two structural rules run through
+The visual system is newsprint, light by default with a measured dark theme (below). In the light
+theme the ground is `#f3f2f2` and the ink `#201f1d`; Cormorant Garamond sets every heading and
+display figure and Lora everything else. Two structural rules run through
 it and both are load-bearing rather than stylistic: **no shadows anywhere** — structure is
 carried entirely by hairlines, so a panel that needs to read as separate gets a rule, not
 elevation — and **radius is 2px**, except dots at 50%.
@@ -114,15 +115,78 @@ the masthead wordmark and the `h1` emphasis spans.
 The design handoff's own contrast table asserts that verdigris passes AA and that `#605d5d` is
 7.0:1. Neither is true (4.38:1 and 5.83:1). Measure; do not read.
 
+### Two themes, and the rule for every new colour
+
+There is a light theme and a dark one, and both are the same tokens with different values. The
+dark values live in `app/globals.css` twice: under `@media (prefers-color-scheme: dark)` guarded
+by `:root:not([data-theme="light"])`, and under `:root[data-theme="dark"]`. Change one, change
+both. The comment block above them records every measured ratio.
+
+**How the choice works.** The site follows the reader's system setting until the reader picks a
+theme with the masthead toggle (`components/ThemeToggle.tsx`: three buttons, light / dark /
+system, each with `aria-pressed`). A pick is stored in `localStorage` under `theme` and set as
+`data-theme` on `<html>`; "system" removes both, so the media query takes over and follows the
+system live, without a reload. An inline script in `<head>` (`app/[locale]/layout.tsx`) applies a
+stored pick before first paint, so there is no flash of the wrong theme. `suppressHydrationWarning`
+sits on `<html>` only, because that is the one element the script changes before React hydrates.
+
+**The dark theme exists once already in this project's history, and failed.** The first visual
+system was dark. Its muted text token measured 3.48:1, its chip borders 1.77:1, and it stacked an
+aura, a vignette, panel shadows and a tint over photographs, each lowering contrast somewhere
+nobody had measured. The current dark theme has no overlays, glows or shadows, and its lightest
+text token is 6.03:1 at worst. Keep it that way.
+
+The rules:
+
+- **Every new colour needs a dark value with a measured contrast**, recorded in the comment block,
+  before it ships: text 4.5:1 and graphics 3:1 against `--bg`, `--surface` and `--card` in *both*
+  themes. A colour written as a literal in a component does not change with the theme, so it does
+  not get written as a literal: add a token, or derive one with
+  `color-mix(in srgb, var(--token) N%, transparent)` where the old code used an `rgba()`.
+- **Sí and no swap ends in the dark theme.** No is the light fill there and sí the mid one, because
+  with both fills at 3:1 against a dark ground and 3:1 against each other one of them must sit near
+  L* 80. The hatch over no is `--hatch-inverse`, which turns dark for that reason. The stance pair
+  is 3.05:1 in dark (3.08:1 in light), and stays apart in lightness under simulated deuteranopia
+  (ΔL* 37.6) and protanopia (ΔL* 30.8).
+- **A hatch's lines need 3:1 against the fill they sit on, in both themes,** measured as the lines
+  composited over that fill. A hatch is the non-colour cue, so a hatch that cannot be seen is a
+  chart that relies on colour after all. Pick the hatch by what the fill does across themes, not
+  by how it looks in one: `striped: "light"` (`--hatch-inverse`) is for a fill that is dark in
+  the light theme and light in the dark one — votó No (3.70:1 light, 4.04:1 dark) and security
+  costs on `--ink-2` (3.59:1, 3.83:1). The security hatch used the dark `--hatch` until
+  2026-10-19 and measured 1.12:1, invisible. The map's two investiture hatches are `--map-hatch`
+  over the PP's fill (3.34:1, 3.12:1) and differ by density, not by colour. The exported image
+  draws the same tokens, so it measures the same.
+- **A translucent mark still needs a 3:1 boundary.** The flow diagram's ribbons are drawn at 42%
+  so crossings stay readable, which leaves every ribbon fill under 3:1 against the page in both
+  themes (1.32–2.46:1). Each ribbon therefore carries a 1px edge in its party colour mixed 45%
+  with `--ink` (6.08:1 light and 8.68:1 dark at worst against the page, 4.62:1 against its own
+  fill). Where an edge crosses another ribbon's fill it drops to 3.29:1 light and 2.67:1 dark;
+  that is the one place the diagram still falls short.
+- **Party colours are data and are never adjusted.** Where one falls under 3:1 against a dark
+  ground it gets an edge instead: `fillEdge()` / `svgFillEdge()` in `lib/chart-colors.ts` draw a
+  1px `--fill-edge` inside the fill (transparent in the light theme). `Bar` and `BarLegend` apply
+  it to every segment; any other party-coloured swatch, dot or node must call it. Today that is IU
+  and the colour UPN and Foro share. The map gives every community a `--map-edge` stroke instead.
+- **Text on a gold fill takes `--on-gold`,** never `--ink`, which is light in the dark theme.
+- **Photographs are never inverted or filtered for the theme.** Their frames keep a visible edge.
+
 Two further traps, both of which have cost time here:
 
 - **A localised percentage is not a CSS length.** `es-ES` renders 0.545 as "54,5", and a bar
   given `width: 54,5%` collapses to nothing rather than erroring. Use `cssPercent()` for layout
   and `percent()` for display, and never one for the other.
-- **`.eyebrow` and `.label-mono` must stay in `@layer base`.** They set colour and size, which
-  Tailwind utilities routinely override; authored unlayered they beat every utility regardless of
-  specificity, because unlayered styles win over every cascade layer. `:where()` does not fix it —
-  the problem is layer order, not specificity.
+- **Base styles go in `@layer base`, never unlayered.** That covers `.eyebrow` and `.label-mono`,
+  which set colour and size that Tailwind utilities routinely override, and the element defaults
+  (`*`, `html`, `body`, `a`). Authored unlayered, a rule beats every utility regardless of
+  specificity, because unlayered styles win over every cascade layer; `:where()` does not fix it —
+  the problem is layer order, not specificity. This has bitten twice: in September 62 call sites
+  of the two classes rendered the wrong colour, and until 2026-10-19 an unlayered
+  `a { color: inherit }` made every link ignore its `text-[…]` class (the party filter counts on
+  `/politicos` measured 4.21:1 because of it). Moving that rule changed the colour of exactly the
+  links whose class asked for a different one — the skip link, the back links, the chips, a few
+  inline links — and nothing else. The one deliberate exception is the global `:focus-visible`
+  ring, which stays unlayered so that `outline-none` on the two search inputs cannot remove it.
 
 ## The court record's status is a type, not a string
 
@@ -286,8 +350,8 @@ ones that do, and how this site meets them:
   drawn. Build stance bars with `stanceSegments()` from `lib/chart-colors.ts`, which applies both.
   Legends say what each colour is in words; where a category has no single colour (ordinary
   subsidies use each party's own), the legend says so.
-- **Text 4.5:1, graphics 3:1,** measured on `--bg`, `--surface` and `--card`. Record the measured
-  ratio in the comment beside the token in `app/globals.css`.
+- **Text 4.5:1, graphics 3:1,** measured on `--bg`, `--surface` and `--card`, in both themes.
+  Record the measured ratio in the comment beside the token in `app/globals.css`.
 - **Every `aria-hidden` chart has its numbers somewhere a screen reader can reach.** Either the
   figures are printed beside the marks as text (most `Bar` rows), or a full table is on the page
   (`GroupBreakdown`, the per-formation table in `ElectoralSpending`, `RightsMap`), or the chart gets
@@ -298,7 +362,12 @@ ones that do, and how this site meets them:
   the plot ("Nº DE CARGOS EN CADA TRAMO"), and a non-linear axis says so on the chart.
 - **Bars start at zero.** They all do: `Bar` has no baseline option.
 - **No horizontal page scroll at 375px.** A chart wider than that (`VoteFlow`) scrolls inside its
-  own focusable box and says so above it.
+  own focusable box and says so above it. A table wider than that goes in `ScrollBox`
+  (`components/chart/ScrollBox.tsx`), which scrolls it inside its own box and, only while the
+  table actually overflows, makes the box a tab stop and a region named by the table's caption, so
+  a keyboard user can scroll it with the arrow keys. `DataTable` uses it; so does every long table
+  on the site (map, group breakdown, electoral spending, declarations, donations, foundations,
+  methodology).
 - **No label is truncated.** Names wrap.
 - **Every new chart with discrete values is readable from the keyboard.** Wrap its marks in
   `ChartReader` (`components/chart/ChartReader.tsx`): give each mark `data-chart-item={index}` and
@@ -308,9 +377,14 @@ ones that do, and how this site meets them:
   ends, and a polite live region announces the value with its context ("PSOE · 83.852.842,14 € ·
   27,9 % del total · 2 de 28"). The cursor is an outline set as an attribute, so nothing is
   redrawn under the reader. A chart laid out in rows and columns passes `rows` and gets the ARIA
-  grid pattern (`BallotGrid`, and `RightsMap`, whose rows are banded from the centroids). Real
-  tables (`GroupBreakdown`, `DonationsTable`, the per-formation and per-territory tables) are left
-  to table navigation and do not get a reader.
+  grid pattern (`BallotGrid`, and `RightsMap`, whose rows are banded from the centroids). In grid
+  mode a cell must be announced once: `aria-activedescendant` already makes a screen reader speak
+  the cell's name, so `ChartReader` renames each cell with the full announcement and keeps the live
+  region quiet for keyboard moves (it still speaks for list charts and for pointer hover). Before
+  2026-10-19 a cell was spoken twice, its short name and then the live region. The visible readout
+  under the chart is `aria-hidden` for the same reason. Real tables (`GroupBreakdown`,
+  `DonationsTable`, the per-formation and per-territory tables) are left to table navigation and
+  do not get a reader; their sortable headers are `<button>`s inside a `<th aria-sort>`.
 - **Every main chart has a "Descargar imagen" button, and the image carries its source and date.**
   Describe the chart as data (`ChartExport` in `lib/chart-export.ts`: `bars`, `grid` or `shapes`,
   the last taking SVG path data) and render `ExportButton`. Always build the frame with
@@ -321,18 +395,22 @@ ones that do, and how this site meets them:
   Pass rows in the order the page shows them and "—" for an unknown value: the image may not rank
   or compare anything the page does not. The main charts with an export today: the subsidy
   ranking, electoral spending by formation and by line, the money-and-vote flow, the map (either
-  layer), a profile's pay distribution and ballot grid, the three `/contexto` charts and the
-  coverage chart. The front-page summaries, `StanceByGroup` and the small single-bar readouts have
-  keyboard reading but no export; they summarise charts that have one.
+  layer), a profile's pay distribution and ballot grid, the three `/contexto` charts, the
+  coverage chart, and the three front-page summaries (the nine divisions' tallies, the donor
+  tranches, which appear nowhere else, and spending by formation). `StanceByGroup`, each division's
+  result bar on `/votaciones` and the small single bars on party and comunidad pages have keyboard
+  reading but no export: each is one bar or one list inside a card, read in place rather than
+  shared, and its figures are printed beside it as text. A value too wide for its column wraps at its " · "
+  separators in the image rather than running over the bar.
 - **Fonts are on `<html>`.** `--font-heading` and `--font-body` are declared on `:root` and refer to
   the next/font variables, so those variables must be set on `<html>` too; set on `<body>`, both
   resolved as invalid and the site and the exported images fell back to the system sans.
 
 Not applicable here, because nothing on this site is a time series or a before-and-after study:
 the index-chart, event-marker, chance-band, control-group, smoothing, fixed-y-range-while-zooming,
-gap-detection and complete-period items. Still open: dark mode (in progress separately; the hatch
-inks in `stripeInk()` and the map's hatch constants are still light-theme literals and will need
-tokens).
+gap-detection and complete-period items. Dark mode is done; see "Two themes" above. Charts read
+every colour from a CSS variable, so a theme change needs no redraw, and the exported image resolves
+the same variables at export time, so it takes the reader's theme — keep it that way.
 
 ## Architecture / where things live
 
@@ -448,8 +526,8 @@ and the section stat strips, one component because the anatomy is identical), `S
 `DonationsTable`, `ElectoralSpending`, `VoteFlow` (the money→party→vote ribbons), `RightsMap`
 (the only client-side chart), `CourtRecords`, `PartySwitcher`, `FoundationChannel` +
 `FoundationGovernance`, `Dashboard` (party funding, client), `StanceByGroup`, `ArticleCard`,
-`Avatar` + `PhotoCredit`, `NewsFeed`, `BlueskyFeed`, `CountUp`, `LocaleToggle`, `Caveat` (a
-`<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
+`Avatar` + `PhotoCredit`, `NewsFeed`, `BlueskyFeed`, `CountUp`, `LocaleToggle`, `ThemeToggle`,
+`Caveat` (a `<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
 it is the standard way to collapse a limitation without deleting it; see the "Every caveat is
 still there" entry in `CHANGELOG.md` for which caveats were and were not converted, and why).
 `components/chart/` holds the chart primitives: `Bar` + `BarLegend`, `SourceLine`, and `DataTable`

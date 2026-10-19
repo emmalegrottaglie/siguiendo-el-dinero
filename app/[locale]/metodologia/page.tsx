@@ -23,6 +23,7 @@ import {
   salariesSource,
   votesSource,
 } from "@/lib/chart-sources";
+import ScrollBox from "@/components/chart/ScrollBox";
 
 export const revalidate = 3600;
 
@@ -116,7 +117,7 @@ export default async function MetodologiaPage({
           {m.feedsGuard(SOURCE_STALE_DAYS, ITEM_MAX_AGE_DAYS)}
         </p>
 
-        <div className="mt-2 overflow-x-auto">
+        <ScrollBox className="mt-2">
           <table className="w-full min-w-[34rem] border-collapse text-sm">
             <caption className="sr-only">{m.feedsTitle}</caption>
             <thead>
@@ -145,7 +146,7 @@ export default async function MetodologiaPage({
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollBox>
 
         <p className="mt-4">{m.feedsExcludedP}</p>
         <ul>
