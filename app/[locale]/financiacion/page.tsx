@@ -8,6 +8,8 @@ import DonationsTable from "@/components/DonationsTable";
 import ElectoralSpending from "@/components/ElectoralSpending";
 import StatStrip, { type StatItem } from "@/components/StatStrip";
 import { subsidiesSource } from "@/lib/chart-sources";
+import { channelTotals, getFoundations } from "@/lib/foundations";
+import MoneyRoutes from "@/components/MoneyRoutes";
 
 export const revalidate = 3600;
 
@@ -28,10 +30,16 @@ export default async function FinanciacionPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
-  const [agg, spend] = await Promise.all([getAggregation(), getSpending()]);
+  const [agg, spend, foundations] = await Promise.all([
+    getAggregation(),
+    getSpending(),
+    getFoundations(),
+  ]);
   const { locale, bcp47, t } = getDict(localeParam);
   const S = t.fundingStats;
   const totals = spendingTotals(spend);
+  const fTotals = channelTotals(foundations);
+  const fYears = Object.keys(foundations.years).sort();
 
   const stats: StatItem[] = [
     {
@@ -95,9 +103,24 @@ export default async function FinanciacionPage({
         className="border-t border-[var(--line)]"
       />
 
+      {/* The routes first: they say what the three channels below are, and
+          which rules each runs under, before any of them is charted. */}
+      <MoneyRoutes
+        m={t.money}
+        bcp47={bcp47}
+        locale={locale}
+        subsidies={agg.grandTotal}
+        foundations={{
+          companies: fTotals.companies,
+          partyShare: fTotals.partyShare,
+          years:
+            fYears.length > 1 ? `${fYears[0]}–${fYears[fYears.length - 1]}` : (fYears[0] ?? "—"),
+        }}
+      />
+
       <ElectoralSpending data={spend} t={t} bcp47={bcp47} />
 
-      <div className="mt-10 border-t border-[var(--line)]">
+      <div id="donaciones" className="mt-10 scroll-mt-6 border-t border-[var(--line)]">
         <DonationsTable t={t} bcp47={bcp47} locale={locale} />
       </div>
 
@@ -111,6 +134,7 @@ export default async function FinanciacionPage({
           home={t.home}
           kinds={t.kinds}
           charts={t.charts}
+          money={t.money}
           source={subsidiesSource(agg, t.charts, bcp47)}
           locale={locale}
         />

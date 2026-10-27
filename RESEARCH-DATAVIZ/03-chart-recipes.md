@@ -83,6 +83,30 @@ One line-chart function drew every chart. Two options made it reusable beyond ti
 - **A non-time x axis**: pass a tick generator and a formatter for x values (used for "hours from event").
 - **A band that varies along x**: pass lower and upper edges as point lists, drawn as one polygon per run where both edges exist. The data table gets "RANGE LOW" and "RANGE HIGH" columns, because the band is data too.
 
+## 5. Lead with the finding
+
+Added 2026-10-27, after Al Jazeera's "Tracking the money" explainer on US midterm donors. Its
+charts are titled with what they show ("Elon Musk gave $446m, more than the next three donors
+combined") rather than with what they are ("Biggest individual donors"), and the chart becomes the
+evidence for the sentence. Three of its devices transfer to this site; one does not.
+
+- **The finding as the lead.** One sentence above the chart, computed from the chart's own rows
+  so it cannot drift from the marks (`components/chart/Finding.tsx`). It states a size or a
+  share, never a reason.
+- **The whole as one shape.** A treemap of all state subsidies in the current selection, above the
+  ranked bars that give the exact figures. Area is read less precisely than length, so it never
+  replaces them.
+- **An explainer of the routes.** Numbered rows, each drawn as source, rules and recipient, with
+  the rules taken from the consolidated text of the law and the figure its official source gives.
+- **Large figures on the graphic itself.** The amounts sit in the treemap's cells and beside each
+  route, at a size that reads before the labels do.
+
+What does not transfer: the newspaper grouped donors into "Republican-aligned" and
+"Democratic-aligned" camps and printed each camp's total. Grouping parties into blocs is a
+classification of stance, which this site does not make in a chart, so the treemap groups by party
+only. A ranking of individual donors is not possible either: the Tribunal de Cuentas publishes
+donations to parties by amount tranche, not by donor.
+
 ## Charts we decided not to make
 
 - **A counter of "events that didn't happen".** It states the cause as fact.

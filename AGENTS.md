@@ -377,6 +377,21 @@ ones that do, and how this site meets them:
   on the site (map, group breakdown, electoral spending, declarations, donations, foundations,
   methodology).
 - **No label is truncated.** Names wrap.
+- **A chart may lead with its finding, and the finding is computed.** `Finding`
+  (`components/chart/Finding.tsx`) sets one sentence above a chart that states what it shows ("PP,
+  PSOE y Vox recibieron el 72 % de lo concedido"). Build the sentence from a template in
+  `lib/i18n.ts` filled from the rows the chart draws, never typed as a literal, so it follows the
+  data and the filters. It states a size, a share or a count; never a reason, never a comparison
+  the chart does not draw. Where the selection is too small for the sentence to say anything (the
+  treemap's with three parties or fewer), leave it out.
+- **An area chart never stands alone.** The subsidy treemap (`components/SubsidyTreemap.tsx`,
+  laid out by `lib/treemap.ts`) sits above the ranked bars and their table, which carry the exact
+  figures, because area is read less precisely than length. Its labels sit on a chip of
+  `--card`, not on the party's colour, so their contrast does not depend on the party; each cell
+  is a size container and shows its name and figure only once it is wide enough to hold them.
+  Parties under 2 % of the selection share an "Otros" cell, and the reader lists them by name. It
+  groups by party only: grouping parties into blocs or camps in a chart is a classification of
+  stance, which this site does not make.
 - **Every new chart with discrete values is readable from the keyboard.** Wrap its marks in
   `ChartReader` (`components/chart/ChartReader.tsx`): give each mark `data-chart-item={index}` and
   pass one announcement per mark as `items`, built with `say()` and labelled with `readerProps()`
@@ -402,7 +417,7 @@ ones that do, and how this site meets them:
   them. Colours are CSS variables resolved at export time, so the image takes the reader's theme.
   Pass rows in the order the page shows them and "—" for an unknown value: the image may not rank
   or compare anything the page does not. The main charts with an export today: the subsidy
-  ranking, electoral spending by formation and by line, the money-and-vote flow, the map (either
+  treemap and ranking, electoral spending by formation and by line, the money-and-vote flow, the map (either
   layer), a profile's pay distribution and ballot grid, the three `/contexto` charts, the
   coverage chart, and the three front-page summaries (the nine divisions' tallies, the donor
   tranches, which appear nowhere else, and spending by formation). `StanceByGroup`, each division's
