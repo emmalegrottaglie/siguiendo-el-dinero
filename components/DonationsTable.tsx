@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { DONATIONS_SOURCE, donationsRanked } from "@/lib/donations";
-import { euroExact, integer } from "@/lib/format";
+import { euroExact, fill, integer, percent } from "@/lib/format";
 import { PARTIES } from "@/lib/parties";
 import { fillEdge, TRANCHE_COLORS } from "@/lib/chart-colors";
 import Bar, { BarLegend, type Segment } from "./chart/Bar";
 import Caveat from "./Caveat";
 import type { Dict, Locale } from "@/lib/i18n";
 import ScrollBox from "./chart/ScrollBox";
+import Finding from "./chart/Finding";
 
 /**
  * Private donations declared for 2020, by party and by tranche.
@@ -34,6 +35,15 @@ export default function DonationsTable({
   const rows = donationsRanked();
   const max = Math.max(...rows.map((r) => r.total.amount));
 
+  // The finding is the shape the tranches show, computed from the same rows:
+  // most donors give little, and the money they give is the smaller part.
+  const smallDonors = rows.reduce((s, r) => s + r.small.donors, 0);
+  const smallAmount = rows.reduce((s, r) => s + r.small.amount, 0);
+  const finding = fill(t.money.donationsFinding, {
+    donorShare: percent(smallDonors / DONATIONS_SOURCE.grandDonors, bcp47, 0),
+    amountShare: percent(smallAmount / DONATIONS_SOURCE.grandTotal, bcp47, 0),
+  });
+
   return (
     <section className="pt-8">
       <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
@@ -54,6 +64,8 @@ export default function DonationsTable({
           {F.tranchesNote}
         </p>
       </div>
+
+      <Finding className="mt-5">{finding}</Finding>
 
       <ScrollBox className="mt-5">
         <table className="min-w-[44rem] w-full border-collapse text-sm">

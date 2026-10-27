@@ -325,6 +325,75 @@ cite their report once per section rather than inside each chart.
 
 ---
 
+## 2026-10-27 — The money at a glance: routes, the whole as one shape, and findings as leads
+
+Prompted by Al Jazeera's "Tracking the money" explainer on the 2026 US midterm donors (27 October
+2026), which condenses its data into a few simple graphics. Four of its devices are now on
+`/financiacion`.
+
+**How money reaches a party** (`components/MoneyRoutes.tsx`). A numbered panel of the three
+routes, each drawn as source, rules and recipient, with the figure its official source gives:
+
+1. state subsidies, from the National Subsidies Database (BDNS);
+2. private donations to a party, from the Tribunal de Cuentas;
+3. donations to a party's linked foundations, from the Tribunal de Cuentas.
+
+The rules are those of Ley Orgánica 8/2007, checked against the BOE's consolidated text on
+2026-10-27:
+
+- art. 2 lists the public subsidies;
+- art. 4.2 requires donations to be named and refuses donors with a live public contract;
+- art. 5.Uno bars anonymous donations, more than €50,000 a year from one person, and donations
+  from companies;
+- disposición adicional séptima lifts the cap and the company ban for foundations, requires a
+  public deed above €120,000, and requires company donations to be notified to the Tribunal de
+  Cuentas within three months.
+
+The three figures come from different sources and years, and the panel says so and does not add
+them. It also states the gap: this site holds no donor-by-donor data, because the report it uses
+gives donations by amount tranche.
+
+**Everything granted, at a glance** (`components/SubsidyTreemap.tsx`, `lib/treemap.ts`).
+
+- Every euro of state subsidy in the current selection is drawn as one squarified treemap, one
+  cell per party. It sits under the filters and redraws with them.
+- Parties under 2 % share an "Otros" cell, which the keyboard reader lists by name.
+- Labels sit on a chip of page ground, so their contrast does not depend on the party's colour.
+  They appear only once a cell is wide enough to hold them, so a phone shows fewer labels, never
+  cut-off ones.
+- Area is read less precisely than length, so the treemap sits above the ranked bars and their
+  table rather than replacing them.
+- It is keyboard-readable and has an image export. Its parts are not in the exported image, which
+  lists the eight largest cells beside the drawing instead.
+- It groups by party only. The newspaper grouped donors into political camps; grouping parties
+  into blocs is a classification of stance, which this site does not make in a chart.
+
+**Findings as leads** (`components/chart/Finding.tsx`). Two charts now open with the sentence
+they show, computed from their own rows, never typed:
+
+- above the treemap: "PP, PSOE y Vox recibieron el 72 % de lo concedido", which follows the
+  filters and is left out when three parties or fewer are selected;
+- above the donations table: "El 92 % de los donantes dio menos de 1.000 €, y entre todos
+  aportaron el 33 % del dinero".
+
+**Large figures on the graphic.** The treemap prints each large party's amount in its cell, sized
+to the cell, and each route prints its figure beside it. The page's stat strip, which already
+carried the headline totals, is unchanged.
+
+**Not done.** A ranking of individual donors, the newspaper's main chart, is not possible with
+the data this site holds, and the routes panel says why.
+
+**Verified.**
+
+- `npx tsc --noEmit` and `npm run build` pass.
+- The treemap's layout was checked to tile its box exactly, with each cell's area proportional to
+  its value.
+- In the browser at 1024px and 375px, light and dark, in es, en and ca: no horizontal scroll at
+  375px; arrow keys, Home and End read the treemap cell by cell; no console errors.
+- The exported image was not opened.
+
+---
+
 ## 2026-10-20 — Asset declarations, fifth batch: 104 published
 
 **What was read.** The next 20 first filings in Congreso's surname order, from Ana Cobo Carmona to

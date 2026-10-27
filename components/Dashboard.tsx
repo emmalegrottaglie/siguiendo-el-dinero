@@ -17,6 +17,7 @@ import { readerProps, say } from "@/lib/chart-reader";
 import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
 import { stagger } from "@/lib/motion";
 import CountUp from "./CountUp";
+import SubsidyTreemap from "./SubsidyTreemap";
 
 type KindFilter = SubsidyKind | "all";
 
@@ -55,6 +56,7 @@ export default function Dashboard({
   home,
   kinds,
   charts,
+  money,
   source,
   locale,
 }: {
@@ -62,6 +64,7 @@ export default function Dashboard({
   home: Dict["home"];
   kinds: Dict["kinds"];
   charts: Dict["charts"];
+  money: Dict["money"];
   /** The BDNS snapshot this ranking is read from, built on the server. */
   source: ChartSource;
   locale: Locale;
@@ -156,7 +159,7 @@ export default function Dashboard({
           This section used to carry the page's <h1>, which bound the title to
           the least surprising of the three money channels. The page owns the
           title now; this is a section heading like the other two. */}
-      <section className="mx-auto mt-20 max-w-6xl pb-10">
+      <section id="reparto" className="mx-auto mt-20 max-w-6xl scroll-mt-6 pb-10">
         <h2 className="display section-tick text-2xl">{home.channelTitle}</h2>
 
         <p className="mt-6 max-w-xl text-[var(--ink-2)]">{home.intro}</p>
@@ -234,6 +237,20 @@ export default function Dashboard({
           </div>
         </div>
       </section>
+
+      {/* ---------- The whole, at a glance ----------
+          Under the controls, because it redraws with them: a chart above the
+          filters that changed when they did would change out of view. */}
+      <SubsidyTreemap
+        parties={agg.parties}
+        grandTotal={agg.grandTotal}
+        m={money}
+        charts={charts}
+        source={source}
+        selection={selection || kinds.all}
+        bcp47={bcp47}
+        locale={locale}
+      />
 
       {/* ---------- Ranked bars ---------- */}
       <section className="mx-auto max-w-6xl pt-14">
