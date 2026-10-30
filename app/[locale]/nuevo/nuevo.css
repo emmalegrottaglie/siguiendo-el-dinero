@@ -29,6 +29,7 @@
   --n-donors: #8f5c0c;
   --n-foundations: #1b6e63;
   --n-companies: #74468a;
+  --n-topic: #a3305a;
   --n-focus: #2457a6;
 
   --n-serif: var(--font-literata), Georgia, serif;
@@ -58,6 +59,7 @@
     --n-donors: #d6a452;
     --n-foundations: #56b8a9;
     --n-companies: #bc97cf;
+    --n-topic: #e987aa;
     --n-focus: #7aa5e6;
   }
 }
@@ -73,6 +75,7 @@
   --n-donors: #d6a452;
   --n-foundations: #56b8a9;
   --n-companies: #bc97cf;
+  --n-topic: #e987aa;
   --n-focus: #7aa5e6;
 }
 
@@ -182,6 +185,13 @@ body:has(.n-root) #main {
 .n-foundations { --route: var(--n-foundations); }
 .n-companies { --route: var(--n-companies); }
 .n-neutral { --route: var(--n-ink-3); }
+/* Themes are lines too, but not money: one accent of their own (6.1:1 light, 7.1:1 dark). */
+.n-topic { --route: var(--n-topic); }
+
+/* The hatch for votes against: never colour alone. */
+.n-hatch {
+  background-image: repeating-linear-gradient(45deg, var(--n-ink-3) 0 2px, transparent 2px 6px);
+}
 .n-route-text { color: var(--route); }
 
 /* The search field, the first thing most readers use. */

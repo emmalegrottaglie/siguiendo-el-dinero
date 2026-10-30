@@ -19,8 +19,18 @@ import { getVotes } from "@/lib/votes";
 import { euroExact, euroM, fill, integer, percent } from "@/lib/format";
 import RouteMap from "@/components/nuevo/RouteMap";
 import ShareBar from "@/components/nuevo/ShareBar";
+import Line from "@/components/nuevo/Line";
+import DotGrid from "@/components/nuevo/DotGrid";
 
 export const revalidate = 3600;
+
+/** What kind of vote each station on a topic's line is, in a few words. */
+const KIND_NOTE: Record<string, string> = {
+  ley: "votación final de ley",
+  toma: "toma en consideración",
+  pnl: "proposición no de ley",
+  mocion: "moción",
+};
 
 /**
  * The redesign prototype's front door.
@@ -86,12 +96,24 @@ export default async function PrototypeHome({
   const filed = deputies.deputies.filter((d) => d.filings.some((x) => x.kind === "bienes")).length;
   const notYet = filed - declarations.length;
 
-  const topics = [...new Map(votes.votes.map((v) => [v.topic, v.topicLabel])).entries()].map(
-    ([topic, label]) => ({
-      topic,
-      label,
-      count: votes.votes.filter((v) => v.topic === topic).length,
-    }),
+  // Each topic's votes in date order; dates are published as "16/2/2023".
+  const when = (d: string) => {
+    const [day, month, year] = d.split("/").map(Number);
+    return Date.UTC(year, month - 1, day);
+  };
+  const topics = votes.topics
+    .map((t) => ({
+      topic: t.id,
+      label: t.label,
+      votes: votes.votes.filter((v) => v.topic === t.id).sort((a, b) => when(a.date) - when(b.date)),
+    }))
+    .filter((t) => t.votes.length > 0);
+
+  // Years from the first audited year on this site to now, for the audit-lag lines.
+  const firstYear = Math.min(DONATIONS_SOURCE.year, ...fYears.map(Number));
+  const auditYears = Array.from(
+    { length: new Date().getFullYear() - firstYear + 1 },
+    (_, i) => firstYear + i,
   );
 
   const L = (path: string) => `/${locale}${path}`;
@@ -193,6 +215,7 @@ export default async function PrototypeHome({
             figure={euroM(f.party + f.companies + f.individuals, bcp47, 1)}
             figureNote={`en aportaciones, entre ${fYearSpan}`}
             finding={`El ${pct(f.partyShare)} lo puso el propio partido. Las empresas, que sí pueden donar a una fundación, aportaron el ${pct(f.companiesShare)}.`}
+            findingNote="El dinero de un partido sale a su vez de subvenciones públicas, cuotas de afiliados y donaciones (Ley Orgánica 8/2007, art. 2). Cuánto de cada fuente tiene cada partido está en sus cuentas auditadas por el Tribunal de Cuentas, que esta web todavía no recoge."
             bar={[
               { label: "Del propio partido", value: f.party },
               { label: "De empresas", value: f.companies },
@@ -221,61 +244,74 @@ export default async function PrototypeHome({
           cargo es el de la fundación.
         </p>
 
-        {/* Every match, grouped by foundation. A first-N list showed one
-            party's foundation only, which read as a choice the data did not make. */}
-        <div className="mt-8 grid gap-x-10 gap-y-8 md:grid-cols-2">
-          {byFoundation.map(([foundation, list]) => (
-            <div key={foundation}>
+        {/* Each foundation is a station on the foundations' line, and its board
+            members with public office hang off it. Every match is listed,
+            grouped by foundation: a first-N list showed one party's
+            foundation only, which read as a choice the data did not make. */}
+        {byFoundation.map(([foundation, list]) => (
+          <div key={foundation} className="n-foundations mt-12">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span
+                aria-hidden
+                className="h-[23px] w-[23px] shrink-0 rounded-full border-[3px]"
+                style={{ borderColor: "var(--route)", background: "var(--n-card)" }}
+              />
               <h3 className="n-h3">
                 <Link href={L(`/fundacion/${entitySlug(foundation)}`)}>{displayName(foundation)}</Link>
               </h3>
-              <p className="n-meta mt-1">
+              <span aria-hidden className="hidden h-[5px] min-w-8 flex-1 sm:block" style={{ background: "var(--route)" }} />
+              <span className="n-meta">
                 {list.length === 1 ? "1 persona con cargo público" : `${list.length} personas con cargo público`} en su patronato
-              </p>
-              <ul className="mt-3">
-                {list.map(({ tie, role }) => (
-                  <li key={tie.slug + role} className="border-t border-[var(--n-rule)] py-3">
-                    <Link href={L(`/nuevo/politico/${tie.slug}`)} className="font-bold">
-                      {tie.person}
-                    </Link>
-                    <span className="text-[var(--n-ink-2)]">, {role.toLowerCase()}</span>
-                    <p className="n-meta mt-0.5">
-                      {tie.organisation}
-                      {tie.role ? `, ${tie.role}` : ""}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 grid gap-8 border-t border-[var(--n-rule)] pt-8 md:grid-cols-[1fr_1fr]">
-          <div>
-            <p className="n-figure n-companies n-route-text" style={{ fontSize: "2.6rem" }}>
-              {integer(withSecurities, bcp47)}
-              <span className="n-meta" style={{ fontFamily: "var(--n-sans)", fontSize: "1rem" }}>
-                {" "}
-                de {integer(declarations.length, bcp47)}
               </span>
+            </div>
+            <ul className="mt-4 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+              {list.map(({ tie, role }) => (
+                <li key={tie.slug + role} className="border-t border-[var(--n-rule)] py-3">
+                  <Link href={L(`/nuevo/politico/${tie.slug}`)} className="font-bold">
+                    {tie.person}
+                  </Link>
+                  <span className="text-[var(--n-ink-2)]">, {role.toLowerCase()}</span>
+                  <p className="n-meta mt-0.5">
+                    {tie.organisation}
+                    {tie.role ? `, ${tie.role}` : ""}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        {/* The declarations, one dot each: how much is read, and what it shows. */}
+        <div className="mt-16 grid gap-x-12 gap-y-6 border-t border-[var(--n-rule)] pt-10 lg:grid-cols-[minmax(0,22rem)_1fr]">
+          <div>
+            <h3 className="n-h3">Lo que declaran los diputados</h3>
+            <p className="n-finding mt-3">
+              {`${integer(withSecurities, bcp47)} de los ${integer(declarations.length, bcp47)} diputados con la declaración ya transcrita declaran acciones, bonos u otros valores.`}
             </p>
-            <p className="mt-3 max-w-[30em]">
-              diputados con la declaración transcrita declaran acciones, bonos u otros valores, según
-              su declaración de bienes al Congreso.
-            </p>
-            <p className="n-meta mt-2">
+            <p className="n-meta mt-3">
+              Un punto por diputado con declaración de bienes en el Congreso. Se leen del escaneo
+              oficial y se comprueban antes de publicarse.{" "}
               <Link href={L("/politicos/declaraciones")}>Ver lo que declaró cada uno</Link>
             </p>
           </div>
-          <div>
-            <p className="n-figure" style={{ fontSize: "2.6rem" }}>
-              {integer(notYet, bcp47)}
-            </p>
-            <p className="mt-3 max-w-[30em]">
-              declaraciones de diputados están todavía sin transcribir. Se leen del escaneo oficial y
-              se comprueban antes de publicarse.
-            </p>
-          </div>
+          <DotGrid
+            groups={[
+              {
+                key: "valores",
+                count: withSecurities,
+                label: "declaran acciones, bonos u otros valores",
+                look: "filled",
+                cls: "n-companies",
+              },
+              {
+                key: "otros",
+                count: declarations.length - withSecurities,
+                label: "transcritas, sin valores declarados",
+                look: "ink",
+              },
+              { key: "pendientes", count: notYet, label: "sin transcribir todavía", look: "hollow" },
+            ]}
+          />
         </div>
       </section>
 
@@ -285,19 +321,61 @@ export default async function PrototypeHome({
           Temas
         </h2>
         <p className="n-body mt-3">
-          Cómo votó cada grupo en el Congreso en las votaciones que siguen esta web, con el acta
-          oficial de cada una.
+          Cómo votó el Congreso en las votaciones que sigue esta web, de la más antigua a la más
+          reciente, con el acta oficial de cada una.
         </p>
-        <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+        <div className="mt-10 grid gap-x-12 gap-y-14 lg:grid-cols-3">
           {topics.map((t) => (
-            <li key={t.topic}>
-              <Link href={L(`/votaciones`)} className="n-h3">
-                {t.label}
-              </Link>
-              <p className="n-meta mt-1">{t.count} votaciones</p>
-            </li>
+            <article key={t.topic} className="n-topic">
+              <h3 className="n-h3">
+                <Link href={L("/votaciones")}>{t.label}</Link>
+              </h3>
+              <Line
+                cls="n-topic"
+                className="mt-5"
+                stops={t.votes.map((v) => ({
+                  key: v.id,
+                  label: v.date.split("/").slice(2).join(""),
+                  note: KIND_NOTE[v.kind] ?? v.kindLabel,
+                  on: true,
+                }))}
+              />
+              <ol className="mt-6 grid gap-5">
+                {t.votes.map((v) => {
+                  const total = v.totals.afavor + v.totals.enContra + v.totals.abstenciones;
+                  return (
+                    <li key={v.id}>
+                      <a href={v.sourceUrl} className="text-[0.95rem] font-bold">
+                        {v.law}
+                      </a>
+                      <span className="n-meta">, {v.date}</span>
+                      <div aria-hidden className="mt-2 flex h-3 w-full gap-[2px] overflow-hidden rounded-[2px]">
+                        <span style={{ flexGrow: v.totals.afavor / total, flexBasis: 0, background: "var(--route)" }} />
+                        <span className="n-hatch" style={{ flexGrow: v.totals.enContra / total, flexBasis: 0, outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
+                        <span style={{ flexGrow: v.totals.abstenciones / total, flexBasis: 0, background: "var(--n-rule-strong)" }} />
+                      </div>
+                      <p className="n-meta mt-1.5">
+                        {v.totals.afavor} a favor, {v.totals.enContra} en contra, {v.totals.abstenciones} {v.totals.abstenciones === 1 ? "abstención" : "abstenciones"}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ol>
+            </article>
           ))}
-        </ul>
+        </div>
+        <p className="n-meta mt-8 flex flex-wrap items-center gap-x-5 gap-y-1">
+          <span className="n-topic inline-flex items-center gap-2">
+            <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--route)" }} />A favor
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span aria-hidden className="n-hatch inline-block h-3 w-5 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />En contra
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--n-rule-strong)" }} />Abstención
+          </span>
+          <span>Fuente: actas de votación nominal del Congreso.</span>
+        </p>
       </section>
 
       {/* ---------- What is not on record ---------- */}
@@ -305,24 +383,106 @@ export default async function PrototypeHome({
         <h2 id="falta" className="n-h2">
           Lo que todavía no consta
         </h2>
-        <ul className="mt-8 grid gap-8 md:grid-cols-2">
-          <Gap
-            figure={pct(spending.otherShare)}
-            text="del gasto ordinario que los partidos declararon en las europeas de 2024 está en una sola línea, sin desglosar."
-          />
-          <Gap
-            figure={integer(DONATIONS_SOURCE.grandDonors, bcp47)}
-            text={`donantes a partidos en ${DONATIONS_SOURCE.year}, y ninguno con nombre: el Tribunal de Cuentas publica las donaciones agrupadas por importe, con uno o dos años de retraso.`}
-          />
-          <Gap
-            figure={fYears[fYears.length - 1]}
-            text="es el último año auditado de las fundaciones de los partidos."
-          />
-          <Gap
-            figure={integer(notYet, bcp47)}
-            text="declaraciones de bienes de diputados pendientes de transcribir."
-          />
-        </ul>
+        <p className="n-body mt-3">
+          Lo que falta también es un dato. Esto es lo que las fuentes no publican, o lo que esta web
+          todavía no recoge.
+        </p>
+
+        <div className="mt-12 grid gap-x-14 gap-y-16 lg:grid-cols-2">
+          {/* Campaign spending: the unitemised line, drawn at its size. */}
+          <article>
+            <h3 className="n-h3">En qué se gastó la campaña</h3>
+            <p className="n-finding mt-3">
+              {`El ${pct(spending.otherShare)} del gasto ordinario que los partidos declararon en las europeas de 2024 está en una sola línea, sin desglosar.`}
+            </p>
+            <div aria-hidden className="mt-5 flex h-7 w-full gap-[2px] overflow-hidden rounded-[3px]">
+              <span style={{ flexGrow: 1 - spending.otherShare, flexBasis: 0, background: "var(--n-ink-2)" }} />
+              <span className="n-hatch" style={{ flexGrow: spending.otherShare, flexBasis: 0, outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
+            </div>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[0.95rem]">
+              <li className="inline-flex items-center gap-2">
+                <span aria-hidden className="inline-block h-3 w-3 rounded-[2px]" style={{ background: "var(--n-ink-2)" }} />
+                Desglosado <span className="n-num font-bold">{pct(1 - spending.otherShare)}</span>
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <span aria-hidden className="n-hatch inline-block h-3 w-3 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
+                En una sola línea <span className="n-num font-bold">{pct(spending.otherShare)}</span>
+              </li>
+            </ul>
+            <p className="n-source">Fuente: Tribunal de Cuentas, informe nº 1.628.</p>
+          </article>
+
+          {/* Donors: the names the source does not publish, drawn as redacted. */}
+          <article>
+            <h3 className="n-h3">Quién donó a los partidos</h3>
+            <p className="n-finding mt-3">
+              {`${integer(DONATIONS_SOURCE.grandDonors, bcp47)} donantes en ${DONATIONS_SOURCE.year}, y ninguno con nombre.`}
+            </p>
+            <table className="n-table mt-4">
+              <caption className="sr-only">Donantes a partidos en {DONATIONS_SOURCE.year}, por tramo</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Donante</th>
+                  <th scope="col">Tramo</th>
+                  <th scope="col" className="n-r">Donantes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(
+                  [
+                    ["small", "Menos de 1.000 €", "78%"],
+                    ["mid", "De 1.000 a 10.000 €", "64%"],
+                    ["large", "Más de 10.000 €", "90%"],
+                  ] as const
+                ).map(([k, label, w]) => (
+                  <tr key={k}>
+                    <td>
+                      <span
+                        className="inline-block h-[0.9em] rounded-[2px] align-middle"
+                        style={{ width: w, background: "var(--n-ink)" }}
+                      />
+                      <span className="sr-only">Nombre no publicado</span>
+                    </td>
+                    <td>{label}</td>
+                    <td className="n-r">{integer(sum(k, "donors"), bcp47)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="n-source">
+              El Tribunal de Cuentas publica las donaciones agrupadas por importe, sin nombres
+              (informe nº 1.573, ejercicio 2020).
+            </p>
+          </article>
+
+          {/* The years each audited source covers on this site. */}
+          <article className="lg:col-span-2">
+            <h3 className="n-h3">Qué años recoge esta web</h3>
+            <p className="n-finding mt-3">
+              {`Las cuentas auditadas llegan con años de retraso: lo más reciente que recoge esta web es ${fYears[fYears.length - 1]} para las fundaciones y ${DONATIONS_SOURCE.year} para las donaciones.`}
+            </p>
+            <div className="mt-8 grid gap-10">
+              {[
+                { name: "Donaciones a los partidos", cls: "n-donors", on: [DONATIONS_SOURCE.year] },
+                { name: "Fundaciones de los partidos", cls: "n-foundations", on: fYears.map(Number) },
+              ].map((row) => (
+                <div key={row.name} className="grid gap-4 md:grid-cols-[14rem_1fr] md:items-start">
+                  <p className="font-bold">{row.name}</p>
+                  <Line
+                    cls={row.cls}
+                    stops={auditYears.map((y) => ({
+                      key: String(y),
+                      label: String(y),
+                      note: y === auditYears[auditYears.length - 1] ? "hoy" : undefined,
+                      on: row.on.includes(y),
+                    }))}
+                  />
+                </div>
+              ))}
+            </div>
+            <p className="n-meta mt-6">Punto lleno: año con datos auditados en esta web. Punto vacío y línea discontinua: todavía no.</p>
+          </article>
+        </div>
       </section>
     </main>
   );
@@ -334,6 +494,7 @@ function Route({
   figure,
   figureNote,
   finding,
+  findingNote,
   bar,
   barFormat,
   link,
@@ -344,6 +505,8 @@ function Route({
   figure: string;
   figureNote: string;
   finding: string;
+  /** Says what the finding's figures do not, right under it. */
+  findingNote?: string;
   bar: { label: string; value: number; muted?: boolean }[];
   barFormat: (v: number) => string;
   link: { href: string; text: string };
@@ -360,6 +523,7 @@ function Route({
       </div>
       <div>
         <p className="n-finding">{finding}</p>
+        {findingNote && <p className="n-body mt-3">{findingNote}</p>}
         <ShareBar parts={bar} format={barFormat} className="mt-5" />
         <p className="mt-4">
           <Link href={link.href}>{link.text}</Link>
@@ -367,16 +531,5 @@ function Route({
         <p className="n-source">Fuente: {source}</p>
       </div>
     </article>
-  );
-}
-
-function Gap({ figure, text }: { figure: string; text: string }) {
-  return (
-    <li className="grid grid-cols-[minmax(5.5rem,auto)_1fr] items-baseline gap-4">
-      <span className="n-figure" style={{ fontSize: "2.2rem" }}>
-        {figure}
-      </span>
-      <span className="text-[var(--n-ink-2)]">{text}</span>
-    </li>
   );
 }

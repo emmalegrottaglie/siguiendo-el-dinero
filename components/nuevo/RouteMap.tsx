@@ -17,8 +17,8 @@
  * under 400.000 €, so a weight scaled to money would make every route but one
  * vanish; the figure is printed on each line instead.
  *
- * Drawn in a 340-unit-wide box so that on a 343px phone column one unit is one
- * pixel and the 13-unit labels render at 13px; it scales up on wider screens.
+ * Drawn in a 360-unit-wide box, close to a phone column, so the 13-unit labels
+ * render at about 13px there; it scales up on wider screens.
  */
 export interface RouteFigures {
   subsidies: string;
@@ -32,11 +32,11 @@ export interface RouteFigures {
 }
 
 const STATIONS = [
-  { id: "estado", x: 40, y: 48, label: "El Estado", anchor: "start" as const, dx: -10, dy: -16 },
+  { id: "estado", x: 40, y: 48, label: "El Estado", anchor: "middle" as const, dx: 0, dy: -16 },
   { id: "particulares", x: 175, y: 48, label: "Particulares", anchor: "middle" as const, dx: 0, dy: -16 },
-  { id: "empresas", x: 305, y: 48, label: "Empresas", anchor: "end" as const, dx: 10, dy: -16 },
-  { id: "partidos", x: 70, y: 262, label: "Partidos", anchor: "start" as const, dx: -30, dy: 32 },
-  { id: "fundaciones", x: 270, y: 262, label: "Fundaciones", anchor: "end" as const, dx: 34, dy: 32 },
+  { id: "empresas", x: 305, y: 48, label: "Empresas", anchor: "middle" as const, dx: 0, dy: -16 },
+  { id: "partidos", x: 70, y: 262, label: "Partidos", anchor: "middle" as const, dx: 0, dy: 32 },
+  { id: "fundaciones", x: 270, y: 262, label: "Fundaciones", anchor: "middle" as const, dx: 0, dy: 32 },
   { id: "personas", x: 175, y: 430, label: "Personas con cargo", anchor: "middle" as const, dx: 0, dy: 34 },
 ];
 
@@ -59,7 +59,7 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
   return (
     <figure className="m-0">
       <svg
-        viewBox="0 0 340 490"
+        viewBox="0 0 360 490"
         className="block h-auto w-full max-w-[34rem]"
         role="img"
         aria-labelledby="route-map-title route-map-desc"
@@ -68,6 +68,8 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
         <desc id="route-map-desc">
           {`El Estado da ${f.subsidies} en subvenciones a los partidos. Particulares donaron ${f.donations} a los partidos en ${f.donationsYear}. Las fundaciones de los partidos recibieron, en ${f.foundationYears}, ${f.foundationsFromParty} de los propios partidos, ${f.foundationsFromCompanies} de empresas y ${f.foundationsFromIndividuals} de particulares. ${f.officeholdersOnBoards} personas con cargo público se sientan en sus patronatos.`}
         </desc>
+        {/* Shifted 10 units in so every station name can sit centred on its dot. */}
+        <g transform="translate(10 0)">
 
         {ties.map((d) => (
           <path
@@ -120,6 +122,7 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
           <tspan x={260}>{f.officeholdersOnBoards} cargos públicos</tspan>
           <tspan x={260} dy={16}>en sus patronatos</tspan>
         </text>
+        </g>
       </svg>
       <figcaption className="n-meta mt-3 flex flex-wrap gap-x-5 gap-y-1">
         <span className="inline-flex items-center gap-2">

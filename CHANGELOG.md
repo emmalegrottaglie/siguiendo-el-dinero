@@ -5,6 +5,45 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-30 — A redesign prototype at /nuevo, built on the route map
+
+A prototype of a new front page and person page lives at `/[locale]/nuevo`, beside the current
+site and without replacing any of it. Its scoped stylesheet hides the current header and footer on
+those pages only. It answers a design review that found the site organised by source rather than
+by the questions a reader brings, with every section given the same weight.
+
+**One motif.** The front page opens with the routes money takes into politics drawn as a transit
+map: state subsidies to parties, donations to parties and to foundations, company money to
+foundations, party money to its own foundations, and the officeholders who sit on foundation
+boards. Each route has one colour. A solid line is money on record; a dashed line is people
+appearing on both sides of a record, which is not money. There is deliberately no line from
+companies to officeholders: deputies declare shares, but nothing on record says they hold the
+companies that pay the foundations. The same grammar is now a component (`components/nuevo/Line.tsx`):
+a line of stations, filled and joined by a solid segment when on record, hollow and dashed when
+not, always stated in words as well.
+
+**Each section drawn, not listed.**
+
+- The foundations route says where a party's own money comes from in turn: public subsidies,
+  member fees and donations (Ley Orgánica 8/2007, art. 2). It also says that the per-party split
+  is in the parties' audited accounts, which this site does not hold yet.
+- Who appears on the routes: each foundation is a station with its board members who hold public
+  office listed under it, three to a row on wide screens. The asset declarations are drawn one dot
+  per deputy (`components/nuevo/DotGrid.tsx`): 35 declare securities, 69 do not, 245 are not yet
+  transcribed.
+- Topics: each topic's votes are a line in date order, with each vote's result drawn as a bar of
+  yes, no and abstentions. The bars do not say whether a vote passed, because organic laws need an
+  absolute majority and a bar would invite the wrong reading.
+- What is not on record: the unitemised share of campaign spending drawn at its size, the donor
+  tranches with the names the Court of Audit does not publish drawn as redactions, and the audited
+  years this site holds for donations and foundations drawn as lines up to the current year.
+
+**Left out.** The prototype covers the front page and the person page only; party, place and topic
+pages, and the navigation, still point at the current site. Nothing is ranked by wealth and no net
+worth is computed, as on the current site.
+
+---
+
 ## 2026-10-19 — Both themes and the chart tools together, and the contrast both left open
 
 The dark theme and the keyboard-reading and export work were built side by side from the same
