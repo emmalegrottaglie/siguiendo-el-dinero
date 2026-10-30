@@ -12,9 +12,9 @@
     "discover:votes": "node scripts/discover-votes.mjs",
     "build:foundations": "python scripts/extract-foundations.py",
     "build:provinces": "node scripts/build-provinces.mjs",
-  "check:territories": "node scripts/check-territories.mjs",
-  "check:feeds": "node scripts/check-feeds.mjs",
-  "build:ine": "node scripts/fetch-ine.mjs",
+    "check:territories": "node scripts/check-territories.mjs",
+    "check:feeds": "node scripts/check-feeds.mjs",
+    "build:ine": "node scripts/fetch-ine.mjs",
     "build:spending": "python scripts/extract-electoral-spending.py",
     "build:regions": "node scripts/build-regions.mjs",
     "build:hate-territory": "python scripts/extract-hate-territory.py",
@@ -23,7 +23,8 @@
     "build:deputies": "node scripts/fetch-deputies.mjs",
     "check:deputies": "node scripts/check-deputies.mjs",
     "build:declarations": "node scripts/build-declarations.mjs",
-    "check:declarations": "node scripts/check-declarations.mjs"
+    "check:declarations": "node scripts/check-declarations.mjs",
+    "check:party-income": "node scripts/check-party-income.mjs"
   },
   "engines": {
     "node": "22.x"

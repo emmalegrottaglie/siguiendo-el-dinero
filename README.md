@@ -26,6 +26,7 @@ Six documents, each with one job. Start with the one that matches your question.
 |-------|--------|-----------|
 | State subsidies to parties | BDNS / SNPSAP REST API | Live, refreshed daily |
 | Private donations to parties | Tribunal de Cuentas report nº 1573 (2020) | Fixed snapshot, lagged 1–2 years |
+| Parties' ordinary income, public and private | Tribunal de Cuentas report nº 1573 (2020), Anexos IV and V | Fixed snapshot, lagged 1–2 years |
 | Party-linked foundations | Tribunal de Cuentas report nº 1.642 (2021–22) | Fixed snapshot, lagged |
 | Public salaries of officeholders | Registro de Altos Cargos / transparencia.gob.es | Rebuilt from a CSV export |
 | Key roll-call votes | Congreso de los Diputados open data | Rebuilt on demand |
@@ -121,6 +122,7 @@ deploy.
 | `npm run check:deputies` | nothing | The deputy-to-register join; **exits non-zero** on a missing or stale alias, a party-family disagreement or a slug collision |
 | `npm run build:declarations` | `data/declarations.json` | Publishes only transcriptions that pass a check, and lists the rest |
 | `npm run check:declarations` | nothing | Re-runs the checks on every published declaration |
+| `npm run check:party-income` | nothing | Checks the party income table against its printed totals and against the donations data |
 | `npm run check:feeds` | nothing | Health-checks every news feed; **exits non-zero** on a dead, unparseable or stale source |
 
 Run `npm run check:feeds` after editing `lib/news-sources.mjs`. A feed can answer HTTP 200 and
@@ -222,6 +224,7 @@ API routes: `/api/refresh` (BDNS pull, cron-protected), `/api/news`, `/api/blues
 | `lib/name-key.mjs` | Shared accent-folded name keys — single source of truth for every join |
 | `lib/politicians.ts` | Curated politicians with verified Bluesky handles |
 | `lib/donations.ts` | Private donations 2020, transcribed from Tribunal de Cuentas report 1573 |
+| `lib/party-income.ts` | Parties' ordinary income 2020, transcribed from the same report's Anexos IV and V |
 | `lib/foundations.ts` + `scripts/extract-foundations.py` | Party-linked foundations from report 1.642 |
 | `lib/salaries.ts` + `scripts/build-salaries.mjs` | Officeholder pay: load, search, party join |
 | `lib/votes.ts` + `scripts/fetch-votes.mjs` | Pinned roll-call votes and per-deputy positions |

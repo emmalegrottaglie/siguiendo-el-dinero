@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAggregation } from "@/lib/data";
 import { getDict } from "@/lib/i18n";
 import { DONATIONS_SOURCE, DONATIONS_2020 } from "@/lib/donations";
+import { ordinaryIncome, PARTY_INCOME, PARTY_INCOME_TOTALS, PARTY_INCOME_YEAR } from "@/lib/party-income";
 import {
   channelTotals,
   displayName,
@@ -117,6 +118,10 @@ export default async function PrototypeHome({
     (_, i) => firstYear + i,
   );
 
+  // Where a party's own money comes from in turn, from the party-accounts report.
+  const allIncome = ordinaryIncome(PARTY_INCOME_TOTALS);
+  const priv = PARTY_INCOME_TOTALS.private;
+
   const L = (path: string) => `/${locale}${path}`;
 
   return (
@@ -216,7 +221,7 @@ export default async function PrototypeHome({
             figure={euroM(f.party + f.companies + f.individuals, bcp47, 1)}
             figureNote={`en aportaciones, entre ${fYearSpan}`}
             finding={`El ${pct(f.partyShare)} lo puso el propio partido. Las empresas, que sí pueden donar a una fundación, aportaron el ${pct(f.companiesShare)}.`}
-            findingNote="El dinero de un partido sale a su vez de subvenciones públicas, cuotas de afiliados y donaciones (Ley Orgánica 8/2007, art. 2). Cuánto de cada fuente tiene cada partido está en sus cuentas auditadas por el Tribunal de Cuentas, que esta web todavía no recoge."
+            findingNote={`Ese dinero del partido sale a su vez de sus propios ingresos. En ${PARTY_INCOME_YEAR}, los ${PARTY_INCOME.length} partidos fiscalizados ingresaron ${euroM(allIncome, bcp47, 1)}: el ${pct(PARTY_INCOME_TOTALS.public.total / allIncome)} fue dinero público, y de lo privado, ${euroM(priv.officeholders, bcp47, 1)} lo aportaron sus cargos públicos, ${euroM(priv.memberFees, bcp47, 1)} sus afiliados y ${euroM(priv.donations, bcp47, 2)} los donantes. Son años distintos, así que no se restan uno de otro.`}
             bar={[
               { label: "Del propio partido", value: f.party },
               { label: "De empresas", value: f.companies },

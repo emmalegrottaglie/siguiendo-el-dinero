@@ -17,7 +17,7 @@ import {
 } from "@/lib/foundations";
 import { officeTies, type OfficeTie } from "@/lib/officeholder-ties";
 import { BOARD_GAPS, ROLES } from "@/lib/foundation-people";
-import { nameKey } from "@/lib/name-key.mjs";
+import { foldText, nameKey } from "@/lib/name-key.mjs";
 import { financial, getSpending } from "@/lib/spending";
 import { getPeople } from "@/lib/people";
 import {
@@ -38,6 +38,13 @@ import {
 import ShareBar from "@/components/nuevo/ShareBar";
 import Line from "@/components/nuevo/Line";
 import DotGrid from "@/components/nuevo/DotGrid";
+import {
+  incomeByNif,
+  ordinaryIncome,
+  PARTY_INCOME,
+  PARTY_INCOME_SOURCE,
+  PARTY_INCOME_YEAR,
+} from "@/lib/party-income";
 import {
   formationName,
   formationsOf,
@@ -127,6 +134,69 @@ export default async function PrototypeParty({
 
   const rank = agg.parties.findIndex((p) => p.nif === nif) + 1;
   const short = party.shortName;
+
+  // ---------- The party's own income, 2020 ----------
+  const income = incomeByNif(nif);
+  // A row printed under this party's name that the site leaves unlinked, because
+  // more than one registered party carries the name.
+  const unlinkedRow = income
+    ? undefined
+    : PARTY_INCOME.find(
+        (f) =>
+          !f.nif &&
+          foldText(f.label) ===
+            foldText(party.displayName.replace(/\s*\(.*\)\s*$/, "")),
+      );
+  const incomeTotal = income ? ordinaryIncome(income) : 0;
+  const PRIVATE_PARTS = income
+    ? [
+        {
+          label: "Cuotas de afiliados",
+          words: "las cuotas de sus afiliados",
+          value: income.private.memberFees,
+        },
+        {
+          label: "Aportaciones de sus cargos públicos",
+          words: "las aportaciones de sus cargos públicos",
+          value: income.private.officeholders,
+        },
+        {
+          label: "Donaciones de particulares",
+          words: "las donaciones de particulares",
+          value: income.private.donations,
+        },
+        {
+          label: "Otros ingresos",
+          words: "otros ingresos",
+          value: income.private.other,
+        },
+      ]
+    : [];
+  const PUBLIC_PARTS = income
+    ? [
+        { label: "Del Estado", value: income.public.state },
+        {
+          label: "De parlamentos autonómicos",
+          value: income.public.regionalParliaments,
+        },
+        { label: "De entidades locales", value: income.public.local },
+        {
+          label: "De gobiernos autonómicos",
+          value: income.public.regionalGovernments,
+        },
+        { label: "De las Cortes Generales", value: income.public.cortes },
+        { label: "Otras subvenciones", value: income.public.other },
+      ]
+    : [];
+  const topPrivate = [...PRIVATE_PARTS].sort((a, b) => b.value - a.value)[0];
+  const incomeFinding =
+    income && incomeTotal > 0
+      ? `En ${PARTY_INCOME_YEAR}, el ${pct(income.public.total / incomeTotal)} de sus ingresos ordinarios fue dinero público.${
+          income.private.total > 0
+            ? ` De lo privado, lo que más aportó fueron ${topPrivate.words}: ${money(topPrivate.value)}.`
+            : " No declaró ingresos privados."
+        }`
+      : null;
 
   // ---------- State money, by year ----------
   const years = [...agg.years].sort((a, b) => a - b);
@@ -515,6 +585,115 @@ export default async function PrototypeParty({
         </p>
       </Section>
 
+      {/* ---------- The party's own income ---------- */}
+      <Section id="ingresos" title="De dónde salen sus ingresos">
+        {income && incomeFinding ? (
+          <>
+            <p className="n-finding">{incomeFinding}</p>
+            <div className="mt-6">
+              <div
+                aria-hidden
+                className="flex h-7 w-full gap-[2px] overflow-hidden rounded-[3px]"
+              >
+                <span
+                  className="n-state"
+                  style={{
+                    flexGrow: income.public.total,
+                    flexBasis: 0,
+                    background: "var(--route)",
+                  }}
+                />
+                {income.private.total > 0 && (
+                  <span
+                    className="n-donors"
+                    style={{
+                      flexGrow: income.private.total,
+                      flexBasis: 0,
+                      background: "var(--route)",
+                    }}
+                  />
+                )}
+              </div>
+              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[0.95rem]">
+                <li className="n-state inline-flex items-center gap-2">
+                  <span
+                    aria-hidden
+                    className="inline-block h-3 w-3 rounded-[2px]"
+                    style={{ background: "var(--route)" }}
+                  />
+                  Dinero público{" "}
+                  <span className="n-num font-bold">
+                    {money(income.public.total)}
+                  </span>
+                </li>
+                <li className="n-donors inline-flex items-center gap-2">
+                  <span
+                    aria-hidden
+                    className="inline-block h-3 w-3 rounded-[2px]"
+                    style={{ background: "var(--route)" }}
+                  />
+                  Dinero privado{" "}
+                  <span className="n-num font-bold">
+                    {money(income.private.total)}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-10 grid gap-x-14 gap-y-10 lg:grid-cols-2">
+              <div className="n-state">
+                <h4 className="font-bold">
+                  El dinero público, según quién lo da
+                </h4>
+                <ShareBar
+                  className="mt-4"
+                  parts={PUBLIC_PARTS.filter((x) => x.value > 0)}
+                  format={money}
+                />
+              </div>
+              <div className="n-donors">
+                <h4 className="font-bold">
+                  El dinero privado, según de dónde viene
+                </h4>
+                {income.private.total > 0 ? (
+                  <ShareBar
+                    className="mt-4"
+                    parts={PRIVATE_PARTS.filter((x) => x.value > 0).map(
+                      ({ label, value }) => ({ label, value }),
+                    )}
+                    format={money}
+                  />
+                ) : (
+                  <p className="n-body mt-4">
+                    El informe no le anota ningún ingreso privado.
+                  </p>
+                )}
+              </div>
+            </div>
+            <p className="n-body mt-6">
+              Las aportaciones de cargos públicos son lo que dan al partido las
+              personas que ocupan un cargo en su nombre. El dinero de las
+              Cortes, de los parlamentos autonómicos y de las entidades locales
+              llega a través de sus grupos. Las subvenciones electorales van
+              aparte y no están incluidas.
+            </p>
+          </>
+        ) : (
+          <p className="n-finding">
+            {unlinkedRow
+              ? `La tabla de ingresos de ${PARTY_INCOME_YEAR} tiene una fila con el nombre «${unlinkedRow.label}», pero más de un partido registrado lleva ese nombre y el informe no dice cuál es, así que esta web no se la atribuye a ${short}.`
+              : `El Tribunal de Cuentas fiscalizó las cuentas de ${PARTY_INCOME_YEAR} de las ${PARTY_INCOME.length} formaciones que recibieron subvención anual. Ninguna fila de esa tabla corresponde con seguridad a ${short}.`}
+          </p>
+        )}
+        <p className="n-source">
+          Fuente: Tribunal de Cuentas,{" "}
+          <a href={PARTY_INCOME_SOURCE.url}>
+            informe nº 1.573 (ejercicio {PARTY_INCOME_YEAR})
+          </a>
+          , anexos IV y V: recursos ordinarios de la financiación pública y
+          privada.
+        </p>
+      </Section>
+
       {/* ---------- Private donations ---------- */}
       <Section id="donaciones" title="Lo que declaró en donaciones">
         {donations && donationFinding ? (
@@ -576,40 +755,6 @@ export default async function PrototypeParty({
           </a>
           , donaciones del ejercicio por tramos.
         </p>
-
-        {/* The party's own income split: where it belongs, stated as the gap it is. */}
-        <div className="mt-14 grid gap-x-12 gap-y-6 border-t border-[var(--n-rule)] pt-10 lg:grid-cols-[minmax(0,22rem)_1fr]">
-          <div>
-            <h3 className="n-h3">De dónde salen todos sus ingresos</h3>
-            <p className="n-body mt-3">
-              Cuánto son cuotas de afiliados, aportaciones de sus cargos
-              públicos, donaciones y subvenciones está en sus cuentas anuales,
-              que audita el Tribunal de Cuentas en el{" "}
-              <a href={DONATIONS_SOURCE.url}>
-                informe nº 1.573 (ejercicio 2020)
-              </a>
-              . Esta web todavía no recoge ese desglose.
-            </p>
-          </div>
-          <div>
-            <Line
-              cls="n-neutral"
-              stops={[
-                { key: "cuotas", label: "Cuotas de afiliados", on: false },
-                {
-                  key: "cargos",
-                  label: "Aportaciones de cargos públicos",
-                  on: false,
-                },
-                { key: "donaciones", label: "Donaciones", on: false },
-                { key: "subvenciones", label: "Subvenciones", on: false },
-              ]}
-            />
-            <p className="n-meta mt-4">
-              Puntos vacíos y línea discontinua: todavía no están en esta web.
-            </p>
-          </div>
-        </div>
       </Section>
 
       {/* ---------- Foundations ---------- */}
