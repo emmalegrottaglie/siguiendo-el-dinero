@@ -27,13 +27,18 @@ const atkinson = Atkinson_Hyperlegible_Next({
   weight: ["400", "700"],
   variable: "--font-atkinson",
   display: "swap",
+  // next/font has no fallback metrics for this family and logs an error on
+  // every compile without this; the system sans fallback is used unadjusted.
+  adjustFontFallback: false,
 });
 
+// Personas still opens the current directory: the prototype has person pages
+// but no directory of its own yet.
 const NAV = [
-  { href: "/financiacion", label: "Partidos" },
+  { href: "/nuevo/partidos", label: "Partidos" },
   { href: "/politicos", label: "Personas" },
-  { href: "/mapa", label: "Territorios" },
-  { href: "/votaciones", label: "Temas" },
+  { href: "/nuevo/territorios", label: "Territorios" },
+  { href: "/nuevo/temas", label: "Temas" },
   { href: "/metodologia", label: "Datos y método" },
 ];
 

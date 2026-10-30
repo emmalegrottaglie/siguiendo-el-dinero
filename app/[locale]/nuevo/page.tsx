@@ -21,6 +21,7 @@ import RouteMap from "@/components/nuevo/RouteMap";
 import ShareBar from "@/components/nuevo/ShareBar";
 import Line from "@/components/nuevo/Line";
 import DotGrid from "@/components/nuevo/DotGrid";
+import VoteBar, { VoteLegend } from "@/components/nuevo/VoteBar";
 
 export const revalidate = 3600;
 
@@ -328,7 +329,7 @@ export default async function PrototypeHome({
           {topics.map((t) => (
             <article key={t.topic} className="n-topic">
               <h3 className="n-h3">
-                <Link href={L("/votaciones")}>{t.label}</Link>
+                <Link href={L(`/nuevo/tema/${t.topic}`)}>{t.label}</Link>
               </h3>
               <Line
                 cls="n-topic"
@@ -341,39 +342,24 @@ export default async function PrototypeHome({
                 }))}
               />
               <ol className="mt-6 grid gap-5">
-                {t.votes.map((v) => {
-                  const total = v.totals.afavor + v.totals.enContra + v.totals.abstenciones;
-                  return (
-                    <li key={v.id}>
-                      <a href={v.sourceUrl} className="text-[0.95rem] font-bold">
-                        {v.law}
-                      </a>
-                      <span className="n-meta">, {v.date}</span>
-                      <div aria-hidden className="mt-2 flex h-3 w-full gap-[2px] overflow-hidden rounded-[2px]">
-                        <span style={{ flexGrow: v.totals.afavor / total, flexBasis: 0, background: "var(--route)" }} />
-                        <span className="n-hatch" style={{ flexGrow: v.totals.enContra / total, flexBasis: 0, outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
-                        <span style={{ flexGrow: v.totals.abstenciones / total, flexBasis: 0, background: "var(--n-rule-strong)" }} />
-                      </div>
-                      <p className="n-meta mt-1.5">
-                        {v.totals.afavor} a favor, {v.totals.enContra} en contra, {v.totals.abstenciones} {v.totals.abstenciones === 1 ? "abstención" : "abstenciones"}
-                      </p>
-                    </li>
-                  );
-                })}
+                {t.votes.map((v) => (
+                  <li key={v.id}>
+                    <a href={v.sourceUrl} className="text-[0.95rem] font-bold">
+                      {v.law}
+                    </a>
+                    <span className="n-meta">, {v.date}</span>
+                    <VoteBar
+                      className="mt-2"
+                      counts={{ si: v.totals.afavor, no: v.totals.enContra, abst: v.totals.abstenciones }}
+                    />
+                  </li>
+                ))}
               </ol>
             </article>
           ))}
         </div>
         <p className="n-meta mt-8 flex flex-wrap items-center gap-x-5 gap-y-1">
-          <span className="n-topic inline-flex items-center gap-2">
-            <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--route)" }} />A favor
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span aria-hidden className="n-hatch inline-block h-3 w-5 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />En contra
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--n-rule-strong)" }} />Abstención
-          </span>
+          <VoteLegend />
           <span>Fuente: actas de votación nominal del Congreso.</span>
         </p>
       </section>

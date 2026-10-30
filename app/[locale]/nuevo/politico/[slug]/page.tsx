@@ -363,7 +363,7 @@ export default async function PrototypePerson({
 
       {/* ---------- Citing ---------- */}
       <Section id="citar" title="Cómo citar esta ficha">
-        <p className="max-w-[46rem] rounded-[6px] border border-[var(--n-rule)] bg-[var(--n-card)] p-5 text-[0.95rem]">
+        <p className="max-w-[46rem] rounded-[6px] border border-[var(--n-rule)] bg-[var(--n-card)] p-5 text-[0.95rem] [overflow-wrap:anywhere]">
           Siguiendo el Dinero, «{person.deputy?.fullName ?? person.name}», consultado el{" "}
           {formatDate(new Date().toISOString().slice(0, 10), bcp47)}.
           {d && ` Declaración de bienes registrada en el Congreso el ${formatDate(d.filed, bcp47)}: ${d.url}`}
