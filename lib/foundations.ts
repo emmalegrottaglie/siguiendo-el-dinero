@@ -334,6 +334,28 @@ export function registrationTally(data: FoundationsFile) {
 }
 
 /**
+ * Party names the report writes in a way the word rule below cannot resolve,
+ * each read against the report and the registry, with nothing in doubt about
+ * which party is meant:
+ *
+ *   * "Vox" has no word longer than three letters, so the rule compares nothing;
+ *   * the report writes "Partit del Socialistes de Catalunya", one letter short
+ *     of the registry's "dels";
+ *   * the report writes "Partido Nacionalista Vasco" for the party the registry
+ *     carries by its Basque name, "Eusko Alderdi Jeltzalea — PNV".
+ *
+ * Keys are the report's exact wording, folded. Companies wholly owned by a party
+ * carry a "porcentaje de participación: 100 %" suffix after the party's name,
+ * which is cut first. Coalición Canaria stays unresolved on purpose: the
+ * registry holds two NIFs under that name and the report does not say which.
+ */
+const REPORT_PARTY_NIF: Record<string, string> = {
+  vox: "G86867108",
+  "partit del socialistes de catalunya": "G08564379",
+  "partido nacionalista vasco": "G48103956",
+};
+
+/**
  * Link a report-stated party name to the NIF-keyed registry so the entity can
  * point at that party's funding page. Matching is on the registry entry's own
  * words appearing in the report's name; an ambiguous result yields null, because
@@ -341,6 +363,11 @@ export function registrationTally(data: FoundationsFile) {
  */
 function partyNifFor(party: string | null): string | null {
   if (!party) return null;
+  const worded = foldText(party)
+    .replace(/\s*porcentaje de participacion.*$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (REPORT_PARTY_NIF[worded]) return REPORT_PARTY_NIF[worded];
   const tokens = new Set(foldTokens(party));
   const hits = Object.entries(PARTIES).filter(([, meta]) => {
     const words = foldTokens(meta.displayName).filter((w) => w.length > 3);

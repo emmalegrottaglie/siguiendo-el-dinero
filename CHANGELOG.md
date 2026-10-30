@@ -5,6 +5,132 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-30 — A redesign prototype at /nuevo, built on the route map
+
+A prototype of a new front page and person page lives at `/[locale]/nuevo`, beside the current
+site and without replacing any of it. Its scoped stylesheet hides the current header and footer on
+those pages only. It answers a design review that found the site organised by source rather than
+by the questions a reader brings, with every section given the same weight.
+
+**How it got here, and why.** The prototype went through three rounds, each driven by a specific
+complaint about the one before.
+
+1. *The brief.* Emma found the current site hard to read: the data is gathered carefully but laid
+   out without an order, so there is no story and no visual that can be taken in at a glance. A
+   review of the existing pages confirmed it. Pages are grouped by data source (subsidies,
+   donations, foundations, declarations) rather than by what a reader comes to ask: who funds this
+   party, what does this person own, what reaches my province. Ten menu items carry equal weight,
+   and the person, party and place pages are not reachable from the menu at all. The small label
+   style, 11px capitals in Cormorant, is used 225 times and is hard to read. The site serves two
+   readers. Researchers and journalists need a citable figure with its original document.
+   Citizens want plain detail on where politicians' money comes from. So the agreed shape is a
+   short story on the front page with a reference tool behind it. The old newspaper look is
+   dropped entirely, money is the spine, and topics become one section. People who have only a
+   salary row get a directory row rather than a page of their own.
+2. *The framing.* Emma's first one-line summary was that politicians are part of a systematic
+   route of enrichment through companies and foundations. The site cannot show motive or cause,
+   and the project's honesty rules forbid asserting it. The agreed framing is the routes money takes
+   and who appears on them, which the records do show. This is why the map draws people on both
+   sides of a record as a dashed line that is labelled "not money", and why it has no line at all
+   from companies to officeholders.
+3. *First prototype.* The front page and person page were built with the route map as the hero.
+   The first list of board members with public office showed only one party's foundation, because
+   it took the first eight matches. That read as a choice the data did not make, so all fourteen
+   matches are now shown, grouped by foundation. Labels on the map overlapped and were moved,
+   given halos and, where a line implied a link that is not on record, removed. The person page
+   says "declared a single income in {year}" instead of "100 % of the total" when there is one
+   line.
+4. *Emma's review of the first prototype.*
+   - The station names on the map sat beside their dots rather than over them. They are now
+     centred.
+   - She asked where a party gets the 90 % it puts into its own foundation. The page now answers in
+     general terms: subsidies, member fees and donations, under the law that governs party
+     finance. It also says that the split for each party sits in the audited party accounts, which
+     the site does not yet hold.
+   - On desktop the list of board members left half the width empty. It is now three columns
+     under each foundation.
+   - The declarations count, the topics and the gaps were bare numbers and plain links. Each is
+     now drawn: one dot per deputy, a line of votes per topic with a result bar under each vote,
+     and a graphic for each gap.
+   - She liked the route map most and asked for the design system to grow from it. The line of
+     stations is now a component used for votes and audited years, so the same visual grammar
+     carries through the page.
+
+**One motif.** The front page opens with the routes money takes into politics drawn as a transit
+map: state subsidies to parties, donations to parties and to foundations, company money to
+foundations, party money to its own foundations, and the officeholders who sit on foundation
+boards. Each route has one colour. A solid line is money on record; a dashed line is people
+appearing on both sides of a record, which is not money. There is deliberately no line from
+companies to officeholders: deputies declare shares, but nothing on record says they hold the
+companies that pay the foundations. The same grammar is now a component (`components/nuevo/Line.tsx`):
+a line of stations, filled and joined by a solid segment when on record, hollow and dashed when
+not, always stated in words as well.
+
+**Each section drawn, not listed.**
+
+- The foundations route says where a party's own money comes from in turn: public subsidies,
+  member fees and donations (Ley Orgánica 8/2007, art. 2). It also says that the per-party split
+  is in the parties' audited accounts, which this site does not hold yet.
+- Who appears on the routes: each foundation is a station with its board members who hold public
+  office listed under it, three to a row on wide screens. The asset declarations are drawn one dot
+  per deputy (`components/nuevo/DotGrid.tsx`): 35 declare securities, 69 do not, 245 are not yet
+  transcribed.
+- Topics: each topic's votes are a line in date order, with each vote's result drawn as a bar of
+  yes, no and abstentions. The bars do not say whether a vote passed, because organic laws need an
+  absolute majority and a bar would invite the wrong reading.
+- What is not on record: the unitemised share of campaign spending drawn at its size, the donor
+  tranches with the names the Court of Audit does not publish drawn as redactions, and the audited
+  years this site holds for donations and foundations drawn as lines up to the current year.
+
+**Party, place and topic pages.** The prototype now has an index and a hub for each, and its menu
+points at them.
+
+- *Parties* (`/nuevo/partidos`, `/nuevo/partido/[nif]`). The index ranks parties by state money
+  received and shows, for each party, which records hold it. A party's hub opens with four
+  figures that the page says are not added together. It then shows:
+  - state money by year and by type of subsidy;
+  - its 2020 donations by tranche;
+  - each of its foundations year by year;
+  - its officeholders on foundation boards;
+  - its campaign spending, itemised against the single unexplained line;
+  - its people, with a long list of deputies folded so the sections below stay within reach;
+  - how its group voted.
+  Where a party's own income split would belong, the page states that it is in party-accounts
+  report nº 1.573 and not yet on this site.
+- *Places* (`/nuevo/territorios`, `/nuevo/territorio/[provincia]`). The index has a plain map of
+  the comunidades and the provinces grouped under them, each drawn as one dot per deputy by
+  whether their declaration is transcribed. A province's hub shows who represents it, what the
+  register says they are paid, and what they declare. It also shows the subsidies of their
+  parties, labelled as national figures because subsidies carry no territory, and the figures of
+  the comunidad. A missing salary is shown as "—" with a note that the register publishes none,
+  never as "0 €". `lib/constituencies.ts` joins Congreso's constituencies to the site's
+  provinces, with a short written table for the five names that differ.
+- *Topics* (`/nuevo/temas`, `/nuevo/tema/[id]`). Each topic's votes are a line in date order. Each
+  vote has its overall result, the record's own wording and what kind of vote it was in plain
+  words. A bar per parliamentary group follows; a group formed by one party links to that party's
+  page, with the sentence that a vote and money on the same site do not explain each other.
+  A search finds how one deputy voted, linking to the person only when the name is unique. The
+  vote bar is now one component (`VoteBar`) shared with the front page.
+
+**Foundations now linked to Vox, the PSC and the PNV.** The rule that ties a foundation to its
+party matches the words of the party's registered name against the Court of Audit's wording, and
+it missed three parties. "Vox" has no word long enough to compare. The report writes "Partit del
+Socialistes" where the registry has "dels". The report names the PNV in Spanish, while the
+registry carries its Basque name. An exact table of those three wordings in `lib/foundations.ts`
+now links Fundación Disenso, Fundación Rafael Campalans, Fundación Sabino Arana and two companies
+wholly owned by the PNV, so 30 of the 39 audited entities are tied to a party instead of 25.
+Totals across all foundations are unchanged, as are the 14 board members matched to public
+office. Coalición Canaria stays unlinked on purpose: two registered parties carry that name.
+
+**Smaller fixes.** The citation box on the person page wraps a long PDF address instead of pushing
+the page wider than a phone screen. The prototype's sans-serif no longer logs an error on every
+build: next/font has no fallback metrics for it, so the fallback is used without adjustment.
+
+**Left out.** The prototype is in Spanish only, and Personas still opens the current directory.
+Nothing is ranked by wealth and no net worth is computed, as on the current site.
+
+---
+
 ## 2026-10-19 — Both themes and the chart tools together, and the contrast both left open
 
 The dark theme and the keyboard-reading and export work were built side by side from the same
