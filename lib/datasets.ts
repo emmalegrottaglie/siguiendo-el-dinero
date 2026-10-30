@@ -10,6 +10,7 @@ import { getIndicators, sourceFor } from "./indicators";
 import { GOVERNMENTS, GOVERNMENTS_SOURCE } from "./governments";
 import { TERRITORIES } from "./territories";
 import { DONATIONS_2020, DONATIONS_SOURCE } from "./donations";
+import { PARTY_INCOME, PARTY_INCOME_SOURCE, PARTY_INCOME_YEAR } from "./party-income";
 import { getDeclarations, getInterests } from "./declarations";
 import { toCsv, type CsvColumn } from "./csv";
 
@@ -116,6 +117,35 @@ const donaciones = dataset({
       name: DONATIONS_SOURCE.report,
       period: String(DONATIONS_SOURCE.year),
       url: DONATIONS_SOURCE.url,
+    },
+  ],
+});
+
+const ingresosPartidos = dataset({
+  id: "ingresos_partidos",
+  rows: async () => PARTY_INCOME,
+  columns: [
+    { header: "partido", value: (r) => r.label },
+    { header: "partido_nif", value: (r) => r.nif ?? "" },
+    { header: "publico_estado_eur", value: (r) => r.public.state },
+    { header: "publico_gobiernos_autonomicos_eur", value: (r) => r.public.regionalGovernments },
+    { header: "publico_cortes_generales_eur", value: (r) => r.public.cortes },
+    { header: "publico_parlamentos_autonomicos_eur", value: (r) => r.public.regionalParliaments },
+    { header: "publico_entidades_locales_eur", value: (r) => r.public.local },
+    { header: "publico_otras_eur", value: (r) => r.public.other },
+    { header: "publico_total_eur", value: (r) => r.public.total },
+    { header: "privado_cuotas_afiliados_eur", value: (r) => r.private.memberFees },
+    { header: "privado_cargos_publicos_eur", value: (r) => r.private.officeholders },
+    { header: "privado_donaciones_eur", value: (r) => r.private.donations },
+    { header: "privado_otros_eur", value: (r) => r.private.other },
+    { header: "privado_total_eur", value: (r) => r.private.total },
+  ],
+  sources: async () => [
+    {
+      publisher: PARTY_INCOME_SOURCE.body,
+      name: `${PARTY_INCOME_SOURCE.report}, anexos IV y V`,
+      period: String(PARTY_INCOME_YEAR),
+      url: PARTY_INCOME_SOURCE.url,
     },
   ],
 });
@@ -569,6 +599,7 @@ const pobrezaIne = dataset<PovertyRowOut>({
 export const DATASETS: DatasetDef[] = [
   subsidios,
   donaciones,
+  ingresosPartidos,
   fundaciones,
   fundacionesCargos,
   fundacionesVinculos,

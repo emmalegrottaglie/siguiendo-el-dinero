@@ -5,6 +5,54 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-10-30 — Where the parties' own money comes from, 2020
+
+The front page shows that 90 % of what enters a party foundation is put in by the party itself, and
+Emma asked the obvious next question: where does the party get that money? The answer is in the
+same Tribunal de Cuentas report the site already uses for donations (informe nº 1.573, ejercicio
+2020). Its Anexo IV lists each audited party's public income by the body that pays it, and its
+Anexo V lists its private income by origin: member fees, contributions from the party's own
+officeholders, donations from individuals, and other income. Both tables are now on the site.
+
+**What the figures show.** In 2020 the 25 audited parties had 233,6 M€ of ordinary income, and
+72 % of it was public money. Of the private part, the parties' own officeholders contributed
+28,9 M€, slightly more than the 27,5 M€ in member fees. Donations were 2,07 M€. The officeholder
+contributions are what people who hold office on a party's behalf pay to that party; the report
+does not say what share of their pay that is.
+
+**How it was transcribed.** The PDF has a text layer, but the columns come out scrambled, so both
+pages were read from their images. Three checks were then run:
+
+- every row sums to its printed total, and every column to the report's TOTAL row;
+- every figure was found in the text layer of that page;
+- every party's donations equal the figure `lib/donations.ts` already took from the report's
+  donations chart, which is an independent reading of the same report.
+
+All three passed for all 25 rows. The printed grand total of public income is cut off in its cell
+("167.744.342,3"); its columns sum to 167.744.342,39, which is the figure stored. `npm run
+check:party-income` re-runs the first and third checks; the second needs the PDF and was run once.
+
+**Which party is which.** Rows are tied to a party by the NIF the donations data already uses, or
+by the party registry where the name is unambiguous. Five rows stay unlinked because the site has
+no single NIF for them: Teruel Existe, Barcelona en Comú, Nueva Canarias, Sobiranistes and
+Coalición Canaria. Two registered parties carry the Coalición Canaria name and the report does not
+say which it means, so the Coalición Canaria page says that rather than claiming the row.
+
+**On the pages.**
+
+- *Party hub* (prototype). A new section, "De dónde salen sus ingresos", sits after state money.
+  It has a finding, a public-against-private bar, and the two halves broken down by source.
+- *Party index* (prototype). One composition bar per audited party, so the mix can be compared at
+  a glance. A share that rounds to 0 % but is not zero reads "menos del 1 %".
+- *Front page* (prototype). The foundations route now answers its own question with the 2020
+  figures. It says that the years differ, so the two are not subtracted.
+- *Datos* (current site). There is a new downloadable table, `ingresos_partidos`.
+
+The gap notes that said this breakdown was not on the site are gone. Electoral subsidies are a
+separate annex and are not included.
+
+---
+
 ## 2026-10-30 — A redesign prototype at /nuevo, built on the route map
 
 A prototype of a new front page and person page lives at `/[locale]/nuevo`, beside the current
