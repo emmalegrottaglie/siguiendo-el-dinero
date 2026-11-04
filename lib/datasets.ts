@@ -10,7 +10,7 @@ import { getIndicators, sourceFor } from "./indicators";
 import { GOVERNMENTS, GOVERNMENTS_SOURCE } from "./governments";
 import { TERRITORIES } from "./territories";
 import { DONATIONS_2020, DONATIONS_SOURCE } from "./donations";
-import { PARTY_INCOME, PARTY_INCOME_SOURCE, PARTY_INCOME_YEAR } from "./party-income";
+import { PARTY_INCOME_YEARS } from "./party-income";
 import { getDeclarations, getInterests } from "./declarations";
 import { toCsv, type CsvColumn } from "./csv";
 
@@ -123,8 +123,9 @@ const donaciones = dataset({
 
 const ingresosPartidos = dataset({
   id: "ingresos_partidos",
-  rows: async () => PARTY_INCOME,
+  rows: async () => PARTY_INCOME_YEARS.flatMap((y) => y.formations.map((f) => ({ ...f, year: y.year }))),
   columns: [
+    { header: "ejercicio", value: (r) => r.year },
     { header: "partido", value: (r) => r.label },
     { header: "partido_nif", value: (r) => r.nif ?? "" },
     { header: "publico_estado_eur", value: (r) => r.public.state },
@@ -139,15 +140,19 @@ const ingresosPartidos = dataset({
     { header: "privado_donaciones_eur", value: (r) => r.private.donations },
     { header: "privado_otros_eur", value: (r) => r.private.other },
     { header: "privado_total_eur", value: (r) => r.private.total },
+    { header: "nota_informe", value: (r) => r.note ?? "" },
   ],
-  sources: async () => [
-    {
-      publisher: PARTY_INCOME_SOURCE.body,
-      name: `${PARTY_INCOME_SOURCE.report}, anexos IV y V`,
-      period: String(PARTY_INCOME_YEAR),
-      url: PARTY_INCOME_SOURCE.url,
-    },
-  ],
+  // One source per report: 1.532 covers 2018 and 2019, 1.573 covers 2020.
+  sources: async () =>
+    [...new Map(PARTY_INCOME_YEARS.map((y) => [y.source.url, y])).values()].map((y) => {
+      const years = PARTY_INCOME_YEARS.filter((x) => x.source.url === y.source.url).map((x) => x.year);
+      return {
+        publisher: y.source.body,
+        name: `${y.source.report}, ${years.length > 1 ? "anexos IV, V, VII y VIII" : "anexos IV y V"}`,
+        period: years.join(", "),
+        url: y.source.url,
+      };
+    }),
 });
 
 const fundaciones = dataset({
