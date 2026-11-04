@@ -5,6 +5,30 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-04 — Asset declarations, sixth batch: 124 published
+
+**What was read.** The next 20 first filings in Congreso's surname order, from Emilio Jesús del Valle
+Rodríguez to Carmen Fúnez de Gregorio; a second reading, in the same pass, of the one of them who
+took her seat after RTVE's snapshot (Etna Estrems Fayos); and second readings of the two whose first
+reading did not match RTVE: 23 readings in all.
+
+**Result: 124 published, up from 104**, 91 checked against RTVE and 33 by an independent second
+reading. None is waiting for a second reading; 225 filings are not yet transcribed. Of the 19 new
+filings RTVE covers, 17 matched it on the first reading, and Etna Estrems Fayos's two readings
+agreed on all four totals.
+
+**Where two readings agree and RTVE does not.** Two, each checked against the scan:
+
+- Emilio Jesús del Valle Rodríguez: income 131.39 € against RTVE's 131.99 €. The scan's only income
+  line, "RENTAS INMUEBLES A DISPOSICIÓN DEL TITULAR", reads 131,39.
+- José María Figaredo Álvarez-Sala: income 22,113.57 € against RTVE's 31,713.57 €. The scan lists
+  four income lines (13.332,00, 720,00, 45,89 and 8.015,68), which sum to the readings' figure; the
+  9,600 € difference appears nowhere on the five pages.
+
+**Verified.** `check:declarations`, `check:deputies`, `npx tsc --noEmit` and `npm run build` pass.
+
+---
+
 ## 2026-10-30 — Where the parties' own money comes from, 2020
 
 The front page shows that 90 % of what enters a party foundation is put in by the party itself, and
