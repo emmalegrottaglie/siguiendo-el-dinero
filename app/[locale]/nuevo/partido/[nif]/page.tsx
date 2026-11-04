@@ -39,14 +39,19 @@ import {
   percent,
 } from "@/lib/format";
 import ShareBar from "@/components/nuevo/ShareBar";
+import InvestitureRecord, { investituresNaming } from "@/components/nuevo/InvestitureRecord";
+import { PARTIES } from "@/lib/parties";
+import { caName } from "@/lib/constituencies";
 import Line from "@/components/nuevo/Line";
 import DotGrid from "@/components/nuevo/DotGrid";
 import {
   incomeByNif,
+  incomeHistoryByNif,
   ordinaryIncome,
   PARTY_INCOME,
   PARTY_INCOME_SOURCE,
   PARTY_INCOME_YEAR,
+  PARTY_INCOME_YEARS,
 } from "@/lib/party-income";
 import {
   formationName,
@@ -82,6 +87,10 @@ type PartKey = (typeof FOUNDATION_PART_KEYS)[number];
  * section opens with the one sentence its figures show, computed here, then the
  * graphic, then the source. A section with nothing on record says so rather
  * than disappearing, because the gap is part of the answer.
+ *
+ * The one exception is the regional investitures, from the old /mapa page: the
+ * record names only the PP and Vox, so the section appears only on a hub whose
+ * party the record names, and shows only the votes in favour it records.
  *
  * Figures from different reports and years sit side by side and are never
  * added together.
@@ -131,6 +140,10 @@ export default async function PrototypeParty({
             foldText(party.displayName.replace(/\s*\(.*\)\s*$/, "")),
       );
   const incomeTotal = income ? ordinaryIncome(income) : 0;
+  // Every audited year with a row for this party, oldest first. Each year is
+  // shown as its own proportion; years are never added together.
+  const incomeYears = incomeHistoryByNif(nif);
+  const earlierSource = PARTY_INCOME_YEARS.find((y) => y.year !== PARTY_INCOME_YEAR)?.source;
   const PRIVATE_PARTS = income
     ? [
         { ...t.privateParts.memberFees, value: income.private.memberFees },
@@ -367,6 +380,18 @@ export default async function PrototypeParty({
         integer(withStance.length, bcp47),
       )
     : t.voteNoGroup(short, integer(stances.length, bcp47));
+
+  // ---------- Regional investitures, as recorded ----------
+  // The record keys votes in favour by the party's short name as lib/parties.ts
+  // spells it ("PP", "Vox"); the match is exact, on that registry's name for
+  // this NIF, never on the display name.
+  const recordName = PARTIES[nif]?.shortName;
+  const invNamed = recordName ? investituresNaming(recordName) : { voted: [], seatsOnly: [] };
+  const invRounds = invNamed.voted.flatMap((f) =>
+    f.investiture.rounds.filter((r) => (r.forBreakdown[recordName!] ?? 0) > 0),
+  );
+  const invFailed = invRounds.filter((r) => !r.succeeded).length;
+  const invName = (id: string) => caName(id, id);
 
   // ---------- Summary row ----------
   const f0 = formations[0];
@@ -682,8 +707,55 @@ export default async function PrototypeParty({
               : t.incomeNoRow(PARTY_INCOME_YEAR, PARTY_INCOME.length, short)}
           </p>
         )}
+        {incomeYears.length > 1 && (
+          <div className="mt-12">
+            <h3 className="font-bold" style={{ fontFamily: "var(--n-serif)", fontSize: "1.25rem" }}>
+              {t.yearsTitle}
+            </h3>
+            <p className="n-body mt-3">
+              {t.yearsIntro(short, incomeYears.map((y) => y.year).join(", "))}
+            </p>
+            <ul className="mt-6 grid gap-5">
+              {incomeYears.map(({ year, income: row }) => {
+                const total = ordinaryIncome(row);
+                return (
+                  <li key={year} className="grid gap-2 sm:grid-cols-[4rem_minmax(0,1fr)] sm:items-center sm:gap-6">
+                    <span className="n-num font-bold">{year}</span>
+                    {total > 0 ? (
+                      <div>
+                        <div aria-hidden className="flex h-5 w-full gap-[2px] overflow-hidden rounded-[3px]">
+                          <span
+                            className="n-state"
+                            style={{ flexGrow: row.public.total, flexBasis: 0, background: "var(--route)" }}
+                          />
+                          {row.private.total > 0 && (
+                            <span
+                              className="n-donors"
+                              style={{ flexGrow: row.private.total, flexBasis: 0, background: "var(--route)" }}
+                            />
+                          )}
+                        </div>
+                        <p className="n-meta mt-1">
+                          {t.yearsPublicShare(pct(row.public.total / total))}, {t.yearsTotal(money(total))}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="n-meta">{row.note ? t.yearsNoBreakdown : "—"}</p>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
         <p className="n-source">
           {t.incomeSource(PARTY_INCOME_SOURCE.url, PARTY_INCOME_YEAR)}
+          {incomeYears.some((y) => y.year !== PARTY_INCOME_YEAR) && earlierSource && (
+            <>
+              {" "}
+              {t.yearsSource(earlierSource.url)}
+            </>
+          )}
         </p>
       </Section>
 
@@ -769,7 +841,7 @@ export default async function PrototypeParty({
                         }}
                       />
                       <h3 className="n-h3">
-                        <Link href={L(`/fundacion/${e.slug}`)}>
+                        <Link href={L(`/nuevo/fundacion/${e.slug}`)}>
                           {displayName(e.name)}
                         </Link>
                       </h3>
@@ -825,7 +897,7 @@ export default async function PrototypeParty({
                 {unfunded.map((e, i) => (
                   <span key={e.slug}>
                     {i > 0 && (i === unfunded.length - 1 ? t.listAnd : ", ")}
-                    <Link href={L(`/fundacion/${e.slug}`)}>
+                    <Link href={L(`/nuevo/fundacion/${e.slug}`)}>
                       {displayName(e.name)}
                     </Link>
                   </span>
@@ -886,7 +958,7 @@ export default async function PrototypeParty({
                       className="n-foundations mb-8 last:mb-0"
                     >
                       <h3 className="n-h3">
-                        <Link href={L(`/fundacion/${entitySlug(foundation)}`)}>
+                        <Link href={L(`/nuevo/fundacion/${entitySlug(foundation)}`)}>
                           {displayName(foundation)}
                         </Link>
                       </h3>
@@ -1235,6 +1307,51 @@ export default async function PrototypeParty({
           {t.votesSource}
         </p>
       </Section>
+
+      {/* ---------- Regional investitures ---------- */}
+      {recordName && (invNamed.voted.length > 0 || invNamed.seatsOnly.length > 0) && (
+        <Section id="investiduras" title={t.investTitle}>
+          {invNamed.voted.length > 0 && (
+            <p className="n-finding">
+              {t.investFinding(
+                short,
+                integer(invRounds.length, bcp47),
+                invRounds.length,
+                listFmt.format(invNamed.voted.map((f) => invName(f.investiture.id))),
+                integer(invFailed, bcp47),
+                invFailed,
+              )}
+            </p>
+          )}
+          {invNamed.seatsOnly.length > 0 && (
+            <p className={invNamed.voted.length > 0 ? "n-body mt-3" : "n-finding"}>
+              {t.investSeatsOnly(
+                short,
+                listFmt.format(invNamed.seatsOnly.map((f) => invName(f.investiture.id))),
+              )}
+            </p>
+          )}
+          {invNamed.voted.length > 0 && (
+            <div className="mt-10 grid gap-x-14 gap-y-12 lg:grid-cols-2">
+              {invNamed.voted.map((f) => (
+                <InvestitureRecord
+                  key={f.investiture.id}
+                  finding={f}
+                  name={invName(f.investiture.id)}
+                  href={L(`/nuevo/territorios#inv-${f.investiture.id}`)}
+                  locale={locale}
+                  bcp47={bcp47}
+                  highlight={recordName}
+                />
+              ))}
+            </div>
+          )}
+          <p className="n-meta mt-8 max-w-[48em]">{t.investScope}</p>
+          <p className="mt-4">
+            <Link href={L("/nuevo/territorios#investiduras")}>{t.investAll}</Link>
+          </p>
+        </Section>
+      )}
 
       <div className="n-shell pb-4">
         <p className="n-meta">

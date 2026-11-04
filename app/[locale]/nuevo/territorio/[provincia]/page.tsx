@@ -400,7 +400,7 @@ export default async function PrototypePlace({
                         </Link>
                         {t.roleAt(roleLabel(b.role.toLowerCase(), locale))}
                       </p>
-                      <Link href={L(`/fundacion/${entitySlug(b.foundation)}`)}>
+                      <Link href={L(`/nuevo/fundacion/${entitySlug(b.foundation)}`)}>
                         {displayName(b.foundation)}
                       </Link>
                     </li>
@@ -610,7 +610,7 @@ export default async function PrototypePlace({
           </div>
           <p className="n-source">
             {t.declSource}{" "}
-            <Link href={L("/politicos/declaraciones")}>
+            <Link href={L("/nuevo/personas?kind=declarations")}>
               {t.allDeclarations}
             </Link>
           </p>

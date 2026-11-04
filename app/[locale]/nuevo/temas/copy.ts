@@ -47,10 +47,10 @@ const ca: Copy = {
   metaTitle: "Temes: com va votar el Congrés",
   title: "Temes",
   intro:
-    "Com va votar el Congrés en els assumptes que segueix aquesta web: drets de les persones trans i LGBTI, avortament i salut sexual, i habitatge. Cada vot és un vot emès i publicat a l'acta oficial, no una postura atribuïda.",
+    "Com va votar el Congrés en els assumptes que segueix aquest web: drets de les persones trans i LGBTI, avortament i salut sexual, i habitatge. Cada vot és un vot emès i publicat a l'acta oficial, no una postura atribuïda.",
   linesTitle: "Una línia per tema",
   finding: (n, span, law, gap) =>
-    `De les ${n} votacions que segueix aquesta web ${span}, la més ajustada va ser «${law}», amb ${gap} ${gap === 1 ? "vot" : "vots"} de diferència entre el sí i el no.`,
+    `De les ${n} votacions que segueix aquest web ${span}, la més ajustada va ser «${law}», amb ${gap} ${gap === 1 ? "vot" : "vots"} de diferència entre el sí i el no.`,
   topicMeta: (n, binding) =>
     `${n === 1 ? "1 votació" : `${n} votacions`}, ${binding === 0 ? "cap" : binding} amb efecte legal`,
   noLegalEffect: ", sense efecte legal",

@@ -13,7 +13,7 @@ const es = {
   filterParty: "Partido",
   allParties: "Todos",
   filterKind: "Quién",
-  kinds: { all: "Todas", deputies: "Diputados en activo", others: "Otros cargos" },
+  kinds: { all: "Todas", deputies: "Diputados en activo", others: "Otros cargos", declarations: "Bienes declarados" },
   stations: {
     votes: "Votos",
     declaration: "Declaración",
@@ -59,7 +59,7 @@ const en: Copy = {
   filterParty: "Party",
   allParties: "All",
   filterKind: "Who",
-  kinds: { all: "Everyone", deputies: "Sitting deputies", others: "Other posts" },
+  kinds: { all: "Everyone", deputies: "Sitting deputies", others: "Other posts", declarations: "Declared assets" },
   stations: {
     votes: "Votes",
     declaration: "Declaration",
@@ -103,7 +103,7 @@ const ca: Copy = {
   filterParty: "Partit",
   allParties: "Tots",
   filterKind: "Qui",
-  kinds: { all: "Totes", deputies: "Diputats en actiu", others: "Altres càrrecs" },
+  kinds: { all: "Totes", deputies: "Diputats en actiu", others: "Altres càrrecs", declarations: "Béns declarats" },
   stations: {
     votes: "Vots",
     declaration: "Declaració",

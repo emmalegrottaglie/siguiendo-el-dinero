@@ -2790,7 +2790,7 @@ const ca: Dict = {
       "Les set recomanacions d'aquest informe són les mateixes que el Tribunal de Comptes ja va formular a l'informe nº 1.533, sobre l'exercici 2020, aprovat el 28 de setembre de 2023. Les tres dirigides al Govern segueixen sense complir-se perquè no s'ha modificat la llei. Les dirigides a les mateixes fundacions —ajustar l'activitat als seus fins i presentar un pla de sanejament quan el patrimoni és negatiu— tampoc s'han complert.",
     legalTitle: "Què permet la llei",
     legalBody:
-      "Des de la reforma de 2015, un partit no pot acceptar donacions de persones juríiques, ni donacions anònimes, ni més de 50.000 euros l'any d'una mateixa persona física, i ha de rebutjar els diners de qui tingui un contracte públic vigent. Les seves fundacions es regeixen per la disposició addicional setena: allà les persones juríiques sí que poden donar. Per damunt de 120.000 euros la donació s'ha d'elevar a document públic, tota donació d'una persona jurídica s'ha de comunicar al Tribunal de Comptes en tres mesos i la identitat del donant s'ha de publicar. No poden rebre diners d'organismes, entitats o empreses públiques.",
+      "Des de la reforma de 2015, un partit no pot acceptar donacions de persones jurídiques, ni donacions anònimes, ni més de 50.000 euros l'any d'una mateixa persona física, i ha de rebutjar els diners de qui tingui un contracte públic vigent. Les seves fundacions es regeixen per la disposició addicional setena: allà les persones jurídiques sí que poden donar. Per damunt de 120.000 euros la donació s'ha d'elevar a document públic, tota donació d'una persona jurídica s'ha de comunicar al Tribunal de Comptes en tres mesos i la identitat del donant s'ha de publicar. No poden rebre diners d'organismes, entitats o empreses públiques.",
     lawLink: "Llei Orgànica 8/2007, disposició addicional setena ↗",
     tableTitle: "Entitat per entitat",
     tableNote:
@@ -2802,7 +2802,7 @@ const ca: Dict = {
     noPartyStated: "sense partit indicat",
     gapTitle: "Què no mostra",
     gapBody:
-      "L'informe cobreix 2021 i 2022; no hi ha dades posteriors publicades. No diu qui són les persones juríiques que van donar: nomena la contrapart només quan els diners van arribar com a conveni de col·laboració. I la seva pròpia aritmètica falla en un punt, que s'assenyala a la fitxa corresponent.",
+      "L'informe cobreix 2021 i 2022; no hi ha dades posteriors publicades. No diu qui són les persones jurídiques que van donar: nomena la contrapart només quan els diners van arribar com a conveni de col·laboració. I la seva pròpia aritmètica falla en un punt, que s'assenyala a la fitxa corresponent.",
     dossierEyebrow: "Entitat vinculada a un partit",
     identityTitle: "Dades generals",
     supervisor: "Protectorat o administració competent",

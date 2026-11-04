@@ -192,6 +192,18 @@ const es = {
       recursos ordinarios de la financiación pública y privada.
     </>
   ),
+  yearsTitle: "Año a año",
+  yearsIntro: (short: string, years: string) =>
+    `El mismo reparto en cada año que el Tribunal de Cuentas tiene fiscalizado para ${short}: ${years}. Cada barra muestra la proporción de ese año, no su tamaño, y los años no se suman: el Tribunal fiscaliza cada año a los partidos que recibieron subvención ese año.`,
+  yearsPublicShare: (pct: string) => `${pct} público`,
+  yearsTotal: (money: string) => `${money} en total`,
+  yearsNoBreakdown: "Sin desglose: el partido no facilitó la composición de sus ingresos.",
+  yearsSource: (url: string): ReactNode => (
+    <>
+      2018 y 2019: Tribunal de Cuentas,{" "}
+      <a href={url}>informe nº 1.532 (ejercicios 2018 y 2019)</a>, anexos IV, V, VII y VIII.
+    </>
+  ),
   // ---- donations ----
   donationsTitle: "Lo que declaró en donaciones",
   donationFinding: (
@@ -338,6 +350,22 @@ const es = {
   noOwnGroup: "Sin grupo propio",
   votesSource:
     "Fuente: actas de votación nominal del Congreso. La posición del grupo es la de la mayoría de sus diputados; un partido dentro de un grupo compartido no tiene posición propia.",
+  // ---- regional investitures ----
+  investTitle: "Investiduras autonómicas",
+  investFinding: (
+    short: string,
+    rounds: string,
+    roundsN: number,
+    list: string,
+    failed: string,
+    failedN: number,
+  ) =>
+    `Las actas que recoge esta web registran votos a favor de ${short} en ${rounds} ${roundsN === 1 ? "votación" : "votaciones"} de investidura, en ${list}${failedN ? `; ${failed} ${failedN === 1 ? "fue rechazada" : "fueron rechazadas"}` : ""}.`,
+  investSeatsOnly: (short: string, list: string) =>
+    `En ${list} sólo constan aquí los escaños, no el acta de la votación, así que no se dice cómo votó ${short}.`,
+  investScope:
+    "El registro de investiduras de esta web sólo recoge presidencias del PP. Los votos en contra no están desglosados por partido, así que ningún partido figura aquí por haber votado en contra. Cada investidura es una votación con fecha: no dice quién se sienta hoy en un gobierno.",
+  investAll: "Todas las investiduras, por comunidad",
   // ---- footer ----
   currentSite: (short: string) => `Ver la ficha de ${short} en el sitio actual`,
 };
@@ -477,6 +505,18 @@ const en: Copy = {
       annexes IV and V: ordinary resources from public and private funding.
     </>
   ),
+  yearsTitle: "Year by year",
+  yearsIntro: (short, years) =>
+    `The same split for each year the Court of Auditors has audited for ${short}: ${years}. Each bar shows that year’s proportions, not its size, and the years are not added together: each year the Court audits the parties that received a subsidy that year.`,
+  yearsPublicShare: (pct) => `${pct} public`,
+  yearsTotal: (money) => `${money} in total`,
+  yearsNoBreakdown: "No breakdown: the party did not provide the composition of its income.",
+  yearsSource: (url) => (
+    <>
+      2018 and 2019: Court of Auditors,{" "}
+      <a href={url}>Report no. 1532 (fiscal years 2018 and 2019)</a>, annexes IV, V, VII and VIII.
+    </>
+  ),
   donationsTitle: "What it declared in donations",
   donationFinding: (total, donors, year, pct, words) =>
     `It declared ${total} from ${donors} in ${year}, and ${pct} of the money came in donations ${words}.`,
@@ -594,6 +634,14 @@ const en: Copy = {
   noOwnGroup: "No group of its own",
   votesSource:
     "Source: records of the Congress’s roll-call votes. The group’s position is that of the majority of its deputies; a party within a shared group has no position of its own.",
+  investTitle: "Regional investitures",
+  investFinding: (short, rounds, roundsN, list, failed, failedN) =>
+    `The records this site holds show ${short} votes in favour in ${rounds} investiture ${roundsN === 1 ? "vote" : "votes"}, in ${list}${failedN ? `; ${failed} of them ${failedN === 1 ? "was" : "were"} rejected` : ""}.`,
+  investSeatsOnly: (short, list) =>
+    `For ${list} only the seats are on record here, not the record of the vote, so nothing is said about how ${short} voted.`,
+  investScope:
+    "This site's investiture record covers PP presidencies only. Votes against are not broken down by party, so no party appears here for having voted against. Each investiture is a dated vote: it does not say who sits in a government today.",
+  investAll: "Every investiture, by community",
   currentSite: (short) => `See ${short}’s page on the current site`,
 };
 
@@ -658,7 +706,7 @@ const ca: Copy = {
   listAnd: " i ",
   breadcrumb: "Partits",
   nif: "NIF",
-  topRank: "El partit que més diners públics ha rebut en aquesta web.",
+  topRank: "El partit que més diners públics ha rebut en aquest web.",
   rankLine: (ord, total) =>
     `El ${ord} de ${total} partits per diners públics rebuts.`,
   noSum:
@@ -674,7 +722,7 @@ const ca: Copy = {
   zeroEuro: "0 €",
   sumFoundationsNote: (year) => `el ${year}, aportacions i subvencions`,
   sumFoundationsYears: (years) => `el ${years}`,
-  sumFoundationsNone: "cap fundació vinculada en aquesta web",
+  sumFoundationsNone: "cap fundació vinculada en aquest web",
   sumCampaign: "Despesa de campanya",
   sumCampaignCoalition:
     "despesa ordinària de la seva candidatura, europees del 2024",
@@ -720,13 +768,25 @@ const ca: Copy = {
   incomeNote:
     "Les aportacions de càrrecs públics són el que donen al partit les persones que ocupen un càrrec en nom seu. Els diners de les Corts, dels parlaments autonòmics i de les entitats locals arriben a través dels seus grups. Les subvencions electorals van a part i no hi són incloses.",
   incomeUnlinked: (year, label, short) =>
-    `La taula d’ingressos del ${year} té una fila amb el nom «${label}», però més d’un partit registrat porta aquest nom i l’informe no diu quin és, de manera que aquesta web no l’atribueix a ${short}.`,
+    `La taula d’ingressos del ${year} té una fila amb el nom «${label}», però més d’un partit registrat porta aquest nom i l’informe no diu quin és, de manera que aquest web no l’atribueix a ${short}.`,
   incomeNoRow: (year, n, short) =>
     `El Tribunal de Comptes va fiscalitzar els comptes del ${year} de les ${n} formacions que van rebre subvenció anual. Cap fila d’aquesta taula correspon amb seguretat a ${short}.`,
   incomeSource: (url, year) => (
     <>
       Font: Tribunal de Comptes, <a href={url}>informe núm. 1.573 (exercici {year})</a>,
       annexos IV i V: recursos ordinaris del finançament públic i privat.
+    </>
+  ),
+  yearsTitle: "Any a any",
+  yearsIntro: (short, years) =>
+    `El mateix repartiment per a cada any que el Tribunal de Comptes té fiscalitzat de ${short}: ${years}. Cada barra mostra la proporció d’aquell any, no la seva mida, i els anys no se sumen: el Tribunal fiscalitza cada any els partits que van rebre subvenció aquell any.`,
+  yearsPublicShare: (pct) => `${pct} públic`,
+  yearsTotal: (money) => `${money} en total`,
+  yearsNoBreakdown: "Sense desglossament: el partit no va facilitar la composició dels seus ingressos.",
+  yearsSource: (url) => (
+    <>
+      2018 i 2019: Tribunal de Comptes,{" "}
+      <a href={url}>informe núm. 1.532 (exercicis 2018 i 2019)</a>, annexos IV, V, VII i VIII.
     </>
   ),
   donationsTitle: "El que va declarar en donacions",
@@ -770,11 +830,11 @@ const ca: Copy = {
   ),
   boardsTitle: "Càrrecs públics al capdavant de les seves fundacions",
   boardNone: (people, their) =>
-    `Cap de les ${people} que aquesta web recull al capdavant de ${their} coincideix amb un càrrec del Registre d’Alts Càrrecs.`,
+    `Cap de les ${people} que aquest web recull al capdavant de ${their} coincideix amb un càrrec del Registre d’Alts Càrrecs.`,
   boardSome: (matched, matchedNf, people, their, onlyOne) =>
     onlyOne
-      ? `L’única persona que aquesta web recull al capdavant de ${their} té també un càrrec públic.`
-      : `${matched === 1 ? "Una" : matchedNf} de les ${people} que aquesta web recull al capdavant de ${their} ${matched === 1 ? "té" : "tenen"} també un càrrec públic.`,
+      ? `L’única persona que aquest web recull al capdavant de ${their} té també un càrrec públic.`
+      : `${matched === 1 ? "Una" : matchedNf} de les ${people} que aquest web recull al capdavant de ${their} ${matched === 1 ? "té" : "tenen"} també un càrrec públic.`,
   dotWith: "amb càrrec públic",
   dotWithout: "sense coincidència exacta al registre",
   boardDotNote:
@@ -816,7 +876,7 @@ const ca: Copy = {
   thisList: "(aquesta candidatura)",
   boldHatched: "En negreta i amb trama, aquesta candidatura.",
   campaignNone: (short) =>
-    `L’informe del Tribunal de Comptes sobre les europees del 2024 no recull cap candidatura que aquesta web atribueixi a ${short}.`,
+    `L’informe del Tribunal de Comptes sobre les europees del 2024 no recull cap candidatura que aquest web atribueixi a ${short}.`,
   campaignSource: (url) => (
     <>
       Font: Tribunal de Comptes, <a href={url}>informe núm. 1.628</a>,
@@ -841,13 +901,21 @@ const ca: Copy = {
     "Fonts: Registre d’Alts Càrrecs i relació de diputats del Congrés dels Diputats.",
   votesTitle: "Com va votar el seu grup",
   voteFinding: (inFavour, inFavourNf, trackedNf) =>
-    `El seu grup va votar a favor en ${inFavour === 0 ? "cap" : inFavourNf} de les ${trackedNf} votacions que segueix aquesta web en què va tenir grup propi.`,
+    `El seu grup va votar a favor en ${inFavour === 0 ? "cap" : inFavourNf} de les ${trackedNf} votacions que segueix aquest web en què va tenir grup propi.`,
   voteNoGroup: (short, trackedNf) =>
-    `${short} no va tenir grup parlamentari propi en cap de les ${trackedNf} votacions que segueix aquesta web, de manera que no consta una posició seva com a partit.`,
+    `${short} no va tenir grup parlamentari propi en cap de les ${trackedNf} votacions que segueix aquest web, de manera que no consta una posició seva com a partit.`,
   noOwnPosition: (group) => `Sense posició pròpia, dins de ${group}`,
   noOwnGroup: "Sense grup propi",
   votesSource:
     "Font: actes de votació nominal del Congrés. La posició del grup és la de la majoria dels seus diputats; un partit dins d’un grup compartit no té posició pròpia.",
+  investTitle: "Investidures autonòmiques",
+  investFinding: (short, rounds, roundsN, list, failed, failedN) =>
+    `Les actes que recull aquest web registren vots a favor de ${short} en ${rounds} ${roundsN === 1 ? "votació" : "votacions"} d'investidura, a ${list}${failedN ? `; ${failed} ${failedN === 1 ? "va ser rebutjada" : "van ser rebutjades"}` : ""}.`,
+  investSeatsOnly: (short, list) =>
+    `A ${list} només hi consten els escons, no l'acta de la votació, així que no es diu com va votar ${short}.`,
+  investScope:
+    "El registre d'investidures d'aquest web només recull presidències del PP. Els vots en contra no estan desglossats per partit, així que cap partit no hi figura per haver votat en contra. Cada investidura és una votació amb data: no diu qui seu avui en un govern.",
+  investAll: "Totes les investidures, per comunitat",
   currentSite: (short) => `Veure la fitxa de ${short} al lloc actual`,
 };
 

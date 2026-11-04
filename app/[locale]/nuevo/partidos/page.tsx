@@ -437,7 +437,7 @@ export default async function PrototypeParties({
                     key={e.slug}
                     className="border-t border-[var(--n-rule)] py-2.5"
                   >
-                    <Link href={L(`/fundacion/${e.slug}`)}>
+                    <Link href={L(`/nuevo/fundacion/${e.slug}`)}>
                       {displayName(e.name)}
                     </Link>
                     <p className="n-meta mt-0.5">{reportParty(e.party)}</p>

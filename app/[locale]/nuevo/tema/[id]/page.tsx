@@ -18,6 +18,9 @@ import {
   yearSpan,
 } from "@/components/nuevo/topics";
 import type { Locale } from "@/lib/locales";
+import { fetchTopicNews } from "@/lib/news";
+import { NEWS_SOURCES } from "@/lib/news-sources.mjs";
+import OrgVoices from "@/components/nuevo/OrgVoices";
 import { COPY } from "./copy";
 
 // The deputy search reads the query string.
@@ -71,10 +74,14 @@ export default async function PrototypeTopic({
   const label = topicLabel(topic.id, topic.label, locale);
   const lowerLabel = label[0].toLowerCase() + label.slice(1);
   // Other pages of the current site that cover the same topic.
-  const related = [
-    ...(id === "lgtbi" ? [{ href: "/derechos", text: t.relatedLgtbi }] : []),
-    { href: "/votaciones", text: t.relatedAll },
-  ];
+  const related = [{ href: "/votaciones", text: t.relatedAll }];
+
+  // The LGBTI topic also carries what the organisations themselves publish. It sits beside the
+  // votes and is fetched only for that topic.
+  const isLgtbi = id === "lgtbi";
+  const voices = isLgtbi ? await fetchTopicNews(["lgtbi"], 24, locale === "en" ? "en" : "es") : null;
+  const orgSources = NEWS_SOURCES.filter((s) => s.topics.includes("lgtbi") && s.kind === "org");
+  const mediaSources = NEWS_SOURCES.filter((s) => s.topics.includes("lgtbi") && s.kind === "media");
 
   // The line's finding: how many divisions, over which years, and how many bind.
   const binding = votes.filter((v) => v.binding).length;
@@ -134,6 +141,21 @@ export default async function PrototypeTopic({
           columnLabel={(v) => v.law}
         />
       </Section>
+
+      {/* ---------- The organisations' own voice (LGBTI topic only) ---------- */}
+      {voices && (
+        <Section id="organizaciones" title={t.orgTitle}>
+          <OrgVoices
+            t={t}
+            locale={locale}
+            items={voices.items}
+            dropped={voices.dropped}
+            orgs={orgSources}
+            media={mediaSources}
+            methodHref={`/${locale}/metodologia`}
+          />
+        </Section>
+      )}
 
       {/* ---------- What is not on record ---------- */}
       <Section id="falta" title={t.missingTitle}>

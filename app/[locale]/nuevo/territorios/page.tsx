@@ -2,13 +2,17 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { getDict } from "@/lib/i18n";
 import { getProvinces } from "@/lib/provinces";
-import { getRegions } from "@/lib/regions";
+import { getHateTerritory, getRegions } from "@/lib/regions";
 import { TERRITORIES } from "@/lib/territories";
 import { getDeclarations } from "@/lib/declarations";
 import { getSalaries, SALARIES_SOURCE_URL } from "@/lib/salaries";
 import { caName, deputiesByProvince, declarationState, type DeclarationState } from "@/lib/constituencies";
-import { euroExact, formatDate, integer } from "@/lib/format";
+import { GOVERNMENTS, GOVERNMENTS_SOURCE } from "@/lib/governments";
+import { euroExact, formatDate, integer, percent, rate } from "@/lib/format";
 import RegionMap from "@/components/nuevo/RegionMap";
+import ShareBar from "@/components/nuevo/ShareBar";
+import InvestitureRecord, { StatusMark, shownInvestitures } from "@/components/nuevo/InvestitureRecord";
+import { INVESTITURE_COPY } from "@/components/nuevo/investiture-copy";
 import { COPY } from "./copy";
 
 export const revalidate = 3600;
@@ -25,6 +29,14 @@ export const revalidate = 3600;
  * how many officeholders the register places in each, and what the published
  * figures are. It is a count of the register's rows, and the page says so,
  * because the register does not cover every comunidad's posts alike.
+ *
+ * Then what the old /mapa page carried, comunidad by comunidad: who holds each
+ * presidency, how the PP presidencies in the investiture record were invested,
+ * and the hate incidents the Interior ministry's report places in each. The
+ * old page drew the first and the last as two layers of one map and never
+ * joined them; here they are separate sections, and still never joined. The map
+ * at the top stays unencoded: the figures are in bars and tables, where they
+ * can be read to the precision of a number.
  */
 
 const LOOK: Record<DeclarationState, { cls?: string; style: CSSProperties }> = {
@@ -55,13 +67,15 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
   const { locale: localeParam } = await params;
   const { locale, bcp47 } = getDict(localeParam);
   const t = COPY[locale];
-  const [{ provinces }, regions, decl, salaries, join] = await Promise.all([
+  const [{ provinces }, regions, decl, salaries, join, hate] = await Promise.all([
     getProvinces(),
     getRegions(),
     getDeclarations(),
     getSalaries(),
     deputiesByProvince(),
+    getHateTerritory(),
   ]);
+  const ti = INVESTITURE_COPY[locale];
   const L = (path: string) => `/${locale}${path}`;
   const n = (x: number) => integer(x, bcp47);
   const listFmt = new Intl.ListFormat(bcp47, { type: "conjunction" });
@@ -110,6 +124,48 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
 
   const plural = (x: number, forms: [string, string]) => `${n(x)} ${x === 1 ? forms[0] : forms[1]}`;
   const lookLabel = (k: DeclarationState, one: boolean) => (one ? (t.look[k].one ?? t.look[k].label) : t.look[k].label);
+
+  // ---------- Who presides each comunidad, and how it was invested ----------
+  const hrefFor = (id: string) => (single.has(id) ? L(`/nuevo/territorio/${single.get(id)}`) : `#ca-${id}`);
+  const investitures = shownInvestitures();
+  const invById = new Map(investitures.map((f) => [f.investiture.id, f]));
+  const govRows = regions.regions
+    .map((r) => ({
+      id: r.id,
+      name: caName(r.id, r.name),
+      legal: r.name,
+      gov: GOVERNMENTS.find((g) => g.id === r.id) ?? null,
+      inv: invById.get(r.id) ?? null,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, "es"));
+  // Presidencies by party label, as the list records it: PSOE, PSC and
+  // PSN-PSOE are kept apart, because the list keeps them apart.
+  const byParty = [
+    ...govRows.reduce((m, r) => {
+      if (r.gov) m.set(r.gov.partyLabel, (m.get(r.gov.partyLabel) ?? 0) + 1);
+      return m;
+    }, new Map<string, number>()),
+  ].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "es"));
+  const presided = govRows.filter((r) => r.gov).length;
+  const decisiveN = investitures.filter((f) => f.status === "vox-decisive").length;
+  const shortN = investitures.length - decisiveN;
+  const invCards = investitures
+    .map((f) => ({ f, name: caName(f.investiture.id, regions.regions.find((r) => r.id === f.investiture.id)?.name ?? f.investiture.id) }))
+    .sort((a, b) => a.name.localeCompare(b.name, "es"));
+
+  // ---------- Recorded hate crime, by comunidad ----------
+  // In the order the old map's hate-crime layer was read in: by rate, highest
+  // first. A territory the report does not place has no rate, and sorts last.
+  const hateRows = regions.regions
+    .map((r) => ({ id: r.id, name: caName(r.id, r.name), h: hate.territories[r.id] ?? null }))
+    .sort((a, b) => (b.h?.ratePer100k ?? -1) - (a.h?.ratePer100k ?? -1) || a.name.localeCompare(b.name, "es"));
+  const rated = hateRows.filter((r) => r.h !== null);
+  const hiRate = rated[0];
+  const loRate = rated[rated.length - 1];
+  const maxRate = Math.max(hate.national.ratePer100k, ...rated.map((r) => r.h!.ratePer100k));
+  const unlocatedHate = Object.values(hate.unlocated).reduce((s, x) => s + x.total, 0);
+  const share = (x: number, total: number) =>
+    x <= 0 || total <= 0 ? null : x / total < 0.01 ? t.lessThanOne : percent(x / total, bcp47, 0);
 
   return (
     <main>
@@ -217,7 +273,7 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
           </p>
         )}
         <p className="n-source">
-          {t.declSource} <Link href={L("/politicos/declaraciones")}>{t.allDeclarations}</Link>
+          {t.declSource} <Link href={L("/nuevo/personas?kind=declarations")}>{t.allDeclarations}</Link>
         </p>
       </section>
 
@@ -319,6 +375,265 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
           {salaries.source.updated ? t.updated(formatDate(salaries.source.updated, bcp47)) : ""}
           {t.registerSourceTail}
         </p>
+      </section>
+
+      {/* ---------- Who presides each comunidad ---------- */}
+      <section className="n-shell n-section" aria-labelledby="gobiernos">
+        <h2 id="gobiernos" className="n-h2">
+          {t.govTitle}
+        </h2>
+        {byParty.length > 0 && (
+          <p className="n-finding mt-4">
+            {t.govFinding(byParty[0][0], n(byParty[0][1]), n(govRows.length), formatDate(GOVERNMENTS_SOURCE.checked, bcp47))}
+          </p>
+        )}
+        <p className="n-body mt-3">{t.govBody}</p>
+        <ShareBar
+          locale={locale}
+          className="n-neutral mt-6 max-w-[48rem]"
+          parts={[
+            ...byParty.map(([label, count]) => ({ label, value: count })),
+            ...(presided < govRows.length ? [{ label: "—", value: govRows.length - presided, muted: true }] : []),
+          ]}
+          format={(v) => n(v)}
+        />
+        <div className="relative mt-8 overflow-x-auto">
+          <table className="n-table min-w-[40rem]">
+            <caption className="sr-only">{t.govCaption}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{t.colCommunity}</th>
+                <th scope="col">{t.colPresident}</th>
+                <th scope="col">{t.colParty}</th>
+                <th scope="col" className="n-r">
+                  {t.colSince}
+                </th>
+                <th scope="col">{t.colInvestiture}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {govRows.map((r) => (
+                <tr key={r.id}>
+                  <th scope="row" className="font-normal">
+                    <a href={hrefFor(r.id)}>{r.name}</a>
+                    {r.legal !== r.name && <span className="n-meta block">{r.legal}</span>}
+                  </th>
+                  <td>{r.gov?.president ?? <span className="text-[var(--n-ink-3)]">—</span>}</td>
+                  <td>{r.gov?.partyLabel ?? <span className="text-[var(--n-ink-3)]">—</span>}</td>
+                  <td className="n-r">
+                    {r.gov ? formatDate(r.gov.since, bcp47) : <span className="text-[var(--n-ink-3)]">—</span>}
+                  </td>
+                  <td>
+                    {r.inv ? (
+                      <a href={`#inv-${r.id}`} className="inline-flex items-start gap-2">
+                        <span className="mt-[0.3em]">
+                          <StatusMark status={r.inv.status} />
+                        </span>
+                        {r.inv.status === "vox-decisive" ? ti.hatchDecisive : ti.hatchShort}
+                      </a>
+                    ) : (
+                      <span className="text-[var(--n-ink-3)]">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="n-meta mt-3 max-w-[48em]">{t.govInvestNote}</p>
+        <p className="n-source">
+          {t.sourceLabel}{" "}
+          <a href={GOVERNMENTS_SOURCE.url}>
+            {t.wikiPrefix}
+            {GOVERNMENTS_SOURCE.body}
+          </a>
+          {t.checkedTail(formatDate(GOVERNMENTS_SOURCE.checked, bcp47))}
+        </p>
+      </section>
+
+      {/* ---------- Investitures ---------- */}
+      <section className="n-shell n-section" aria-labelledby="investiduras">
+        <h2 id="investiduras" className="n-h2">
+          {t.investTitle}
+        </h2>
+        <p className="n-finding mt-4">
+          {t.investFinding(n(investitures.length), n(decisiveN), n(shortN))}
+        </p>
+        <p className="n-body mt-3">{t.investBody}</p>
+        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]">
+          <li className="inline-flex items-center gap-2">
+            <StatusMark status="vox-decisive" />
+            {ti.hatchDecisive}
+          </li>
+          <li className="inline-flex items-center gap-2">
+            <StatusMark status="pp-short-alone" />
+            {ti.hatchShort}
+          </li>
+        </ul>
+        <div className="mt-10 grid gap-x-14 gap-y-12 lg:grid-cols-2">
+          {invCards.map(({ f, name }) => (
+            <InvestitureRecord
+              key={f.investiture.id}
+              id={`inv-${f.investiture.id}`}
+              finding={f}
+              name={name}
+              href={hrefFor(f.investiture.id)}
+              locale={locale}
+              bcp47={bcp47}
+            />
+          ))}
+        </div>
+        <p className="n-meta mt-8 max-w-[48em]">{t.investGap}</p>
+      </section>
+
+      {/* ---------- Recorded hate crime ---------- */}
+      <section className="n-shell n-section" aria-labelledby="odio">
+        <h2 id="odio" className="n-h2">
+          {t.hateTitle}
+        </h2>
+        {hiRate && loRate && (
+          <p className="n-finding mt-4">
+            {t.hateFinding(
+              String(hate.year),
+              n(hate.national.total),
+              rate(hate.national.ratePer100k, bcp47),
+              rate(loRate.h!.ratePer100k, bcp47),
+              loRate.name,
+              rate(hiRate.h!.ratePer100k, bcp47),
+              hiRate.name,
+            )}
+          </p>
+        )}
+        <p className="n-body mt-3">{t.hateBody}</p>
+
+        {/* The rate, one bar per territory on one scale, with Spain's as a line. */}
+        <ul aria-label={t.rateListLabel} className="mt-8 grid max-w-[48rem] gap-1.5">
+          {hateRows.map((r) => (
+            <li key={r.id} className="grid grid-cols-[minmax(0,9rem)_1fr_auto] items-center gap-3 text-[0.95rem]">
+              <a href={hrefFor(r.id)} className="leading-tight">
+                {r.name}
+              </a>
+              <span aria-hidden className="relative block h-3">
+                {r.h && (
+                  <span
+                    className="absolute inset-y-0 left-0 rounded-[2px]"
+                    style={{ width: `${(r.h.ratePer100k / maxRate) * 100}%`, minWidth: 2, background: "var(--n-ink-2)" }}
+                  />
+                )}
+                <span
+                  className="absolute -bottom-0.5 -top-0.5 w-[2px]"
+                  style={{ left: `${(hate.national.ratePer100k / maxRate) * 100}%`, background: "var(--n-ink)" }}
+                />
+              </span>
+              <span className="n-num w-[4.5rem] text-right">
+                {r.h ? rate(r.h.ratePer100k, bcp47) : <span className="text-[var(--n-ink-3)]">—</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="n-meta mt-3 inline-flex items-center gap-2">
+          <span aria-hidden className="inline-block h-3 w-[2px]" style={{ background: "var(--n-ink)" }} />
+          {t.nationalLine(rate(hate.national.ratePer100k, bcp47))}
+        </p>
+
+        <details className="mt-8">
+          <summary className="n-h3 cursor-pointer">{t.hateTableSummary(n(hateRows.length))}</summary>
+          <div className="relative mt-4 overflow-x-auto">
+            <table className="n-table min-w-[40rem]">
+              <caption className="sr-only">{t.hateCaption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{t.colTerritory}</th>
+                  <th scope="col" className="n-r">
+                    {t.colRecorded(String(hate.year))}
+                  </th>
+                  <th scope="col" className="n-r">
+                    {t.colRate}
+                  </th>
+                  <th scope="col" className="n-r">
+                    {t.colSogi}
+                  </th>
+                  <th scope="col" className="n-r">
+                    {t.colRacism}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {hateRows.map((r) => {
+                  const sogi = r.h ? share(r.h.sexualOrientationGenderIdentity, r.h.total) : null;
+                  const racism = r.h ? share(r.h.racism, r.h.total) : null;
+                  return (
+                    <tr key={r.id}>
+                      <th scope="row" className="font-normal">
+                        <a href={hrefFor(r.id)}>{r.name}</a>
+                      </th>
+                      {r.h ? (
+                        <>
+                          <td className="n-r">{n(r.h.total)}</td>
+                          <td className="n-r">{rate(r.h.ratePer100k, bcp47)}</td>
+                          <td className="n-r">
+                            {n(r.h.sexualOrientationGenderIdentity)}
+                            {sogi && <span className="n-meta"> ({sogi})</span>}
+                          </td>
+                          <td className="n-r">
+                            {n(r.h.racism)}
+                            {racism && <span className="n-meta"> ({racism})</span>}
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="n-r text-[var(--n-ink-3)]">—</td>
+                          <td className="n-r text-[var(--n-ink-3)]">—</td>
+                          <td className="n-r text-[var(--n-ink-3)]">—</td>
+                          <td className="n-r text-[var(--n-ink-3)]">—</td>
+                        </>
+                      )}
+                    </tr>
+                  );
+                })}
+                {unlocatedHate > 0 && (
+                  <tr>
+                    <th scope="row" className="font-normal text-[var(--n-ink-2)]">
+                      {t.noTerritory}
+                    </th>
+                    <td className="n-r">{n(unlocatedHate)}</td>
+                    <td className="n-r text-[var(--n-ink-3)]">—</td>
+                    <td className="n-r text-[var(--n-ink-3)]">—</td>
+                    <td className="n-r text-[var(--n-ink-3)]">—</td>
+                  </tr>
+                )}
+                <tr>
+                  <th scope="row" className="font-bold">
+                    {t.spain}
+                  </th>
+                  <td className="n-r font-bold">{n(hate.national.total)}</td>
+                  <td className="n-r font-bold">{rate(hate.national.ratePer100k, bcp47)}</td>
+                  <td className="n-r text-[var(--n-ink-3)]">—</td>
+                  <td className="n-r text-[var(--n-ink-3)]">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="n-meta mt-3 max-w-[48em]">{t.barsNote}</p>
+        </details>
+
+        <p className="n-body mt-8 text-[0.95rem]">{t.hateLimits}</p>
+        <p className="n-meta mt-3 max-w-[48em]">{t.hateNotJoined}</p>
+        <p className="n-source">
+          {t.sourceLabel}{" "}
+          <a href={hate.source.url}>
+            {hate.source.body.replace(/\s*·\s*/g, ", ")}, {hate.source.report}
+          </a>
+          {t.tablesTail(listFmt.format(hate.source.tables))}
+        </p>
+      </section>
+
+      {/* ---------- What this page does not show ---------- */}
+      <section className="n-shell n-section" aria-labelledby="no-muestra">
+        <h2 id="no-muestra" className="n-h2">
+          {t.missingTitle}
+        </h2>
+        <p className="n-body mt-4 max-w-[48em]">{t.missingLayers}</p>
       </section>
     </main>
   );

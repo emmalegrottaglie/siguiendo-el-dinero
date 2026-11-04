@@ -39,7 +39,7 @@ const NAV = [
   { href: "/nuevo/personas", key: "people" },
   { href: "/nuevo/territorios", key: "territories" },
   { href: "/nuevo/temas", key: "topics" },
-  { href: "/metodologia", key: "method" },
+  { href: "/nuevo/metodologia", key: "method" },
 ] as const;
 
 export default async function PrototypeLayout({
@@ -81,7 +81,7 @@ export default async function PrototypeLayout({
       <footer className="n-shell n-section n-meta grid gap-3 sm:grid-cols-2">
         <p>{t.footerSources}</p>
         <p>
-          {t.footerJuxta} <Link href={`/${locale}/metodologia`}>{t.footerLink}</Link>
+          {t.footerJuxta} <Link href={`/${locale}/nuevo/metodologia`}>{t.footerLink}</Link>
         </p>
       </footer>
     </div>

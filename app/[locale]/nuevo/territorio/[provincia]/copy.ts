@@ -150,7 +150,7 @@ const es = {
   investVox: (pp: string, seats: string) =>
     `El PP tenía ${pp} de ${seats} escaños, y la investidura salió adelante con votos de Vox: sin ellos no había mayoría.`,
   investShort: (pp: string, seats: string) =>
-    `El PP tenía ${pp} de ${seats} escaños, menos de la mayoría absoluta. Esta web recoge la aritmética; el acta de la votación no está verificada aquí.`,
+    `El PP tenía ${pp} de ${seats} escaños, menos de la mayoría absoluta. Esta web recoge la aritmética; el acta de la votación no está verificada aquí, y en segunda vuelta basta la mayoría simple, así que no se afirma quién invistió a nadie.`,
   wikiPrefix: "Wikipedia, ",
   checkedTail: (date: string) =>
     `, comprobado el ${date}. Es quién ocupa la presidencia, no el resultado de las elecciones.`,
@@ -333,7 +333,7 @@ const en: Copy = {
   investVox: (pp, seats) =>
     `The PP held ${pp} of ${seats} seats, and the investiture carried with votes from Vox: without them there was no majority.`,
   investShort: (pp, seats) =>
-    `The PP held ${pp} of ${seats} seats, short of an absolute majority. This site records the arithmetic; the division record itself is not verified here.`,
+    `The PP held ${pp} of ${seats} seats, short of an absolute majority. This site records the arithmetic; the division record itself is not verified here, and a second round needs only a simple majority, so nothing is claimed about who invested whom.`,
   wikiPrefix: "Wikipedia, ",
   checkedTail: (date) =>
     `, checked on ${date}. It is who holds the presidency, not the result of the elections.`,
@@ -518,7 +518,7 @@ const ca: Copy = {
   investVox: (pp, seats) =>
     `El PP tenia ${pp} de ${seats} escons, i la investidura va tirar endavant amb vots de Vox: sense ells no hi havia majoria.`,
   investShort: (pp, seats) =>
-    `El PP tenia ${pp} de ${seats} escons, menys de la majoria absoluta. Aquest web recull l'aritmètica; l'acta de la votació no està verificada aquí.`,
+    `El PP tenia ${pp} de ${seats} escons, menys de la majoria absoluta. Aquest web recull l'aritmètica; l'acta de la votació no està verificada aquí, i en segona volta n'hi ha prou amb la majoria simple, així que no s'afirma qui va investir ningú.`,
   wikiPrefix: "Wikipedia, ",
   checkedTail: (date) =>
     `, comprovat el ${date}. És qui ocupa la presidència, no el resultat de les eleccions.`,

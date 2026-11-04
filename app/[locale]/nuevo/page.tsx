@@ -130,7 +130,7 @@ export default async function PrototypeHome({
           <p className="n-body mt-6" style={{ fontSize: "1.15rem" }}>
             {t.lede}
           </p>
-          <form action={L("/buscar")} method="get" role="search" className="n-search mt-8">
+          <form action={L("/nuevo/buscar")} method="get" role="search" className="n-search mt-8">
             <label htmlFor="n-q" className="sr-only">
               {t.searchLabel}
             </label>
@@ -149,7 +149,7 @@ export default async function PrototypeHome({
             {t.forExample}{" "}
             <Link href={L("/nuevo/politico/pilar-calvo-gomez")}>Pilar Calvo Gómez</Link>,{" "}
             <Link href={L("/nuevo/politico/alberto-nunez-feijoo")}>Alberto Núñez Feijóo</Link>,{" "}
-            <Link href={L("/donde/madrid")}>Madrid</Link>.
+            <Link href={L("/nuevo/territorio/madrid")}>Madrid</Link>.
           </p>
         </div>
         <RouteMap
@@ -192,7 +192,7 @@ export default async function PrototypeHome({
               },
             ]}
             barFormat={(v) => pct(v / agg.grandTotal)}
-            link={{ href: L("/financiacion#reparto"), text: t.stateLink }}
+            link={{ href: L("/nuevo/financiacion#reparto"), text: t.stateLink }}
             source={t.stateSource}
             sourceLabel={t.sourceLabel}
             locale={locale}
@@ -209,7 +209,7 @@ export default async function PrototypeHome({
               { label: t.over10000, value: sum("large", "amount") },
             ]}
             barFormat={(v) => pct(v / DONATIONS_SOURCE.grandTotal)}
-            link={{ href: L("/financiacion#donaciones"), text: t.donorsLink }}
+            link={{ href: L("/nuevo/financiacion#donaciones"), text: t.donorsLink }}
             source={t.donorsSource}
             sourceLabel={t.sourceLabel}
             locale={locale}
@@ -235,7 +235,7 @@ export default async function PrototypeHome({
               { label: t.fromIndividuals, value: f.individuals },
             ]}
             barFormat={(v) => pct(v / f.contributions)}
-            link={{ href: L("/fundaciones"), text: t.foundationsLink }}
+            link={{ href: L("/nuevo/fundaciones"), text: t.foundationsLink }}
             source={t.foundationsSource}
             sourceLabel={t.sourceLabel}
             locale={locale}
@@ -268,7 +268,7 @@ export default async function PrototypeHome({
                 style={{ borderColor: "var(--route)", background: "var(--n-card)" }}
               />
               <h3 className="n-h3">
-                <Link href={L(`/fundacion/${entitySlug(foundation)}`)}>{displayName(foundation)}</Link>
+                <Link href={L(`/nuevo/fundacion/${entitySlug(foundation)}`)}>{displayName(foundation)}</Link>
               </h3>
               <span aria-hidden className="hidden h-[5px] min-w-8 flex-1 sm:block" style={{ background: "var(--route)" }} />
               <span className="n-meta">
@@ -301,7 +301,7 @@ export default async function PrototypeHome({
             </p>
             <p className="n-meta mt-3">
               {t.declMeta}{" "}
-              <Link href={L("/politicos/declaraciones")}>{t.declLink}</Link>
+              <Link href={L("/nuevo/personas?kind=declarations")}>{t.declLink}</Link>
             </p>
           </div>
           <DotGrid

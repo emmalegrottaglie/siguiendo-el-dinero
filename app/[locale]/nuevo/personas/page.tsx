@@ -1,12 +1,19 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getBadges, getPeople, placeOf, queryPeople, type Person } from "@/lib/people";
+import {
+  getBadges,
+  getPeople,
+  placeOf,
+  queryPeople,
+  type Person,
+} from "@/lib/people";
 import { getDict } from "@/lib/i18n";
 import { integer } from "@/lib/format";
 import { getDeclarations } from "@/lib/declarations";
 import { getFoundations, partyNifByFoundation } from "@/lib/foundations";
 import { officeTies } from "@/lib/officeholder-ties";
 import { COPY } from "./copy";
+import Declarations from "./Declarations";
 
 /*
  * The prototype's people directory. Each person is a row and each row is a
@@ -44,12 +51,22 @@ export default async function PrototypePeople({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ q?: string; party?: string; kind?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    party?: string;
+    kind?: string;
+    page?: string;
+  }>;
 }) {
-  const { locale, bcp47 } = getDict((await params).locale);
+  const { locale, bcp47, t: dict } = getDict((await params).locale);
   const t = COPY[locale];
   const { q, party, kind: kindParam, page: pageParam } = await searchParams;
-  const kind = kindParam === "deputies" || kindParam === "others" ? kindParam : "all";
+  const kind =
+    kindParam === "deputies" ||
+    kindParam === "others" ||
+    kindParam === "declarations"
+      ? kindParam
+      : "all";
   const L = (path: string) => `/${locale}${path}`;
 
   const [everyone, badges, declarations, foundations] = await Promise.all([
@@ -59,7 +76,9 @@ export default async function PrototypePeople({
     getFoundations(),
   ]);
   const ties = await officeTies(partyNifByFoundation(foundations));
-  const onBoard = new Set([...ties.byPerson.values()].flatMap((list) => list.map((x) => x.slug)));
+  const onBoard = new Set(
+    [...ties.byPerson.values()].flatMap((list) => list.map((x) => x.slug)),
+  );
   const declared = new Set(declarations.declarations.map((d) => d.cod));
 
   const has = (p: Person): Record<Station, boolean> => ({
@@ -81,10 +100,16 @@ export default async function PrototypePeople({
   // The text filter is the current directory's. The kind filter comes next, and
   // the party counts are taken over that set, so the number beside each party
   // is what choosing it returns.
-  const { results: matched } = await queryPeople({ q, perPage: Number.MAX_SAFE_INTEGER });
-  const ofKind = matched.filter((p) => (kind === "all" ? true : kind === "deputies" ? !!p.deputy : !p.deputy));
+  const { results: matched } = await queryPeople({
+    q,
+    perPage: Number.MAX_SAFE_INTEGER,
+  });
+  const ofKind = matched.filter((p) =>
+    kind === "all" ? true : kind === "others" ? !p.deputy : !!p.deputy,
+  );
   const counts = new Map<string, number>();
-  for (const p of ofKind) counts.set(p.partyShort, (counts.get(p.partyShort) ?? 0) + 1);
+  for (const p of ofKind)
+    counts.set(p.partyShort, (counts.get(p.partyShort) ?? 0) + 1);
   const parties = [...counts.entries()]
     .map(([short, count]) => ({ short, count }))
     .sort((a, b) => b.count - a.count)
@@ -98,9 +123,21 @@ export default async function PrototypePeople({
 
   const href = (next: Record<string, string | number | undefined>) => {
     const sp = new URLSearchParams();
-    const merged: Record<string, string | number | undefined> = { q, party, kind, page, ...next };
+    const merged: Record<string, string | number | undefined> = {
+      q,
+      party,
+      kind,
+      page,
+      ...next,
+    };
     for (const [k, v] of Object.entries(merged)) {
-      if (v === undefined || v === "" || (k === "page" && v === 1) || (k === "kind" && v === "all")) continue;
+      if (
+        v === undefined ||
+        v === "" ||
+        (k === "page" && v === 1) ||
+        (k === "kind" && v === "all")
+      )
+        continue;
       sp.set(k, String(v));
     }
     const qs = sp.toString();
@@ -119,7 +156,12 @@ export default async function PrototypePeople({
 
       <section className="n-section">
         <div className="n-shell">
-          <form action={L("/nuevo/personas")} method="get" role="search" className="n-search">
+          <form
+            action={L("/nuevo/personas")}
+            method="get"
+            role="search"
+            className="n-search"
+          >
             <label htmlFor="n-people-q" className="sr-only">
               {t.searchLabel}
             </label>
@@ -139,20 +181,28 @@ export default async function PrototypePeople({
           </form>
 
           <div className="mt-6 grid gap-4">
-            <nav aria-label={t.filterKind} className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+            <nav
+              aria-label={t.filterKind}
+              className="flex flex-wrap items-baseline gap-x-4 gap-y-2"
+            >
               <span className="n-label">{t.filterKind}</span>
-              {(["all", "deputies", "others"] as const).map((k) => (
-                <Link
-                  key={k}
-                  href={href({ kind: k, page: 1 })}
-                  aria-current={kind === k ? "page" : undefined}
-                  className={kind === k ? "font-bold !no-underline" : ""}
-                >
-                  {t.kinds[k]}
-                </Link>
-              ))}
+              {(["all", "deputies", "others", "declarations"] as const).map(
+                (k) => (
+                  <Link
+                    key={k}
+                    href={href({ kind: k, page: 1 })}
+                    aria-current={kind === k ? "page" : undefined}
+                    className={kind === k ? "font-bold !no-underline" : ""}
+                  >
+                    {t.kinds[k]}
+                  </Link>
+                ),
+              )}
             </nav>
-            <nav aria-label={t.filterParty} className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+            <nav
+              aria-label={t.filterParty}
+              className="flex flex-wrap items-baseline gap-x-4 gap-y-2"
+            >
               <span className="n-label">{t.filterParty}</span>
               <Link
                 href={href({ party: undefined, page: 1 })}
@@ -168,105 +218,156 @@ export default async function PrototypePeople({
                     key={p.short}
                     href={href({ party: p.short, page: 1 })}
                     aria-current={party === p.short ? "page" : undefined}
-                    className={party === p.short ? "font-bold !no-underline" : ""}
+                    className={
+                      party === p.short ? "font-bold !no-underline" : ""
+                    }
                   >
-                    {p.short} <span className="n-meta">{integer(p.count, bcp47)}</span>
+                    {p.short}{" "}
+                    <span className="n-meta">{integer(p.count, bcp47)}</span>
                   </Link>
                 ))}
             </nav>
           </div>
 
-          <details open className="mt-8">
-            <summary className="n-label cursor-pointer">{t.legendTitle}</summary>
-            <p className="n-body mt-3">{t.legend}</p>
-            <ul className="mt-3 grid gap-1">
-              {STATIONS.map((s) => (
-                <li key={s} className={`${STATION_CLS[s]} flex items-baseline gap-2`}>
-                  <span
-                    aria-hidden
-                    className="inline-block h-3 w-3 shrink-0 rounded-full"
-                    style={{ background: "var(--route)" }}
-                  />
-                  {t.legendItems[s]}
-                </li>
-              ))}
-            </ul>
-          </details>
-
-          <p className="n-meta mt-8" aria-live="polite">
-            {rows.length > 0 &&
-              t.count(
-                integer((page - 1) * PER_PAGE + 1, bcp47),
-                integer((page - 1) * PER_PAGE + rows.length, bcp47),
-                integer(list.length, bcp47),
-              )}
-          </p>
-
-          {rows.length === 0 ? (
-            <p className="n-body mt-4">{t.none}</p>
+          {kind === "declarations" ? (
+            <Declarations
+              deputies={list}
+              data={declarations}
+              t={dict}
+              locale={locale}
+              bcp47={bcp47}
+            />
           ) : (
-            <ul className="mt-2">
-              {rows.map((p) => {
-                const on = has(p);
-                const post = p.deputy
-                  ? p.deputy.role === "Diputada"
-                    ? t.deputyF
-                    : t.deputy
-                  : p.role;
-                const where = placeOf(p);
-                return (
-                  <li
-                    key={p.slug}
-                    className="grid gap-x-6 gap-y-2 border-t border-[var(--n-rule)] py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
-                  >
-                    <div className="min-w-0">
-                      <Link href={L(`/nuevo/politico/${p.slug}`)} className="font-bold">
-                        {p.name}
-                      </Link>
-                      <p className="n-meta mt-0.5">
-                        {[p.partyShort, post, where].filter(Boolean).join(", ")}
-                      </p>
-                    </div>
-                    <ol className="flex items-center" aria-label={t.legendTitle}>
-                      {STATIONS.map((s, i) => (
-                        <li key={s} className={`${STATION_CLS[s]} flex items-center`}>
-                          {i > 0 && (
-                            <span
-                              aria-hidden
-                              className="block h-[3px] w-5"
-                              style={{
-                                background: on[s] && on[STATIONS[i - 1]] ? "var(--n-ink-3)" : "transparent",
-                                backgroundImage:
-                                  on[s] && on[STATIONS[i - 1]]
-                                    ? undefined
-                                    : "repeating-linear-gradient(90deg, var(--n-ink-3) 0 3px, transparent 3px 6px)",
-                              }}
-                            />
-                          )}
-                          <span
-                            title={t.stations[s]}
-                            className="block h-[15px] w-[15px] rounded-full border-[3px]"
-                            style={{
-                              borderColor: on[s] ? "var(--route)" : "var(--n-ink-3)",
-                              background: on[s] ? "var(--route)" : "var(--n-bg)",
-                            }}
-                          />
-                          <span className="sr-only">{on[s] ? t.srOn(t.stations[s]) : t.srOff(t.stations[s])}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+            <>
+              <details open className="mt-8">
+                <summary className="n-label cursor-pointer">
+                  {t.legendTitle}
+                </summary>
+                <p className="n-body mt-3">{t.legend}</p>
+                <ul className="mt-3 grid gap-1">
+                  {STATIONS.map((s) => (
+                    <li
+                      key={s}
+                      className={`${STATION_CLS[s]} flex items-baseline gap-2`}
+                    >
+                      <span
+                        aria-hidden
+                        className="inline-block h-3 w-3 shrink-0 rounded-full"
+                        style={{ background: "var(--route)" }}
+                      />
+                      {t.legendItems[s]}
+                    </li>
+                  ))}
+                </ul>
+              </details>
 
-          {pages > 1 && (
-            <nav aria-label={t.pagesLabel} className="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-              {page > 1 && <Link href={href({ page: page - 1 })}>{t.prev}</Link>}
-              <span className="n-meta">{t.page(integer(page, bcp47), integer(pages, bcp47))}</span>
-              {page < pages && <Link href={href({ page: page + 1 })}>{t.next}</Link>}
-            </nav>
+              <p className="n-meta mt-8" aria-live="polite">
+                {rows.length > 0 &&
+                  t.count(
+                    integer((page - 1) * PER_PAGE + 1, bcp47),
+                    integer((page - 1) * PER_PAGE + rows.length, bcp47),
+                    integer(list.length, bcp47),
+                  )}
+              </p>
+
+              {rows.length === 0 ? (
+                <p className="n-body mt-4">{t.none}</p>
+              ) : (
+                <ul className="mt-2">
+                  {rows.map((p) => {
+                    const on = has(p);
+                    const post = p.deputy
+                      ? p.deputy.role === "Diputada"
+                        ? t.deputyF
+                        : t.deputy
+                      : p.role;
+                    const where = placeOf(p);
+                    return (
+                      <li
+                        key={p.slug}
+                        className="grid gap-x-6 gap-y-2 border-t border-[var(--n-rule)] py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+                      >
+                        <div className="min-w-0">
+                          <Link
+                            href={L(`/nuevo/politico/${p.slug}`)}
+                            className="font-bold"
+                          >
+                            {p.name}
+                          </Link>
+                          <p className="n-meta mt-0.5">
+                            {[p.partyShort, post, where]
+                              .filter(Boolean)
+                              .join(", ")}
+                          </p>
+                        </div>
+                        <ol
+                          className="flex items-center"
+                          aria-label={t.legendTitle}
+                        >
+                          {STATIONS.map((s, i) => (
+                            <li
+                              key={s}
+                              className={`${STATION_CLS[s]} flex items-center`}
+                            >
+                              {i > 0 && (
+                                <span
+                                  aria-hidden
+                                  className="block h-[3px] w-5"
+                                  style={{
+                                    background:
+                                      on[s] && on[STATIONS[i - 1]]
+                                        ? "var(--n-ink-3)"
+                                        : "transparent",
+                                    backgroundImage:
+                                      on[s] && on[STATIONS[i - 1]]
+                                        ? undefined
+                                        : "repeating-linear-gradient(90deg, var(--n-ink-3) 0 3px, transparent 3px 6px)",
+                                  }}
+                                />
+                              )}
+                              <span
+                                title={t.stations[s]}
+                                className="block h-[15px] w-[15px] rounded-full border-[3px]"
+                                style={{
+                                  borderColor: on[s]
+                                    ? "var(--route)"
+                                    : "var(--n-ink-3)",
+                                  background: on[s]
+                                    ? "var(--route)"
+                                    : "var(--n-bg)",
+                                }}
+                              />
+                              <span className="sr-only">
+                                {on[s]
+                                  ? t.srOn(t.stations[s])
+                                  : t.srOff(t.stations[s])}
+                              </span>
+                            </li>
+                          ))}
+                        </ol>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              {pages > 1 && (
+                <nav
+                  aria-label={t.pagesLabel}
+                  className="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2"
+                >
+                  {page > 1 && (
+                    <Link href={href({ page: page - 1 })}>{t.prev}</Link>
+                  )}
+                  <span className="n-meta">
+                    {t.page(integer(page, bcp47), integer(pages, bcp47))}
+                  </span>
+                  {page < pages && (
+                    <Link href={href({ page: page + 1 })}>{t.next}</Link>
+                  )}
+                </nav>
+              )}
+            </>
           )}
 
           <p className="n-meta mt-10">

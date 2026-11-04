@@ -128,7 +128,7 @@ export default async function PrototypePerson({
           {party && (
             <>
               {". "}
-              <Link href={L(`/party/${party.nif}`)}>{party.displayName}</Link>
+              <Link href={L(`/nuevo/partido/${party.nif}`)}>{party.displayName}</Link>
             </>
           )}
           {person.deputy && `, ${person.deputy.group}.`}
@@ -270,7 +270,7 @@ export default async function PrototypePerson({
         <ol className="mt-8 max-w-[46rem]">
           {party && (
             <Station cls="n-state" kind={t.kindParty}>
-              <Link href={L(`/party/${party.nif}`)}>{party.displayName}</Link>
+              <Link href={L(`/nuevo/partido/${party.nif}`)}>{party.displayName}</Link>
               <p className="n-meta mt-1">
                 {t.partyMoney(euroM(party.total, bcp47, 1))}
               </p>
@@ -284,7 +284,7 @@ export default async function PrototypePerson({
           ))}
           {boardRoles.map((r) => (
             <Station key={r.foundation + r.role} cls="n-foundations" kind={t.roleIn(roleLabel(r.role, locale))}>
-              <Link href={L(`/fundacion/${entitySlug(r.foundation)}`)}>{displayName(r.foundation)}</Link>
+              <Link href={L(`/nuevo/fundacion/${entitySlug(r.foundation)}`)}>{displayName(r.foundation)}</Link>
             </Station>
           ))}
           {employers.map((r, i) => (
