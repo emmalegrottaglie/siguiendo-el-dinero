@@ -5,6 +5,46 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-04 — The parties' income in 2018 and 2019, and why the BORME is not used
+
+**2018 and 2019.** The same two tables already held for 2020 — public money by the paying
+administration, private money by origin — transcribed for the two years before, from the Tribunal de
+Cuentas' Informe nº 1.532 (cuentas anuales de los partidos políticos, ejercicios 2018 y 2019,
+approved 28/09/2023): Anexos IV and VII for 2018, V and VIII for 2019, PDF pages 551, 552, 554 and
+555. 30 formations in 2018 and 32 in 2019; the columns are the same as 2020's, in the same order.
+
+- **Checked three ways**, as 2020 was: every row sums to its printed total, every column to the
+  printed TOTAL row, and every figure transcribed is in the PDF's text layer for its page, with the
+  same number of occurrences (139, 158, 132 and 141 figures). The text layer has the right digits in
+  jumbled columns, so it confirms the figures, and the images and the sums settle where each one goes.
+- **Totals.** 2018: 167.8 M€ public and 74.7 M€ private. 2019: 174.5 M€ public and 73.8 M€ private.
+  The audited formations change from year to year (Convergència, En Marea, Iniciativa per
+  Catalunya-Verds and others in 2018–2019; Más Madrid and Verdes Equo in 2020), so the totals of
+  different years are totals of different sets of parties and are never subtracted from one another.
+- **Nueva Canarias** has a row with no figures in all four tables; the report's footnote says it gave
+  no breakdown of its income. The row is kept with zeros and the footnote, and `/datos` carries the
+  footnote in a `nota_informe` column, so a reader does not take the zeros for no income.
+- **Linked to a party page** only where the registry holds exactly one party under the printed name:
+  19 of 30 rows in 2018 and 19 of 32 in 2019. "Equo" is linked to the same NIF as 2020's "Verdes
+  Equo"; Más País is not linked to Más Madrid, which is a different party.
+- **Where it shows.** `lib/party-income.ts` adds `PARTY_INCOME_YEARS` and `incomeHistoryByNif`, and
+  keeps its single-year exports on 2020, so nothing on the pages changes yet. `/datos` publishes the
+  `ingresos_partidos` table with one row per party and year, 87 rows, citing both reports. Showing
+  the years on the prototype's party pages is left until the prototype's translation (#45) is
+  merged, since both change the same page.
+- **Not transcribed:** the report's donations chart for 2018 and 2019, which would extend
+  `lib/donations.ts`.
+
+**The BORME, probed and not used.** Company appointments are published in the Boletín Oficial del
+Registro Mercantil, and the BOE's open-data API serves each day's summary. But each act names the
+people appointed by surname and given name only, with no DNI or other identifier, so the only way to
+connect an appointment to a politician would be by name, which this site does not do. The probe, the
+reason and what would make a narrower version possible are recorded in `NEXT-STEPS.md` (item 8).
+
+**Verified.** `npm run check:party-income`, `npx tsc --noEmit` and `npm run build` pass.
+
+---
+
 ## 2026-11-04 — Asset declarations, sixth batch: 124 published
 
 **What was read.** The next 20 first filings in Congreso's surname order, from Emilio Jesús del Valle

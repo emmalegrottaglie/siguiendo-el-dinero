@@ -1,0 +1,676 @@
+{
+  "source": {
+    "body": "Tribunal de Cuentas",
+    "report": "Informe nº 1.532, Cuentas Anuales de los Partidos Políticos, ejercicios 2018 y 2019",
+    "approved": "2023-09-28",
+    "url": "https://www.tcu.es/export/sites/portal/repositorio2/INFORME/2023/I1532.pdf",
+    "tables": {
+      "public": "Anexo V. Recursos ordinarios de la financiación pública, ejercicio 2019 (p. 548 of the report, p. 552 of the PDF)",
+      "private": "Anexo VIII. Recursos de la financiación privada, ejercicio 2019 (p. 551 of the report, p. 555 of the PDF)"
+    },
+    "transcribed": "2026-11-04",
+    "method": "Read from the page images. Every row was checked to sum to its printed total, every column to the printed TOTAL row, and every figure was found in the PDF's own text layer for that page, with the same number of occurrences. Nueva Canarias appears in both tables with no figures; the report's footnote says it gave no breakdown of its income, so its row is kept with zeros and that note."
+  },
+  "year": 2019,
+  "totals": {
+    "public": {
+      "state": 54951944.36,
+      "regionalGovernments": 8370812.18,
+      "cortes": 12651313.66,
+      "regionalParliaments": 57193533.45,
+      "local": 41211980.22,
+      "other": 153748.47,
+      "total": 174533332.34
+    },
+    "private": {
+      "memberFees": 30189268.75,
+      "officeholders": 26494348.07,
+      "donations": 4972898.03,
+      "other": 12098675.2,
+      "total": 73755190.05
+    }
+  },
+  "formations": [
+    {
+      "label": "Agrupación de Electores Teruel Existe",
+      "nif": null,
+      "public": {
+        "state": 0,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 0,
+        "local": 0,
+        "other": 0,
+        "total": 0
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 18057.51,
+        "donations": 0,
+        "other": 0,
+        "total": 18057.51
+      }
+    },
+    {
+      "label": "Anova-Irmandade Nacionalista",
+      "nif": null,
+      "public": {
+        "state": 3285.09,
+        "regionalGovernments": 84723.57,
+        "cortes": 0,
+        "regionalParliaments": 0,
+        "local": 0,
+        "other": 1089,
+        "total": 89097.66
+      },
+      "private": {
+        "memberFees": 26220.25,
+        "officeholders": 1100,
+        "donations": 700,
+        "other": 0,
+        "total": 28020.25
+      }
+    },
+    {
+      "label": "Barcelona en Comú",
+      "nif": null,
+      "public": {
+        "state": 274949.77,
+        "regionalGovernments": 0,
+        "cortes": 53351.71,
+        "regionalParliaments": 23740.41,
+        "local": 475207.87,
+        "other": 0,
+        "total": 827249.76
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 500127.82,
+        "donations": 48962,
+        "other": 20404.38,
+        "total": 569494.2
+      }
+    },
+    {
+      "label": "Bloque Nacionalista Galego",
+      "nif": "G32014003",
+      "public": {
+        "state": 33618.13,
+        "regionalGovernments": 171649.42,
+        "cortes": 0,
+        "regionalParliaments": 322708.92,
+        "local": 466117.68,
+        "other": 0,
+        "total": 994094.15
+      },
+      "private": {
+        "memberFees": 459567.95,
+        "officeholders": 1636.1,
+        "donations": 438074.55,
+        "other": 269820.94,
+        "total": 1169099.54
+      }
+    },
+    {
+      "label": "Candidatura d'Unitat Popular",
+      "nif": "G59736926",
+      "public": {
+        "state": 0,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 1611923.87,
+        "local": 195505.44,
+        "other": 0,
+        "total": 1807429.31
+      },
+      "private": {
+        "memberFees": 290025.57,
+        "officeholders": 889902.67,
+        "donations": 289727.46,
+        "other": 19851.41,
+        "total": 1489507.11
+      }
+    },
+    {
+      "label": "Catalunya en Comú",
+      "nif": "G67072074",
+      "public": {
+        "state": 530005.14,
+        "regionalGovernments": 0,
+        "cortes": 45000,
+        "regionalParliaments": 363842.08,
+        "local": 58005.61,
+        "other": 0,
+        "total": 996852.83
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 155852.35,
+        "donations": 19737.16,
+        "other": 7.45,
+        "total": 175596.96
+      }
+    },
+    {
+      "label": "Ciudadanos-Partido de la Ciudadanía",
+      "nif": "G64283310",
+      "public": {
+        "state": 7482991.46,
+        "regionalGovernments": 296077.35,
+        "cortes": 1103000,
+        "regionalParliaments": 6681412.65,
+        "local": 986654.05,
+        "other": 0,
+        "total": 16550135.51
+      },
+      "private": {
+        "memberFees": 3137410.86,
+        "officeholders": 751789.56,
+        "donations": 181402.25,
+        "other": 35876,
+        "total": 4106478.67
+      }
+    },
+    {
+      "label": "Coalició Compromís",
+      "nif": "G98282213",
+      "public": {
+        "state": 426722.15,
+        "regionalGovernments": 321120.86,
+        "cortes": 101248.12,
+        "regionalParliaments": 1001437.7,
+        "local": 49319.16,
+        "other": 959.7,
+        "total": 1900807.69
+      },
+      "private": {
+        "memberFees": 265183.05,
+        "officeholders": 1096237.1,
+        "donations": 119825.73,
+        "other": 46581.9,
+        "total": 1527827.78
+      }
+    },
+    {
+      "label": "Coalición Canaria",
+      "nif": null,
+      "public": {
+        "state": 251347.22,
+        "regionalGovernments": 0,
+        "cortes": 98775.36,
+        "regionalParliaments": 431200,
+        "local": 877953.03,
+        "other": 0,
+        "total": 1659275.61
+      },
+      "private": {
+        "memberFees": 149955.25,
+        "officeholders": 355892.67,
+        "donations": 0,
+        "other": 747.83,
+        "total": 506595.75
+      }
+    },
+    {
+      "label": "Convergencia Democrática de Catalunya",
+      "nif": null,
+      "public": {
+        "state": 586884.78,
+        "regionalGovernments": 0,
+        "cortes": 212471.13,
+        "regionalParliaments": 111500,
+        "local": 340883.11,
+        "other": 0,
+        "total": 1251739.02
+      },
+      "private": {
+        "memberFees": 73571.66,
+        "officeholders": 0,
+        "donations": 17970,
+        "other": 301669.4,
+        "total": 393211.06
+      }
+    },
+    {
+      "label": "En Marea",
+      "nif": null,
+      "public": {
+        "state": 0,
+        "regionalGovernments": 395842.98,
+        "cortes": 0,
+        "regionalParliaments": 14869.91,
+        "local": 0,
+        "other": 0,
+        "total": 410712.89
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 2300,
+        "donations": 28396.32,
+        "other": 7051.31,
+        "total": 37747.63
+      }
+    },
+    {
+      "label": "Equo",
+      "nif": "G86273414",
+      "public": {
+        "state": 6931.58,
+        "regionalGovernments": 34528.46,
+        "cortes": 0,
+        "regionalParliaments": 31764.4,
+        "local": 35765.31,
+        "other": 355.9,
+        "total": 109345.65
+      },
+      "private": {
+        "memberFees": 114684.27,
+        "officeholders": 56329.85,
+        "donations": 44149.61,
+        "other": 31837.35,
+        "total": 247001.08
+      }
+    },
+    {
+      "label": "Esquerra Republicana de Catalunya",
+      "nif": "G08678120",
+      "public": {
+        "state": 1818940.93,
+        "regionalGovernments": 0,
+        "cortes": 932685.47,
+        "regionalParliaments": 3613850,
+        "local": 1296126.06,
+        "other": 52224.77,
+        "total": 7713827.23
+      },
+      "private": {
+        "memberFees": 1753287,
+        "officeholders": 770727.73,
+        "donations": 160257.27,
+        "other": 220399.25,
+        "total": 2904671.25
+      }
+    },
+    {
+      "label": "Esquerra Unida i Alternativa",
+      "nif": null,
+      "public": {
+        "state": 84666.22,
+        "regionalGovernments": 0,
+        "cortes": 15894.58,
+        "regionalParliaments": 0,
+        "local": 60432.27,
+        "other": 0,
+        "total": 160993.07
+      },
+      "private": {
+        "memberFees": 138618.54,
+        "officeholders": 12107.83,
+        "donations": 5565.01,
+        "other": 166082.94,
+        "total": 322374.32
+      }
+    },
+    {
+      "label": "Federación EH Bildu",
+      "nif": "G71206700",
+      "public": {
+        "state": 517461.85,
+        "regionalGovernments": 1033826.51,
+        "cortes": 203638.09,
+        "regionalParliaments": 1304140.21,
+        "local": 3123396.84,
+        "other": 5921.65,
+        "total": 6188385.15
+      },
+      "private": {
+        "memberFees": 763943,
+        "officeholders": 2580218.98,
+        "donations": 24475.64,
+        "other": 128746.76,
+        "total": 3497384.38
+      }
+    },
+    {
+      "label": "Foro de Ciudadanos",
+      "nif": "G74297664",
+      "public": {
+        "state": 75146,
+        "regionalGovernments": 0,
+        "cortes": 27792.26,
+        "regionalParliaments": 290276.72,
+        "local": 193672.46,
+        "other": 0,
+        "total": 586887.44
+      },
+      "private": {
+        "memberFees": 30858,
+        "officeholders": 0,
+        "donations": 3929,
+        "other": 4325,
+        "total": 39112
+      }
+    },
+    {
+      "label": "Iniciativa per Catalunya-Verds",
+      "nif": null,
+      "public": {
+        "state": 239902.12,
+        "regionalGovernments": 0,
+        "cortes": 121347.89,
+        "regionalParliaments": 0,
+        "local": 498562.6,
+        "other": 0,
+        "total": 859812.61
+      },
+      "private": {
+        "memberFees": 156957.03,
+        "officeholders": 75163.52,
+        "donations": 7062.23,
+        "other": 332829.71,
+        "total": 572012.49
+      }
+    },
+    {
+      "label": "Izquierda Unida",
+      "nif": "G78269206",
+      "public": {
+        "state": 1931251.97,
+        "regionalGovernments": 112375.29,
+        "cortes": 145639.82,
+        "regionalParliaments": 1434664,
+        "local": 2605690.68,
+        "other": 12619.45,
+        "total": 6242241.21
+      },
+      "private": {
+        "memberFees": 1358398.44,
+        "officeholders": 1600561.3,
+        "donations": 675211.94,
+        "other": 1915537.93,
+        "total": 5549709.61
+      }
+    },
+    {
+      "label": "Más País",
+      "nif": null,
+      "public": {
+        "state": 0,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 472833.24,
+        "local": 0,
+        "other": 0,
+        "total": 472833.24
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 139045.96,
+        "donations": 303280.16,
+        "other": 57289.88,
+        "total": 499616
+      }
+    },
+    {
+      "label": "Més per Mallorca",
+      "nif": null,
+      "public": {
+        "state": 0,
+        "regionalGovernments": 0,
+        "cortes": 25194.48,
+        "regionalParliaments": 122517.62,
+        "local": 111424.06,
+        "other": 0,
+        "total": 259136.16
+      },
+      "private": {
+        "memberFees": 51317,
+        "officeholders": 241464.88,
+        "donations": 5779.55,
+        "other": 90017.26,
+        "total": 388578.69
+      }
+    },
+    {
+      "label": "Nueva Canarias (*)",
+      "nif": null,
+      "note": "Printed with no figures; footnote (*): \"El partido político no ha facilitado información sobre la composición de los ingresos.\"",
+      "public": {
+        "state": 0,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 0,
+        "local": 0,
+        "other": 0,
+        "total": 0
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 0,
+        "donations": 0,
+        "other": 0,
+        "total": 0
+      }
+    },
+    {
+      "label": "Partido Aragonés",
+      "nif": null,
+      "public": {
+        "state": 58772.53,
+        "regionalGovernments": 0,
+        "cortes": 17176.59,
+        "regionalParliaments": 180400,
+        "local": 127411.68,
+        "other": 0,
+        "total": 383760.8
+      },
+      "private": {
+        "memberFees": 33835.28,
+        "officeholders": 13020,
+        "donations": 0,
+        "other": 52106.12,
+        "total": 98961.4
+      }
+    },
+    {
+      "label": "Partido Nacionalista Vasco",
+      "nif": "G48103956",
+      "public": {
+        "state": 841678.64,
+        "regionalGovernments": 1789098.84,
+        "cortes": 837648.74,
+        "regionalParliaments": 3113886.3,
+        "local": 1515967.32,
+        "other": 0,
+        "total": 8098279.84
+      },
+      "private": {
+        "memberFees": 1177913.82,
+        "officeholders": 2045470.96,
+        "donations": 8629.36,
+        "other": 2717587.71,
+        "total": 5949601.85
+      }
+    },
+    {
+      "label": "Partido Popular",
+      "nif": "G28570927",
+      "public": {
+        "state": 13315729.45,
+        "regionalGovernments": 1987679.35,
+        "cortes": 1938654.95,
+        "regionalParliaments": 8109801.66,
+        "local": 6763938.52,
+        "other": 0,
+        "total": 32115803.93
+      },
+      "private": {
+        "memberFees": 2981805.19,
+        "officeholders": 2075692.56,
+        "donations": 282676,
+        "other": 580637.07,
+        "total": 5920810.82
+      }
+    },
+    {
+      "label": "Partido Regionalista de Cantabria",
+      "nif": "G39036579",
+      "public": {
+        "state": 91469.46,
+        "regionalGovernments": 0,
+        "cortes": 64253.28,
+        "regionalParliaments": 540840.4,
+        "local": 109196.5,
+        "other": 0,
+        "total": 805759.64
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 1956,
+        "donations": 0,
+        "other": 2506.34,
+        "total": 4462.34
+      }
+    },
+    {
+      "label": "Partido Socialista Obrero Español",
+      "nif": "G28477727",
+      "public": {
+        "state": 14203215.24,
+        "regionalGovernments": 1394963.66,
+        "cortes": 5119690.23,
+        "regionalParliaments": 14302550.38,
+        "local": 17376220.16,
+        "other": 0,
+        "total": 52396639.67
+      },
+      "private": {
+        "memberFees": 10844428.41,
+        "officeholders": 8639544.33,
+        "donations": 275616.67,
+        "other": 4338136.38,
+        "total": 24097725.79
+      }
+    },
+    {
+      "label": "Partit dels Socialistes de Catalunya",
+      "nif": "G08564379",
+      "public": {
+        "state": 1765840.21,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 4784258.62,
+        "local": 250844.11,
+        "other": 0,
+        "total": 6800942.94
+      },
+      "private": {
+        "memberFees": 737439.65,
+        "officeholders": 847807.37,
+        "donations": 48458.38,
+        "other": 207126.96,
+        "total": 1840832.36
+      }
+    },
+    {
+      "label": "Partit Demòcrata Europeu Català",
+      "nif": "G66848755",
+      "public": {
+        "state": 392562.93,
+        "regionalGovernments": 0,
+        "cortes": 182915.06,
+        "regionalParliaments": 2488153.2,
+        "local": 2031908.38,
+        "other": 80578,
+        "total": 5176117.57
+      },
+      "private": {
+        "memberFees": 981985.74,
+        "officeholders": 928185.04,
+        "donations": 343587.42,
+        "other": 73918.32,
+        "total": 2327676.52
+      }
+    },
+    {
+      "label": "Podemos",
+      "nif": "G86976941",
+      "public": {
+        "state": 5644039.78,
+        "regionalGovernments": 716450.33,
+        "cortes": 1298598.68,
+        "regionalParliaments": 5027092.44,
+        "local": 1623230.79,
+        "other": 0,
+        "total": 14309412.02
+      },
+      "private": {
+        "memberFees": 718024.27,
+        "officeholders": 1943560.48,
+        "donations": 74624.11,
+        "other": 66078.38,
+        "total": 2802287.24
+      }
+    },
+    {
+      "label": "Sobiranistes",
+      "nif": null,
+      "public": {
+        "state": 145301.2,
+        "regionalGovernments": 0,
+        "cortes": 0,
+        "regionalParliaments": 18705.9,
+        "local": 0,
+        "other": 0,
+        "total": 164007.1
+      },
+      "private": {
+        "memberFees": 0,
+        "officeholders": 0,
+        "donations": 0,
+        "other": 8937,
+        "total": 8937
+      }
+    },
+    {
+      "label": "Unión del Pueblo Navarro",
+      "nif": "G31096274",
+      "public": {
+        "state": 267173.62,
+        "regionalGovernments": 0,
+        "cortes": 106337.22,
+        "regionalParliaments": 629638.38,
+        "local": 38546.53,
+        "other": 0,
+        "total": 1041695.75
+      },
+      "private": {
+        "memberFees": 54249,
+        "officeholders": 0,
+        "donations": 0,
+        "other": 48474.77,
+        "total": 102723.77
+      }
+    },
+    {
+      "label": "Vox",
+      "nif": "G86867108",
+      "public": {
+        "state": 3962056.89,
+        "regionalGovernments": 32475.56,
+        "cortes": 0,
+        "regionalParliaments": 165524.44,
+        "local": 0,
+        "other": 0,
+        "total": 4160056.89
+      },
+      "private": {
+        "memberFees": 3889589.52,
+        "officeholders": 750595.5,
+        "donations": 1564800.21,
+        "other": 354089.45,
+        "total": 6559074.68
+      }
+    }
+  ]
+}

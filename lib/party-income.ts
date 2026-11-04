@@ -1,7 +1,21 @@
+import income2018 from "@/data/party-income-2018.json";
+import income2019 from "@/data/party-income-2019.json";
 import income from "@/data/party-income-2020.json";
 
 /**
- * The parties' ordinary income in 2020, as the Tribunal de Cuentas reports it.
+ * The parties' ordinary income in 2018, 2019 and 2020, as the Tribunal de
+ * Cuentas reports it. The single-year exports below (`PARTY_INCOME`,
+ * `PARTY_INCOME_YEAR`, ...) are the latest year, 2020; `PARTY_INCOME_YEARS`
+ * holds every year, oldest first.
+ *
+ * 2018 and 2019 come from Informe nº 1.532 (ejercicios 2018 y 2019, approved
+ * 28/09/2023), Anexos IV and VII (2018) and V and VIII (2019): the same two
+ * tables as 2020's, with the same columns. The set of formations differs from
+ * year to year, because the Court audits the parties that received annual
+ * operating subsidies that year, so totals of different years are not totals
+ * of the same parties and are never added together or subtracted.
+ *
+ * Description of the 2020 figures follows.
  *
  * Source: Informe nº 1.573, Cuentas Anuales de los Partidos Políticos, ejercicio
  * 2020 (approved 27/06/2024), Anexo IV (public resources) and Anexo V (private
@@ -44,6 +58,8 @@ export interface FormationIncome {
   label: string;
   /** Only when the registry holds exactly one party under that name. */
   nif: string | null;
+  /** The report's own footnote, where a row has one (e.g. no breakdown given). */
+  note?: string;
   public: PublicIncome;
   private: PrivateIncome;
 }
@@ -58,6 +74,29 @@ export const PARTY_INCOME: FormationIncome[] = income.formations;
 
 export function incomeByNif(nif: string): FormationIncome | undefined {
   return PARTY_INCOME.find((f) => f.nif === nif);
+}
+
+export interface IncomeYear {
+  year: number;
+  source: typeof income.source;
+  totals: { public: PublicIncome; private: PrivateIncome };
+  formations: FormationIncome[];
+}
+
+/** Every transcribed year, oldest first. */
+export const PARTY_INCOME_YEARS: IncomeYear[] = [income2018, income2019, income].map((y) => ({
+  year: y.year,
+  source: y.source,
+  totals: y.totals,
+  formations: y.formations as FormationIncome[],
+}));
+
+/** One formation's row in each year that has one, oldest first. */
+export function incomeHistoryByNif(nif: string): { year: number; income: FormationIncome }[] {
+  return PARTY_INCOME_YEARS.flatMap((y) => {
+    const f = y.formations.find((x) => x.nif === nif);
+    return f ? [{ year: y.year, income: f }] : [];
+  });
 }
 
 /** Public and private income together: the formation's ordinary income for the year. */

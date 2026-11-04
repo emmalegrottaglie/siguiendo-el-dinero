@@ -1082,8 +1082,8 @@ const es = {
         description: "Donaciones privadas del ejercicio 2020, por partido y tramo, según el Tribunal de Cuentas.",
       },
       ingresos_partidos: {
-        title: "Ingresos de los partidos, 2020",
-        description: "Ingresos ordinarios de 2020 de los 25 partidos fiscalizados, públicos por administración y privados por origen (cuotas, cargos públicos, donaciones, otros), según el Tribunal de Cuentas.",
+        title: "Ingresos de los partidos, 2018–2020",
+        description: "Ingresos ordinarios de 2018, 2019 y 2020 de los partidos fiscalizados cada año, públicos por administración y privados por origen (cuotas, cargos públicos, donaciones, otros), según el Tribunal de Cuentas. Una fila por partido y ejercicio; los partidos fiscalizados cambian de un año a otro.",
       },
       fundaciones: {
         title: "Fundaciones vinculadas a partidos",
@@ -2220,8 +2220,8 @@ const en: Dict = {
         description: "Private donations for 2020, by party and tranche, per the Court of Auditors.",
       },
       ingresos_partidos: {
-        title: "Party income, 2020",
-        description: "Ordinary income in 2020 of the 25 audited parties, public by administration and private by origin (member fees, officeholders, donations, other), per the Court of Auditors.",
+        title: "Party income, 2018–2020",
+        description: "Ordinary income in 2018, 2019 and 2020 of the parties audited each year, public by administration and private by origin (member fees, officeholders, donations, other), per the Court of Auditors. One row per party and year; the audited parties change from year to year.",
       },
       fundaciones: {
         title: "Party-linked foundations",
@@ -3355,8 +3355,8 @@ const ca: Dict = {
         description: "Donacions privades de l'exercici 2020, per partit i tram, segons el Tribunal de Comptes.",
       },
       ingresos_partidos: {
-        title: "Ingressos dels partits, 2020",
-        description: "Ingressos ordinaris del 2020 dels 25 partits fiscalitzats, públics per administració i privats per origen (quotes, càrrecs públics, donacions, altres), segons el Tribunal de Comptes.",
+        title: "Ingressos dels partits, 2018–2020",
+        description: "Ingressos ordinaris del 2018, el 2019 i el 2020 dels partits fiscalitzats cada any, públics per administració i privats per origen (quotes, càrrecs públics, donacions, altres), segons el Tribunal de Comptes. Una fila per partit i exercici; els partits fiscalitzats canvien d'un any a l'altre.",
       },
       fundaciones: {
         title: "Fundacions vinculades a partits",
