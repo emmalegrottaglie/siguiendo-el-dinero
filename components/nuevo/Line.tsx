@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Locale } from "@/lib/locales";
 
 /**
  * The design system's one motif: a line with stations on it.
@@ -32,6 +33,8 @@ export default function Line({
   stops: Stop[];
   cls: string;
   className?: string;
+  /** Accepted for uniformity; the line carries no words of its own. */
+  locale?: Locale;
 }) {
   return (
     <ol

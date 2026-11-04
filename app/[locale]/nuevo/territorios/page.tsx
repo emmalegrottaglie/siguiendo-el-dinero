@@ -9,6 +9,7 @@ import { getSalaries, SALARIES_SOURCE_URL } from "@/lib/salaries";
 import { caName, deputiesByProvince, declarationState, type DeclarationState } from "@/lib/constituencies";
 import { euroExact, formatDate, integer } from "@/lib/format";
 import RegionMap from "@/components/nuevo/RegionMap";
+import { COPY } from "./copy";
 
 export const revalidate = 3600;
 
@@ -26,24 +27,19 @@ export const revalidate = 3600;
  * because the register does not cover every comunidad's posts alike.
  */
 
-const LOOK: Record<DeclarationState, { cls?: string; style: CSSProperties; label: string; one?: string }> = {
+const LOOK: Record<DeclarationState, { cls?: string; style: CSSProperties }> = {
   securities: {
     cls: "n-companies",
     style: { background: "var(--route)", border: "2px solid var(--route)" },
-    label: "declaran acciones, bonos u otros valores",
-    one: "declara acciones, bonos u otros valores",
   },
   transcribed: {
     style: { background: "var(--n-ink-2)", border: "2px solid var(--n-ink-2)" },
-    label: "con la declaración transcrita, sin valores",
   },
   pending: {
     style: { background: "transparent", border: "2px solid var(--n-ink-3)" },
-    label: "con la declaración sin transcribir todavía",
   },
   none: {
     style: { background: "transparent", border: "2px dashed var(--n-ink-3)" },
-    label: "sin declaración enlazada en su ficha",
   },
 };
 const ORDER: DeclarationState[] = ["securities", "transcribed", "pending", "none"];
@@ -58,6 +54,7 @@ function median(values: number[]): number | null {
 export default async function PrototypePlaces({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
   const { locale, bcp47 } = getDict(localeParam);
+  const t = COPY[locale];
   const [{ provinces }, regions, decl, salaries, join] = await Promise.all([
     getProvinces(),
     getRegions(),
@@ -111,39 +108,39 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
   const maxCount = Math.max(unlocated, ...register.map((r) => r.count));
   const top = register[0];
 
-  const plural = (x: number, one: string, many: string) => `${n(x)} ${x === 1 ? one : many}`;
+  const plural = (x: number, forms: [string, string]) => `${n(x)} ${x === 1 ? forms[0] : forms[1]}`;
+  const lookLabel = (k: DeclarationState, one: boolean) => (one ? (t.look[k].one ?? t.look[k].label) : t.look[k].label);
 
   return (
     <main>
       {/* ---------- The places, and the map to find one ---------- */}
       <section className="n-shell grid items-center gap-x-12 gap-y-8 pb-14 pt-6 lg:grid-cols-[1fr_minmax(0,34rem)]">
         <div>
-          <h1 className="n-display">Territorios</h1>
+          <h1 className="n-display">{t.title}</h1>
           <p className="n-body mt-6" style={{ fontSize: "1.15rem" }}>
-            Cada provincia, con quién la representa en el Congreso, lo que cobra según el registro
-            público y lo que declara poseer, y las cifras de la comunidad autónoma en la que está.
+            {t.intro}
           </p>
           <p className="n-finding mt-6">
-            {`Las ${n(rows.length)} circunscripciones eligen a los ${n(seats)} diputados del Congreso: ${most.province.name} elige ${n(most.deputies.length)}; ${listFmt.format(fewestNames)}, ${n(fewest)}${fewestNames.length > 1 ? " cada una" : ""}.`}
+            {t.finding(n(rows.length), n(seats), most.province.name, n(most.deputies.length), listFmt.format(fewestNames), n(fewest), fewestNames.length > 1)}
           </p>
-          <p className="n-source">Fuente: Congreso de los Diputados, datos abiertos de la legislatura en curso.</p>
+          <p className="n-source">{t.source}</p>
         </div>
         <figure className="m-0">
           <RegionMap
+            locale={locale}
             regions={regions}
-            title="Mapa de las comunidades autónomas"
-            desc="Cada comunidad lleva a sus provincias en la lista de abajo. El mapa no representa ninguna cifra."
+            title={t.mapTitle}
+            desc={t.mapDesc}
             hrefFor={(id) => (single.has(id) ? L(`/nuevo/territorio/${single.get(id)}`) : `#ca-${id}`)}
             labelFor={(id) => {
               const g = byTerritory.find((x) => x.territory.id === id);
               if (!g) return id;
               const s = territorySeats.get(id) ?? 0;
-              return `${g.name}: ${plural(s, "diputado", "diputados")}`;
+              return t.mapLabel(g.name, plural(s, t.deputy));
             }}
           />
           <figcaption className="n-meta mt-2">
-            Elige una comunidad para ir a sus provincias. Canarias, en el recuadro. Fuente del mapa:{" "}
-            {regions.source.body} ({regions.source.licence}).
+            {t.mapCaption} {regions.source.body} ({regions.source.licence}).
           </figcaption>
         </figure>
       </section>
@@ -151,14 +148,13 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
       {/* ---------- Provinces by comunidad, one dot per deputy ---------- */}
       <section className="n-shell n-section" aria-labelledby="provincias">
         <h2 id="provincias" className="n-h2">
-          Provincias por comunidad
+          {t.provincesTitle}
         </h2>
         <p className="n-finding mt-4">
-          {`En ${plural(allRead, "provincia", "provincias")} ya están transcritas las declaraciones de bienes de todos sus diputados, ${noneRead === 0 ? "y todas tienen ya al menos una" : `y en ${n(noneRead)} todavía no hay ninguna`}.`}
+          {t.provincesFinding(plural(allRead, t.province), noneRead, n(noneRead))}
         </p>
         <p className="n-meta mt-3 max-w-[48em]">
-          Un punto por diputado elegido en la provincia, según el estado de su declaración de bienes
-          en esta web. Las declaraciones se leen del escaneo oficial y se comprueban antes de publicarse.
+          {t.dotsNote}
         </p>
         <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]">
           {counts
@@ -167,7 +163,7 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
               <li key={c.k} className={`${LOOK[c.k].cls ?? ""} inline-flex items-center gap-2`}>
                 <span aria-hidden className="inline-block h-[13px] w-[13px] rounded-full" style={LOOK[c.k].style} />
                 <span>
-                  <span className="n-num font-bold">{n(c.count)}</span> {c.count === 1 ? (LOOK[c.k].one ?? LOOK[c.k].label) : LOOK[c.k].label}
+                  <span className="n-num font-bold">{n(c.count)}</span> {lookLabel(c.k, c.count === 1)}
                 </span>
               </li>
             ))}
@@ -182,7 +178,7 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
                   {g.name}
                 </h3>
                 {g.rows.length > 1 && (
-                  <p className="n-meta">{`${plural(s, "diputado", "diputados")} en ${n(g.rows.length)} provincias`}</p>
+                  <p className="n-meta">{t.territoryMeta(plural(s, t.deputy), n(g.rows.length))}</p>
                 )}
                 <ul className="mt-2">
                   {g.rows.map((r) => (
@@ -191,7 +187,7 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
                         <Link href={L(`/nuevo/territorio/${r.province.slug}`)} className="font-bold">
                           {r.province.name}
                         </Link>
-                        <span className="n-meta n-num whitespace-nowrap">{plural(r.deputies.length, "diputado", "diputados")}</span>
+                        <span className="n-meta n-num whitespace-nowrap">{plural(r.deputies.length, t.deputy)}</span>
                       </div>
                       <div aria-hidden className="mt-1.5 flex flex-wrap gap-[4px]">
                         {r.states.map((st, i) => (
@@ -205,7 +201,7 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
                       <p className="sr-only">
                         {ORDER.map((k) => ({ k, c: r.states.filter((x) => x === k).length }))
                           .filter((x) => x.c > 0)
-                          .map((x) => `${n(x.c)} ${x.c === 1 ? (LOOK[x.k].one ?? LOOK[x.k].label) : LOOK[x.k].label}`)
+                          .map((x) => `${n(x.c)} ${lookLabel(x.k, x.c === 1)}`)
                           .join("; ")}
                       </p>
                     </li>
@@ -217,42 +213,39 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
         </div>
         {join.unresolved.length > 0 && (
           <p className="n-meta mt-6">
-            {`Sin provincia asignada, porque el nombre de la circunscripción no coincide con ninguna: ${listFmt.format(join.unresolved)}.`}
+            {t.unresolved(listFmt.format(join.unresolved))}
           </p>
         )}
         <p className="n-source">
-          Fuente: Congreso de los Diputados (datos abiertos y ficha de cada diputado); declaraciones
-          de bienes transcritas por esta web. <Link href={L("/politicos/declaraciones")}>Ver todas las declaraciones</Link>
+          {t.declSource} <Link href={L("/politicos/declaraciones")}>{t.allDeclarations}</Link>
         </p>
       </section>
 
       {/* ---------- The register, by comunidad ---------- */}
       <section className="n-shell n-section" aria-labelledby="registro">
         <h2 id="registro" className="n-h2">
-          Cargos públicos en el registro, por comunidad
+          {t.registerTitle}
         </h2>
         <p className="n-finding mt-4">
-          {`El Registro de Altos Cargos sitúa más cargos en ${top.name} (${n(top.count)}) que en ninguna otra comunidad, y no indica comunidad en ${n(unlocated)} de sus ${n(salaries.people.length)} filas.`}
+          {t.registerFinding(top.name, n(top.count), n(unlocated), n(salaries.people.length))}
         </p>
         <p className="n-body mt-3">
-          Es un recuento de las filas del registro, no del número de cargos que tiene cada
-          comunidad: el registro no recoge igual los cargos de todas. Las filas sin comunidad no se
-          reparten entre ellas.
+          {t.registerBody}
         </p>
         <div className="relative mt-8 overflow-x-auto">
           <table className="n-table min-w-[36rem]">
-            <caption className="sr-only">Cargos del Registro de Altos Cargos por comunidad autónoma</caption>
+            <caption className="sr-only">{t.caption}</caption>
             <thead>
               <tr>
-                <th scope="col">Comunidad</th>
+                <th scope="col">{t.colCommunity}</th>
                 <th scope="col" className="w-[40%]">
-                  Cargos en el registro
+                  {t.colPosts}
                 </th>
                 <th scope="col" className="n-r">
-                  Con sueldo publicado
+                  {t.colPaid}
                 </th>
                 <th scope="col" className="n-r">
-                  Mediana del sueldo publicado
+                  {t.colMedian}
                 </th>
               </tr>
             </thead>
@@ -282,13 +275,13 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
                   </td>
                   <td className="n-r">{n(r.paid)}</td>
                   <td className="n-r">
-                    {r.median != null ? euroExact(r.median, bcp47) : <span className="text-[var(--n-ink-3)]">— no publicado</span>}
+                    {r.median != null ? euroExact(r.median, bcp47) : <span className="text-[var(--n-ink-3)]">{t.notPublished}</span>}
                   </td>
                 </tr>
               ))}
               <tr>
                 <th scope="row" className="font-normal text-[var(--n-ink-2)]">
-                  Sin comunidad indicada
+                  {t.noCommunity}
                 </th>
                 <td>
                   <div className="flex items-center gap-3">
@@ -310,22 +303,21 @@ export default async function PrototypePlaces({ params }: { params: Promise<{ lo
         <p className="n-meta mt-3 flex flex-wrap items-center gap-x-5 gap-y-1">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--n-ink-2)" }} />
-            Con sueldo publicado
+            {t.legendPaid}
           </span>
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
-            Sin sueldo publicado
+            {t.legendUnpaid}
           </span>
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="n-hatch inline-block h-3 w-5 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
-            Sin comunidad en el registro
+            {t.legendNoCommunity}
           </span>
         </p>
         <p className="n-source">
-          Fuente: <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>
-          {salaries.source.updated ? `, actualizado el ${formatDate(salaries.source.updated, bcp47)}` : ""}. Sueldo
-          bruto anual. Los diputados del Congreso constan en el registro sin comunidad, y están en la
-          página de cada provincia.
+          {t.sourceLabel} <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>
+          {salaries.source.updated ? t.updated(formatDate(salaries.source.updated, bcp47)) : ""}
+          {t.registerSourceTail}
         </p>
       </section>
     </main>

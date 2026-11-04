@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getPeople } from "@/lib/people";
 import { groupLabel } from "@/lib/groups";
+import type { Locale } from "@/lib/locales";
+import { VOTE_COPY } from "./vote-copy";
 import { nameKey, type Ballot, type KeyVote } from "@/lib/votes";
 
 /**
@@ -14,27 +16,27 @@ import { nameKey, type Ballot, type KeyVote } from "@/lib/votes";
  * exactly one person on the site; an ambiguous match is shown unlinked rather
  * than guessed, since a wrong link would hand one person another's record.
  */
-const BALLOT: Record<string, string> = {
-  Sí: "A favor",
-  No: "En contra",
-  Abstención: "Abstención",
-};
-
 export default async function DeputyBallots({
   votes,
   q,
   action,
-  locale,
+  locale = "es",
   columnLabel,
 }: {
   votes: KeyVote[];
   q: string | undefined;
   /** Where the form submits: the page it sits on. */
   action: string;
-  locale: string;
+  locale?: Locale;
   /** The heading of each division's column. */
   columnLabel: (vote: KeyVote) => string;
 }) {
+  const t = VOTE_COPY[locale];
+  const BALLOT: Record<string, string> = {
+    Sí: t.ballotFor,
+    No: t.ballotAgainst,
+    Abstención: t.ballotAbstention,
+  };
   const query = q?.trim() ?? "";
   type Cast = { ballot: Ballot; group: string };
   let found: { key: string; name: string; ballots: Record<string, Cast> }[] = [];
@@ -71,38 +73,37 @@ export default async function DeputyBallots({
     <div>
       <form action={action} method="get" role="search" className="n-search">
         <label htmlFor="n-dq" className="sr-only">
-          Apellido o nombre del diputado
+          {t.searchLabel}
         </label>
         <input
           id="n-dq"
           name="q"
           type="search"
           defaultValue={query}
-          placeholder="Apellido o nombre"
+          placeholder={t.searchPlaceholder}
           autoComplete="off"
         />
         <button type="submit" className="n-button">
-          Buscar
+          {t.searchButton}
         </button>
       </form>
 
       {query &&
         (found.length === 0 ? (
           <p className="mt-5 text-[var(--n-ink-2)]">
-            Ningún diputado con ese nombre consta en estas votaciones.
+            {t.none}
           </p>
         ) : (
           <>
             <p className="n-meta mt-5">
-              {found.length === 1 ? "1 diputado" : `${found.length} diputados`} con ese nombre
-              {found.length === 40 ? " (se muestran los 40 primeros)" : ""}.
+              {t.found(found.length, found.length === 40)}
             </p>
             <div className="mt-3 overflow-x-auto">
               <table className="n-table">
-                <caption className="sr-only">Voto de cada diputado encontrado en cada votación</caption>
+                <caption className="sr-only">{t.caption}</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Diputado, como figura en el acta</th>
+                    <th scope="col">{t.deputyCol}</th>
                     {votes.map((v) => (
                       <th key={v.id} scope="col">
                         {columnLabel(v)}
@@ -124,11 +125,11 @@ export default async function DeputyBallots({
                             <td key={v.id}>
                               {cast ? (
                                 <>
-                                  {BALLOT[cast.ballot] ?? "No votó"}
+                                  {BALLOT[cast.ballot] ?? t.ballotNoVote}
                                   <span className="n-meta block">{groupLabel(v.legislature, cast.group)}</span>
                                 </>
                               ) : (
-                                <span className="text-[var(--n-ink-3)]">No consta</span>
+                                <span className="text-[var(--n-ink-3)]">{t.notOnRecord}</span>
                               )}
                             </td>
                           );
@@ -140,8 +141,7 @@ export default async function DeputyBallots({
               </table>
             </div>
             <p className="n-source">
-              Un nombre enlaza a su ficha solo cuando identifica a una sola persona. «No consta»: su
-              nombre no figura en el acta de esa votación.
+              {t.note}
             </p>
           </>
         ))}

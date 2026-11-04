@@ -20,6 +20,8 @@
  * Drawn in a 360-unit-wide box, close to a phone column, so the 13-unit labels
  * render at about 13px there; it scales up on wider screens.
  */
+import type { Locale } from "@/lib/locales";
+
 export interface RouteFigures {
   subsidies: string;
   donations: string;
@@ -32,15 +34,91 @@ export interface RouteFigures {
 }
 
 const STATIONS = [
-  { id: "estado", x: 40, y: 48, label: "El Estado", anchor: "middle" as const, dx: 0, dy: -16 },
-  { id: "particulares", x: 175, y: 48, label: "Particulares", anchor: "middle" as const, dx: 0, dy: -16 },
-  { id: "empresas", x: 305, y: 48, label: "Empresas", anchor: "middle" as const, dx: 0, dy: -16 },
-  { id: "partidos", x: 70, y: 262, label: "Partidos", anchor: "middle" as const, dx: 0, dy: 32 },
-  { id: "fundaciones", x: 270, y: 262, label: "Fundaciones", anchor: "middle" as const, dx: 0, dy: 32 },
-  { id: "personas", x: 175, y: 430, label: "Personas con cargo", anchor: "middle" as const, dx: 0, dy: 34 },
-];
+  { id: "estado", x: 40, y: 48, anchor: "middle" as const, dx: 0, dy: -16 },
+  { id: "particulares", x: 175, y: 48, anchor: "middle" as const, dx: 0, dy: -16 },
+  { id: "empresas", x: 305, y: 48, anchor: "middle" as const, dx: 0, dy: -16 },
+  { id: "partidos", x: 70, y: 262, anchor: "middle" as const, dx: 0, dy: 32 },
+  { id: "fundaciones", x: 270, y: 262, anchor: "middle" as const, dx: 0, dy: 32 },
+  { id: "personas", x: 175, y: 430, anchor: "middle" as const, dx: 0, dy: 34 },
+] as const;
 
-export default function RouteMap({ f }: { f: RouteFigures }) {
+const es = {
+  title: "Las rutas del dinero hacia la política",
+  desc: (f: RouteFigures) =>
+    `El Estado da ${f.subsidies} en subvenciones a los partidos. Particulares donaron ${f.donations} a los partidos en ${f.donationsYear}. Las fundaciones de los partidos recibieron, en ${f.foundationYears}, ${f.foundationsFromParty} de los propios partidos, ${f.foundationsFromCompanies} de empresas y ${f.foundationsFromIndividuals} de particulares. ${f.officeholdersOnBoards} personas con cargo público se sientan en sus patronatos.`,
+  stations: {
+    estado: "El Estado",
+    particulares: "Particulares",
+    empresas: "Empresas",
+    partidos: "Partidos",
+    fundaciones: "Fundaciones",
+    personas: "Personas con cargo",
+  },
+  inSubsidies: "en subvenciones",
+  donationsYear: (y: string) => `donaciones, ${y}`,
+  fromIndividuals: "de particulares",
+  fromCompanies: "de empresas",
+  fromParty: "del propio partido",
+  officeholders: (n: string) => `${n} cargos públicos`,
+  onBoards: "en sus patronatos",
+  legendMoney: "Dinero que consta en el registro",
+  legendNotMoney: "Las mismas personas aparecen a los dos lados: no es dinero",
+  foundationsYears: (y: string) => `Fundaciones: ${y}.`,
+};
+type Copy = typeof es;
+
+const en: Copy = {
+  title: "The routes money takes into politics",
+  desc: (f) =>
+    `The State gives ${f.subsidies} in subsidies to the parties. Individuals donated ${f.donations} to the parties in ${f.donationsYear}. The parties' foundations received, in ${f.foundationYears}, ${f.foundationsFromParty} from the parties themselves, ${f.foundationsFromCompanies} from companies and ${f.foundationsFromIndividuals} from individuals. ${f.officeholdersOnBoards} people holding public office sit on their boards.`,
+  stations: {
+    estado: "The State",
+    particulares: "Individuals",
+    empresas: "Companies",
+    partidos: "Parties",
+    fundaciones: "Foundations",
+    personas: "Officeholders",
+  },
+  inSubsidies: "in subsidies",
+  donationsYear: (y) => `donations, ${y}`,
+  fromIndividuals: "from individuals",
+  fromCompanies: "from companies",
+  fromParty: "from the party itself",
+  officeholders: (n) => `${n} officeholders`,
+  onBoards: "on their boards",
+  legendMoney: "Money on record",
+  legendNotMoney: "The same people appear on both sides: not money",
+  foundationsYears: (y) => `Foundations: ${y}.`,
+};
+
+const ca: Copy = {
+  title: "Les rutes dels diners cap a la política",
+  desc: (f) =>
+    `L'Estat dona ${f.subsidies} en subvencions als partits. Els particulars van donar ${f.donations} als partits el ${f.donationsYear}. Les fundacions dels partits van rebre, en el període ${f.foundationYears}, ${f.foundationsFromParty} dels mateixos partits, ${f.foundationsFromCompanies} d'empreses i ${f.foundationsFromIndividuals} de particulars. ${f.officeholdersOnBoards} persones amb càrrec públic seuen als seus patronats.`,
+  stations: {
+    estado: "L'Estat",
+    particulares: "Particulars",
+    empresas: "Empreses",
+    partidos: "Partits",
+    fundaciones: "Fundacions",
+    personas: "Persones amb càrrec",
+  },
+  inSubsidies: "en subvencions",
+  donationsYear: (y) => `donacions, ${y}`,
+  fromIndividuals: "de particulars",
+  fromCompanies: "d'empreses",
+  fromParty: "del mateix partit",
+  officeholders: (n) => `${n} càrrecs públics`,
+  onBoards: "als seus patronats",
+  legendMoney: "Diners que consten al registre",
+  legendNotMoney: "Les mateixes persones apareixen als dos costats: no són diners",
+  foundationsYears: (y) => `Fundacions: ${y}.`,
+};
+
+const COPY: Record<Locale, Copy> = { es, en, ca };
+
+export default function RouteMap({ f, locale = "es" }: { f: RouteFigures; locale?: Locale }) {
+  const t = COPY[locale];
   const routes = [
     // Estado → partidos
     { d: "M40 48 V222 L70 252", cls: "n-state", len: 210, delay: 0 },
@@ -64,9 +142,9 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
         role="img"
         aria-labelledby="route-map-title route-map-desc"
       >
-        <title id="route-map-title">Las rutas del dinero hacia la política</title>
+        <title id="route-map-title">{t.title}</title>
         <desc id="route-map-desc">
-          {`El Estado da ${f.subsidies} en subvenciones a los partidos. Particulares donaron ${f.donations} a los partidos en ${f.donationsYear}. Las fundaciones de los partidos recibieron, en ${f.foundationYears}, ${f.foundationsFromParty} de los propios partidos, ${f.foundationsFromCompanies} de empresas y ${f.foundationsFromIndividuals} de particulares. ${f.officeholdersOnBoards} personas con cargo público se sientan en sus patronatos.`}
+          {t.desc(f)}
         </desc>
         {/* Shifted 10 units in so every station name can sit centred on its dot. */}
         <g transform="translate(10 0)">
@@ -107,20 +185,20 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
               fill="var(--n-ink)"
               style={{ fontFamily: "var(--n-serif)", fontSize: 17, fontWeight: 600, ...HALO }}
             >
-              {s.label}
+              {t.stations[s.id]}
             </text>
           </g>
         ))}
 
         {/* Figures on the lines. */}
-        <LineLabel x={52} y={150} cls="n-state" figure={f.subsidies} note="en subvenciones" />
-        <LineLabel x={158} y={92} cls="n-donors" figure={f.donations} note={`donaciones, ${f.donationsYear}`} anchor="end" />
-        <LineLabel x={192} y={92} cls="n-donors" figure={f.foundationsFromIndividuals} note="de particulares" />
-        <LineLabel x={295} y={150} cls="n-companies" figure={f.foundationsFromCompanies} note="de empresas" anchor="end" />
-        <LineLabel x={170} y={226} cls="n-foundations" figure={f.foundationsFromParty} note="del propio partido" anchor="middle" />
+        <LineLabel x={52} y={150} cls="n-state" figure={f.subsidies} note={t.inSubsidies} />
+        <LineLabel x={158} y={92} cls="n-donors" figure={f.donations} note={t.donationsYear(f.donationsYear)} anchor="end" />
+        <LineLabel x={192} y={92} cls="n-donors" figure={f.foundationsFromIndividuals} note={t.fromIndividuals} />
+        <LineLabel x={295} y={150} cls="n-companies" figure={f.foundationsFromCompanies} note={t.fromCompanies} anchor="end" />
+        <LineLabel x={170} y={226} cls="n-foundations" figure={f.foundationsFromParty} note={t.fromParty} anchor="middle" />
         <text x={260} y={340} textAnchor="end" fill="var(--n-ink-2)" style={{ fontSize: 13, ...HALO }}>
-          <tspan x={260}>{f.officeholdersOnBoards} cargos públicos</tspan>
-          <tspan x={260} dy={16}>en sus patronatos</tspan>
+          <tspan x={260}>{t.officeholders(f.officeholdersOnBoards)}</tspan>
+          <tspan x={260} dy={16}>{t.onBoards}</tspan>
         </text>
         </g>
       </svg>
@@ -129,15 +207,15 @@ export default function RouteMap({ f }: { f: RouteFigures }) {
           <svg width="28" height="8" aria-hidden>
             <path d="M2 4 H26" stroke="var(--n-ink)" strokeWidth={5} strokeLinecap="round" />
           </svg>
-          Dinero que consta en el registro
+          {t.legendMoney}
         </span>
         <span className="inline-flex items-center gap-2">
           <svg width="28" height="8" aria-hidden>
             <path d="M2 4 H26" stroke="var(--n-ink-3)" strokeWidth={2} strokeDasharray="4 5" strokeLinecap="round" />
           </svg>
-          Las mismas personas aparecen a los dos lados: no es dinero
+          {t.legendNotMoney}
         </span>
-        <span>Fundaciones: {f.foundationYears}.</span>
+        <span>{t.foundationsYears(f.foundationYears)}</span>
       </figcaption>
     </figure>
   );

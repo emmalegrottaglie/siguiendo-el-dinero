@@ -11,28 +11,28 @@ import DeputyBallots from "@/components/nuevo/DeputyBallots";
 import {
   KIND_PLAIN,
   KIND_SHORT,
+  topicLabel,
   voteDate,
   votesOfTopic,
   whatWasVoted,
   yearSpan,
 } from "@/components/nuevo/topics";
+import type { Locale } from "@/lib/locales";
+import { COPY } from "./copy";
 
 // The deputy search reads the query string.
 export const dynamic = "force-dynamic";
-
-/** Other pages of the current site that cover the same topic. */
-const RELATED: Record<string, { href: string; text: string }[]> = {
-  lgtbi: [{ href: "/derechos", text: "Lo que publican las organizaciones LGTBI" }],
-};
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const topic = (await getVotes()).topics.find((t) => t.id === id);
-  return { title: topic ? `${topic.label}: cómo votó el Congreso` : "Tema" };
+  const { locale: localeParam, id } = await params;
+  const { locale } = getDict(localeParam);
+  const t = COPY[locale];
+  const topic = (await getVotes()).topics.find((tp) => tp.id === id);
+  return { title: topic ? t.metaTitle(topicLabel(topic.id, topic.label, locale)) : t.metaFallback };
 }
 
 /**
@@ -64,42 +64,38 @@ export default async function PrototypeTopic({
   if (!topic) notFound();
   const votes = votesOfTopic(data, id);
   if (!votes.length) notFound();
+  const t = COPY[locale];
   const L = (path: string) => `/${locale}${path}`;
 
-  const others = data.topics.filter((t) => t.id !== id && data.votes.some((v) => v.topic === t.id));
-  const lowerLabel = topic.label[0].toLowerCase() + topic.label.slice(1);
+  const others = data.topics.filter((tp) => tp.id !== id && data.votes.some((v) => v.topic === tp.id));
+  const label = topicLabel(topic.id, topic.label, locale);
+  const lowerLabel = label[0].toLowerCase() + label.slice(1);
+  // Other pages of the current site that cover the same topic.
+  const related = [
+    ...(id === "lgtbi" ? [{ href: "/derechos", text: t.relatedLgtbi }] : []),
+    { href: "/votaciones", text: t.relatedAll },
+  ];
 
   // The line's finding: how many divisions, over which years, and how many bind.
   const binding = votes.filter((v) => v.binding).length;
-  const bindingText =
-    binding === 0
-      ? "ninguna tiene efecto legal"
-      : binding === votes.length && votes.length > 1
-        ? "todas tienen efecto legal"
-        : `${binding} de ellas ${binding === 1 ? "tiene" : "tienen"} efecto legal`;
-  const lineFinding =
-    votes.length === 1
-      ? `Esta web sigue 1 votación sobre ${lowerLabel}, ${yearSpan(votes)}, y ${votes[0].binding ? "tiene" : "no tiene"} efecto legal.`
-      : `Esta web sigue ${votes.length} votaciones sobre ${lowerLabel} ${yearSpan(votes)}, y ${bindingText}.`;
+  const lineFinding = t.lineFinding(votes.length, lowerLabel, yearSpan(votes, locale), binding, votes[0].binding);
 
   return (
     <main>
       <div className="n-shell pb-10 pt-6">
         <p className="n-meta">
-          <Link href={L("/nuevo/temas")}>Temas</Link>
+          <Link href={L("/nuevo/temas")}>{t.crumb}</Link>
         </p>
         <h1 className="n-display mt-3" style={{ maxWidth: "22ch" }}>
-          {topic.label}
+          {label}
         </h1>
         <p className="n-body mt-5" style={{ fontSize: "1.15rem" }}>
-          Cómo votó el Congreso en las votaciones nominales sobre este tema que sigue esta web, de la
-          más antigua a la más reciente. Cada voto es uno emitido y publicado en el acta oficial, no
-          una postura atribuida.
+          {t.intro}
         </p>
       </div>
 
       {/* ---------- The topic's line ---------- */}
-      <Section id="linea" title="Las votaciones, en orden">
+      <Section id="linea" title={t.lineTitle}>
         <p className="n-finding">{lineFinding}</p>
         <Line
           cls="n-topic"
@@ -107,29 +103,28 @@ export default async function PrototypeTopic({
           stops={votes.map((v) => ({
             key: v.id,
             label: <a href={`#${v.id}`}>{voteDate(v, bcp47)}</a>,
-            note: `${KIND_SHORT[v.kind] ?? v.kindLabel}${v.binding ? "" : ", sin efecto legal"}`,
+            note: `${KIND_SHORT[locale][v.kind] ?? v.kindLabel}${v.binding ? "" : t.noLegalEffect}`,
             on: true,
           }))}
         />
         <p className="n-meta mt-6 max-w-[46em]">
-          Una estación por votación. Todas constan en el acta oficial, por eso la línea es continua y
-          los puntos están llenos.
+          {t.lineNote}
         </p>
         <p className="n-source">
-          Fuente: <a href={data.source.url}>{data.source.name}</a>.
+          {t.sourceLabel}
+          <a href={data.source.url}>{data.source.name}</a>.
         </p>
       </Section>
 
       {/* ---------- Each division ---------- */}
       {votes.map((v) => (
-        <VoteSection key={v.id} vote={v} bcp47={bcp47} L={L} />
+        <VoteSection key={v.id} vote={v} bcp47={bcp47} locale={locale} L={L} />
       ))}
 
       {/* ---------- Find a deputy ---------- */}
-      <Section id="diputado" title="Cómo votó un diputado">
+      <Section id="diputado" title={t.deputyTitle}>
         <p className="n-body mb-6">
-          Busca por apellido o nombre. Se muestra el voto que consta en cada acta y, cuando el nombre
-          identifica a una sola persona, el enlace a su ficha.
+          {t.deputyIntro}
         </p>
         <DeputyBallots
           votes={votes}
@@ -141,48 +136,38 @@ export default async function PrototypeTopic({
       </Section>
 
       {/* ---------- What is not on record ---------- */}
-      <Section id="falta" title="Lo que esta página no dice">
+      <Section id="falta" title={t.missingTitle}>
         <div className="grid gap-x-12 gap-y-8 md:grid-cols-3">
           <div>
-            <h3 className="n-h3">Si salió adelante</h3>
-            <p className="mt-2 text-[var(--n-ink-2)]">
-              Los datos que usa esta web no incluyen el resultado de cada votación, y contar votos no
-              basta: una ley orgánica necesita la mayoría absoluta del Congreso. El acta oficial de
-              cada votación está enlazada en su apartado.
-            </p>
+            <h3 className="n-h3">{t.passedTitle}</h3>
+            <p className="mt-2 text-[var(--n-ink-2)]">{t.passedText}</p>
           </div>
           <div>
-            <h3 className="n-h3">Las enmiendas</h3>
-            <p className="mt-2 text-[var(--n-ink-2)]">
-              Se recogen votaciones de conjunto, tomas en consideración, proposiciones no de ley y
-              mociones. Las votaciones de enmiendas una a una no se recogen.
-            </p>
+            <h3 className="n-h3">{t.amendmentsTitle}</h3>
+            <p className="mt-2 text-[var(--n-ink-2)]">{t.amendmentsText}</p>
           </div>
           <div>
-            <h3 className="n-h3">La postura de nadie</h3>
-            <p className="mt-2 text-[var(--n-ink-2)]">
-              Un diputado aparece solo con el voto que consta en el acta. No se deduce la postura de
-              nadie a partir de su partido o de su grupo.
-            </p>
+            <h3 className="n-h3">{t.nobodyTitle}</h3>
+            <p className="mt-2 text-[var(--n-ink-2)]">{t.nobodyText}</p>
           </div>
         </div>
         <div className="mt-12 grid gap-x-12 gap-y-4 border-t border-[var(--n-rule)] pt-8 md:grid-cols-2">
           {others.length > 0 && (
             <p>
-              <span className="n-label">Otros temas: </span>
-              {others.map((t, i) => (
-                <span key={t.id}>
-                  {i > 0 && (i === others.length - 1 ? " y " : ", ")}
-                  <Link href={L(`/nuevo/tema/${t.id}`)}>{t.label}</Link>
+              <span className="n-label">{t.otherTopics}</span>
+              {others.map((tp, i) => (
+                <span key={tp.id}>
+                  {i > 0 && (i === others.length - 1 ? t.and : ", ")}
+                  <Link href={L(`/nuevo/tema/${tp.id}`)}>{topicLabel(tp.id, tp.label, locale)}</Link>
                 </span>
               ))}
             </p>
           )}
           <p>
-            <span className="n-label">En el sitio actual: </span>
-            {[...(RELATED[id] ?? []), { href: "/votaciones", text: "todas las votaciones" }].map((r, i, all) => (
+            <span className="n-label">{t.currentSite}</span>
+            {related.map((r, i, all) => (
               <span key={r.href}>
-                {i > 0 && (i === all.length - 1 ? " y " : ", ")}
+                {i > 0 && (i === all.length - 1 ? t.and : ", ")}
                 <Link href={L(r.href)}>{i === 0 ? r.text : r.text[0].toLowerCase() + r.text.slice(1)}</Link>
               </span>
             ))}
@@ -198,20 +183,28 @@ function isBloc(g: GroupTally) {
   return [g.si, g.no, g.abst].filter((n) => n > 0).length === 1;
 }
 
-function VoteSection({ vote: v, bcp47, L }: { vote: KeyVote; bcp47: string; L: (p: string) => string }) {
+function VoteSection({
+  vote: v,
+  bcp47,
+  locale,
+  L,
+}: {
+  vote: KeyVote;
+  bcp47: string;
+  locale: Locale;
+  L: (p: string) => string;
+}) {
+  const t = COPY[locale];
   const groups = tallyByGroup(v);
   const blocs = groups.filter(isBloc).length;
   const diff = Math.abs(v.totals.afavor - v.totals.enContra);
-  const finding =
-    diff === 0
-      ? `El sí y el no empataron, y ${blocs} de los ${groups.length} grupos votaron en bloque.`
-      : `Hubo ${diff} ${diff === 1 ? "voto" : "votos"} de diferencia entre el sí y el no, y ${blocs} de los ${groups.length} grupos votaron en bloque.`;
+  const finding = diff === 0 ? t.tied(blocs, groups.length) : t.gap(diff, blocs, groups.length);
 
   return (
     <section id={v.id} className="n-topic n-shell n-section" aria-labelledby={`${v.id}-t`}>
       <p className="n-meta">
-        {(KIND_SHORT[v.kind] ?? v.kindLabel).replace(/^./, (c) => c.toUpperCase())}, {voteDate(v, bcp47)}.{" "}
-        {v.legislature} legislatura.
+        {(KIND_SHORT[locale][v.kind] ?? v.kindLabel).replace(/^./, (c) => c.toUpperCase())}, {voteDate(v, bcp47)}.{" "}
+        {t.legislature(v.legislature)}
       </p>
       <h2 id={`${v.id}-t`} className="n-h2 mt-2">
         {v.law}
@@ -221,40 +214,41 @@ function VoteSection({ vote: v, bcp47, L }: { vote: KeyVote; bcp47: string; L: (
         <div>
           <p className="n-finding">{finding}</p>
           <VoteBar
+            locale={locale}
             className="mt-5"
             counts={{ si: v.totals.afavor, no: v.totals.enContra, abst: v.totals.abstenciones, noVota: v.totals.noVotan }}
           />
           <p className="n-meta mt-2">
-            <VoteLegend />
+            <VoteLegend locale={locale} />
           </p>
 
           <dl className="mt-8 grid gap-5 text-[0.95rem]">
             <div>
-              <dt className="n-label">Qué se votó, según el acta</dt>
+              <dt className="n-label">{t.whatTitle}</dt>
               <dd className="mt-1 text-[var(--n-ink-2)]">{whatWasVoted(v)}</dd>
             </div>
             <div>
-              <dt className="n-label">Qué tipo de votación es</dt>
+              <dt className="n-label">{t.kindTitle}</dt>
               <dd className="mt-1 text-[var(--n-ink-2)]">
-                {KIND_PLAIN[v.kind] ?? v.kindLabel} {v.binding ? "Tiene efecto legal." : "No tiene efecto legal."}
+                {KIND_PLAIN[locale][v.kind] ?? v.kindLabel} {v.binding ? t.hasEffect : t.noEffect}
               </dd>
             </div>
           </dl>
           <ul className="mt-6 grid gap-1.5">
             <li>
-              <a href={v.sourceUrl}>Acta oficial de la votación</a>
-              <span className="n-meta">, sesión {v.session}, votación {v.number}</span>
+              <a href={v.sourceUrl}>{t.officialRecord}</a>
+              <span className="n-meta">{t.sessionNumber(v.session, v.number)}</span>
             </li>
             {v.lawUrl && (
               <li>
-                <a href={v.lawUrl}>Texto de la ley en el BOE</a>
+                <a href={v.lawUrl}>{t.lawText}</a>
               </li>
             )}
           </ul>
         </div>
 
         <div>
-          <h3 className="n-h3">Cómo votó cada grupo</h3>
+          <h3 className="n-h3">{t.groupsTitle}</h3>
           <ul className="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-2">
             {groups.map((g) => {
               const info = groupInfo(v.legislature, g.group);
@@ -265,13 +259,14 @@ function VoteSection({ vote: v, bcp47, L }: { vote: KeyVote; bcp47: string; L: (
                     {info?.party ? <Link href={L(`/nuevo/partido/${info.party}`)}>{name}</Link> : name}
                     <span className="n-meta font-normal">
                       {info?.parties
-                        ? `, grupo de varios partidos (${info.parties.join(", ")})`
+                        ? t.severalParties(info.parties.join(", "))
                         : info
                           ? ""
-                          : ", grupo no identificado en el registro"}
+                          : t.groupUnknown}
                     </span>
                   </p>
                   <VoteBar
+                    locale={locale}
                     size="sm"
                     className="mt-2"
                     counts={{ si: g.si, no: g.no, abst: g.abst, noVota: g.other }}
@@ -281,15 +276,12 @@ function VoteSection({ vote: v, bcp47, L }: { vote: KeyVote; bcp47: string; L: (
             })}
           </ul>
           <p className="n-meta mt-6 max-w-[46em]">
-            En bloque: todos los diputados del grupo que votaron lo hicieron en el mismo sentido. Un
-            grupo parlamentario no es un partido: cuando lo forma uno solo, su nombre enlaza a la ficha
-            de ese partido y a lo que recibe. Que el voto y el dinero estén en la misma web no significa
-            que uno explique el otro.
+            {t.groupNote}
           </p>
         </div>
       </div>
       <p className="n-source">
-        Fuente: acta de votación nominal del Congreso de los Diputados, {voteDate(v, bcp47)}.
+        {t.divisionSource(voteDate(v, bcp47))}
       </p>
     </section>
   );

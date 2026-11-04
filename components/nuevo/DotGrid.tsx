@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/locales";
+
 /**
  * One dot per item, so a count reads as the people it stands for.
  *
@@ -23,7 +25,15 @@ const LOOK = {
   hollow: { background: "transparent", border: "2px solid var(--n-ink-3)" },
 } as const;
 
-export default function DotGrid({ groups, className = "" }: { groups: DotGroup[]; className?: string }) {
+export default function DotGrid({
+  groups,
+  className = "",
+}: {
+  groups: DotGroup[];
+  className?: string;
+  /** Accepted for uniformity; the grid carries no words of its own (labels come from the caller). */
+  locale?: Locale;
+}) {
   return (
     <div className={className}>
       <div aria-hidden className="flex flex-wrap gap-[4px]">

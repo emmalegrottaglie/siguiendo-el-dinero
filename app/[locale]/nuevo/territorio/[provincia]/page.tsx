@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { roleLabel } from "@/components/nuevo/roles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict } from "@/lib/i18n";
@@ -38,6 +39,7 @@ import {
 import ShareBar from "@/components/nuevo/ShareBar";
 import DotGrid from "@/components/nuevo/DotGrid";
 import RegionMap from "@/components/nuevo/RegionMap";
+import { COPY } from "./copy";
 
 export const revalidate = 3600;
 
@@ -63,42 +65,6 @@ export async function generateStaticParams() {
  * other. People are listed by surname, never ordered by what they earn or own.
  */
 
-/** "del PP", "de Vox": the article Spanish uses before each list's short name. */
-const WITH_ARTICLE = new Set([
-  "PP",
-  "PSOE",
-  "PSC",
-  "PNV",
-  "BNG",
-  "PsdeG-PSOE",
-  "PSIB-PSOE",
-  "PSE-EE (PSOE)",
-  "PSN-PSOE",
-]);
-const of = (short: string) =>
-  WITH_ARTICLE.has(short) ? `del ${short}` : `de ${short}`;
-const to = (short: string) =>
-  WITH_ARTICLE.has(short) ? `al ${short}` : `a ${short}`;
-
-const STATE_LABEL: Record<DeclarationState, [string, string]> = {
-  securities: [
-    "Declara acciones, bonos u otros valores",
-    "Declaran acciones, bonos u otros valores",
-  ],
-  transcribed: [
-    "Declaración transcrita, sin valores",
-    "Declaración transcrita, sin valores",
-  ],
-  pending: [
-    "Declaración sin transcribir todavía",
-    "Declaración sin transcribir todavía",
-  ],
-  none: [
-    "Sin declaración enlazada en su ficha",
-    "Sin declaración enlazada en su ficha",
-  ],
-};
-
 export default async function PrototypePlace({
   params,
 }: {
@@ -111,6 +77,7 @@ export default async function PrototypePlace({
   if (!view) notFound();
 
   const { locale, bcp47 } = getDict(localeParam);
+  const t = COPY[locale];
   const [join, decl, people, salaries, agg, foundations, regions] =
     await Promise.all([
       deputiesByProvince(),
@@ -127,8 +94,8 @@ export default async function PrototypePlace({
   const n = (x: number) => integer(x, bcp47);
   const pct = (x: number) => percent(x, bcp47, 1);
   const listFmt = new Intl.ListFormat(bcp47, { type: "conjunction" });
-  const plural = (x: number, one: string, many: string) =>
-    `${n(x)} ${x === 1 ? one : many}`;
+  const plural = (x: number, forms: [string, string]) =>
+    `${n(x)} ${x === 1 ? forms[0] : forms[1]}`;
 
   const {
     territory,
@@ -185,10 +152,14 @@ export default async function PrototypePlace({
 
   const repFinding =
     N === 0
-      ? `No consta ningún diputado elegido por ${name} en los datos del Congreso.`
+      ? t.repNone(name)
       : N === 1
-        ? `${name} elige 1 diputado al Congreso, ${of(lists[0].short)}.`
-        : `${name} elige ${n(N)} diputados al Congreso: ${listFmt.format(lists.map((l) => `${n(l.seats)} ${of(l.short)}`))}.`;
+        ? t.repOne(name, lists[0].short)
+        : t.repMany(
+            name,
+            n(N),
+            listFmt.format(lists.map((l) => t.seatsOf(n(l.seats), l.short))),
+          );
 
   // Officeholders of this province on a party foundation's board, by both join conditions.
   const slugs = new Set(rows.map((r) => r.slug));
@@ -210,13 +181,13 @@ export default async function PrototypePlace({
       ? null
       : N === 1
         ? paid
-          ? `El Registro de Altos Cargos publica el sueldo de su único diputado.`
-          : `El Registro de Altos Cargos no publica el sueldo de su único diputado.`
+          ? t.payOneYes
+          : t.payOneNo
         : paid === N
-          ? `El Registro de Altos Cargos publica el sueldo de los ${n(N)} diputados de ${name}.`
+          ? t.payAll(n(N), name)
           : paid === 0
-            ? `El Registro de Altos Cargos no publica el sueldo de ninguno de los ${n(N)} diputados de ${name}.`
-            : `El Registro de Altos Cargos publica el sueldo de ${n(paid)} de los ${n(N)} diputados de ${name}; de los otros ${n(N - paid)} no consta.`;
+            ? t.payNone(n(N), name)
+            : t.paySome(n(paid), n(N), name, n(N - paid));
 
   // ---------- Declarations ----------
   const count = (k: DeclarationState) =>
@@ -226,20 +197,20 @@ export default async function PrototypePlace({
   const filed = N - count("none");
   const declFinding =
     filed === 0
-      ? `Ningún diputado de ${name} tiene declaración de bienes enlazada en su ficha.`
+      ? t.declNone(name)
       : read === 0
         ? filed === 1
-          ? `La declaración de bienes de su diputado no está transcrita todavía.`
-          : `Ninguna de las ${n(filed)} declaraciones de bienes de los diputados de ${name} está transcrita todavía.`
+          ? t.declUnreadOne
+          : t.declUnreadMany(n(filed), name)
         : read === 1
           ? sec
-            ? `El único diputado de ${name} con la declaración ya transcrita declara acciones, bonos u otros valores.`
-            : `El único diputado de ${name} con la declaración ya transcrita no declara acciones, bonos ni otros valores.`
+            ? t.declReadOneSec(name)
+            : t.declReadOneNoSec(name)
           : sec === 0
-            ? `Ninguno de los ${n(read)} diputados de ${name} con la declaración ya transcrita declara acciones, bonos ni otros valores.`
+            ? t.declReadNoSec(n(read), name)
             : sec === read
-              ? `Los ${n(read)} diputados de ${name} con la declaración ya transcrita declaran acciones, bonos u otros valores.`
-              : `${n(sec)} de los ${n(read)} diputados de ${name} con la declaración ya transcrita ${sec === 1 ? "declara" : "declaran"} acciones, bonos u otros valores.`;
+              ? t.declReadAllSec(n(read), name)
+              : t.declReadSome(sec, n(sec), n(read), name);
   const allDecl = decl.declarations;
   const allSec = allDecl.filter((d) =>
     d.otherAssets.some((a) => a.kind === "securities"),
@@ -262,18 +233,31 @@ export default async function PrototypePlace({
     lists.length === 0
       ? null
       : funded.length === 0
-        ? `Ninguna de las listas con escaño por ${name} recibió en ${year} una subvención estatal a su nombre.`
+        ? t.moneyNone(name, year)
         : lists.length === 1
-          ? `En ${year}, el Estado concedió ${euroM(funded[0].amount!, bcp47, 1)} ${to(funded[0].short)}, la única lista con escaño por ${name}, para toda España.`
-          : `De las ${n(lists.length)} listas con escaño por ${name}, ${funded.length === lists.length ? "todas" : n(funded.length)} recibieron en ${year} una subvención estatal a su nombre; la mayor, ${euroM(funded[0].amount!, bcp47, 1)} ${of(funded[0].short)}, para toda España.`;
+          ? t.moneyOne(year, euroM(funded[0].amount!, bcp47, 1), funded[0].short, name)
+          : t.moneyMany(
+              n(lists.length),
+              name,
+              funded.length === lists.length,
+              n(funded.length),
+              year,
+              euroM(funded[0].amount!, bcp47, 1),
+              funded[0].short,
+            );
 
   // ---------- The comunidad ----------
   const registerFinding =
     officeholders.count === 0
-      ? `El Registro de Altos Cargos no sitúa ningún cargo en ${ca}.`
+      ? t.registerNone(ca)
       : officeholders.withSalary === 0 || officeholders.medianGross === null
-        ? `El Registro de Altos Cargos sitúa ${n(officeholders.count)} cargos en ${ca}, y no publica el sueldo de ninguno.`
-        : `El Registro de Altos Cargos sitúa ${n(officeholders.count)} cargos en ${ca}; publica el sueldo de ${n(officeholders.withSalary)}, con una mediana de ${euroExact(officeholders.medianGross, bcp47)} al año.`;
+        ? t.registerNoSalary(n(officeholders.count), ca)
+        : t.registerSome(
+            n(officeholders.count),
+            ca,
+            n(officeholders.withSalary),
+            euroExact(officeholders.medianGross, bcp47),
+          );
 
   return (
     <main>
@@ -281,51 +265,53 @@ export default async function PrototypePlace({
       <div className="n-shell grid gap-x-12 gap-y-8 pb-10 pt-6 lg:grid-cols-[1fr_16rem]">
         <div>
           <p className="n-meta">
-            <Link href={L("/nuevo/territorios")}>Territorios</Link>
+            <Link href={L("/nuevo/territorios")}>{t.breadcrumb}</Link>
           </p>
           <h1 className="n-display mt-3">{name}</h1>
           <p className="mt-4 max-w-[42em] text-[1.1rem] text-[var(--n-ink-2)]">
-            {sameName
-              ? `${name} es a la vez provincia y comunidad autónoma. Sus diputados se eligen aquí; las cifras de la comunidad, más abajo, son de ese mismo territorio.`
-              : `${name} es una provincia de ${ca}. Sus diputados se eligen aquí; las cifras de la comunidad, más abajo, son de toda ${ca} y no se reparten por provincias.`}
+            {sameName ? t.heroSame(name) : t.heroOther(name, ca)}
           </p>
         </div>
         <figure className="m-0 self-end">
           <RegionMap
+            locale={locale}
             regions={regions}
             highlight={territory.id}
-            title={`Situación de ${ca}`}
-            desc={`Mapa de las comunidades autónomas con ${ca} marcada.`}
+            title={t.mapTitle(ca)}
+            desc={t.mapDesc(ca)}
             className="max-w-[16rem]"
           />
           <figcaption className="n-meta mt-1">
-            Marcada, {ca}. El mapa es de comunidades: no dibuja las provincias.
+            {t.mapCaption(ca)}
           </figcaption>
         </figure>
 
         <dl className="grid gap-px overflow-hidden rounded-[6px] border border-[var(--n-rule)] bg-[var(--n-rule)] sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
           {[
             {
-              label: "Diputados en el Congreso",
+              label: t.statDeputies,
               value: n(N),
-              note: "elegidos por esta provincia",
+              note: t.statDeputiesNote,
             },
             {
-              label: "Con sueldo publicado",
-              value: N ? `${n(paid)} de ${n(N)}` : "—",
-              note: "en el Registro de Altos Cargos",
+              label: t.statPaid,
+              value: N ? t.xOfY(n(paid), n(N)) : "—",
+              note: t.statPaidNote,
             },
             {
-              label: "Declaraciones transcritas",
-              value: filed ? `${n(read)} de ${n(filed)}` : "—",
-              note: "declaraciones de bienes en esta web",
+              label: t.statDecl,
+              value: filed ? t.xOfY(n(read), n(filed)) : "—",
+              note: t.statDeclNote,
             },
             {
-              label: `Preside ${ca}`,
-              value: government ? government.president : "No consta",
+              label: t.statPresides(ca),
+              value: government ? government.president : t.statNoRecord,
               note: government
-                ? `${government.partyLabel}, desde el ${formatDate(government.since, bcp47)}`
-                : "sin presidencia registrada",
+                ? t.statPresidesNote(
+                    government.partyLabel,
+                    formatDate(government.since, bcp47),
+                  )
+                : t.statNoPresidency,
               small: true,
             },
           ].map((s) => (
@@ -347,14 +333,15 @@ export default async function PrototypePlace({
       </div>
 
       {/* ---------- Who represents it ---------- */}
-      <Section id="representan" title="Quién la representa en el Congreso">
+      <Section id="representan" title={t.repTitle}>
         <p className="n-finding">{repFinding}</p>
         {N > 0 && (
           <>
             <div className="n-neutral mt-6 max-w-[48rem]">
               <ShareBar
+                locale={locale}
                 parts={lists.map((l) => ({ label: l.short, value: l.seats }))}
-                format={(v) => plural(v, "escaño", "escaños")}
+                format={(v) => plural(v, t.seat)}
               />
             </div>
             <ul className="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -386,9 +373,9 @@ export default async function PrototypePlace({
               <p className="text-[var(--n-ink-2)]">
                 {boardPeople === 0
                   ? N === 1
-                    ? "No consta en el patronato de ninguna fundación de partido."
-                    : "Ninguno de ellos consta en el patronato de una fundación de partido."
-                  : `${N === 1 ? "Se sienta" : plural(boardPeople, "de ellos se sienta", "de ellos se sientan")} también en el patronato de una fundación de partido. Son dos registros sobre la misma persona, puestos uno al lado del otro.`}
+                    ? t.boardNoneOne
+                    : t.boardNoneMany
+                  : t.boardSome(N, boardPeople, n(boardPeople))}
               </p>
               {boards.length > 0 && (
                 <ol className="mt-5">
@@ -411,7 +398,7 @@ export default async function PrototypePlace({
                         <Link href={L(`/nuevo/politico/${b.row.slug}`)}>
                           {b.row.deputy.fullName}
                         </Link>
-                        , {b.role.toLowerCase()} en
+                        {t.roleAt(roleLabel(b.role.toLowerCase(), locale))}
                       </p>
                       <Link href={L(`/fundacion/${entitySlug(b.foundation)}`)}>
                         {displayName(b.foundation)}
@@ -424,18 +411,13 @@ export default async function PrototypePlace({
           </>
         )}
         <p className="n-source">
-          Fuente: Congreso de los Diputados, datos abiertos de la legislatura en
-          curso. Patronatos: Tribunal de Cuentas y registros de fundaciones,
-          cruzados con el Registro de Altos Cargos solo cuando el nombre
-          identifica a una sola persona y el partido coincide. Los senadores no
-          se incluyen: el registro no dice por qué provincia fue elegido cada
-          uno.
+          {t.repSource}
         </p>
       </Section>
 
       {/* ---------- What they are paid ---------- */}
       {N > 0 && (
-        <Section id="sueldos" title="Lo que cobran">
+        <Section id="sueldos" title={t.payTitle}>
           {payFinding && <p className="n-finding">{payFinding}</p>}
           <div className="mt-6 max-w-[48rem]">
             <div
@@ -470,7 +452,7 @@ export default async function PrototypePlace({
                     className="inline-block h-3 w-3 rounded-[2px]"
                     style={{ background: "var(--n-ink-2)" }}
                   />
-                  Sueldo publicado{" "}
+                  {t.legendPublished}{" "}
                   <span className="n-num font-bold">{n(paid)}</span>
                 </li>
               )}
@@ -484,7 +466,7 @@ export default async function PrototypePlace({
                       outlineOffset: -1,
                     }}
                   />
-                  No consta en el registro{" "}
+                  {t.legendNotInRegister}{" "}
                   <span className="n-num font-bold">{n(N - paid)}</span>
                 </li>
               )}
@@ -493,19 +475,19 @@ export default async function PrototypePlace({
           {/* A long table starts folded, so the sections after it stay within reach. */}
           <details className="mt-8" open={rows.length <= 16}>
             <summary className="cursor-pointer font-bold">
-              Ver el sueldo de cada diputado
+              {t.seeEach}
             </summary>
             <div className="relative mt-4 overflow-x-auto">
               <table className="n-table min-w-[30rem] max-w-[52rem]">
                 <caption className="sr-only">
-                  Sueldo público anual de los diputados de {name}, por apellido
+                  {t.payCaption(name)}
                 </caption>
                 <thead>
                   <tr>
-                    <th scope="col">Diputado o diputada</th>
-                    <th scope="col">Cargo en el registro</th>
+                    <th scope="col">{t.colDeputy}</th>
+                    <th scope="col">{t.colRole}</th>
                     <th scope="col" className="n-r">
-                      Sueldo bruto anual
+                      {t.colGross}
                     </th>
                   </tr>
                 </thead>
@@ -518,7 +500,7 @@ export default async function PrototypePlace({
                         </Link>
                       </th>
                       <td className="text-[var(--n-ink-2)]">
-                        {r.registerRole ?? "No consta en el registro"}
+                        {r.registerRole ?? t.notInRegister}
                       </td>
                       <td className="n-r">
                         {r.gross !== null ? (
@@ -526,7 +508,7 @@ export default async function PrototypePlace({
                         ) : (
                           <span className="text-[var(--n-ink-3)]">
                             <span aria-hidden>—</span>
-                            <span className="sr-only">no consta</span>
+                            <span className="sr-only">{t.srNoRecord}</span>
                           </span>
                         )}
                       </td>
@@ -537,50 +519,47 @@ export default async function PrototypePlace({
             </div>
           </details>
           <p className="n-source">
-            Fuente: <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>
+            {t.sourceLabel} <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>
             {salaries.source.updated
-              ? `, actualizado el ${formatDate(salaries.source.updated, bcp47)}`
+              ? t.updated(formatDate(salaries.source.updated, bcp47))
               : ""}
-            . Por orden de apellido. «—» quiere decir que el registro no publica
-            sueldo para esa persona, no que no cobre.
+            {t.paySourceTail}
           </p>
         </Section>
       )}
 
       {/* ---------- What they declare ---------- */}
       {N > 0 && (
-        <Section id="declaran" title="Lo que declaran sus diputados">
+        <Section id="declaran" title={t.declTitle}>
           <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,24rem)_1fr]">
             <div>
               <p className="n-finding">{declFinding}</p>
               <p className="n-meta mt-3">
-                {`En todo el Congreso, ${n(allSec)} de los ${n(allDecl.length)} diputados con la declaración ya transcrita declaran valores.`}
+                {t.declCongress(n(allSec), n(allDecl.length))}
               </p>
             </div>
             <div>
               <DotGrid
+                locale={locale}
                 groups={
                   [
                     {
                       key: "valores",
                       count: sec,
-                      label:
-                        sec === 1
-                          ? "declara acciones, bonos u otros valores"
-                          : "declaran acciones, bonos u otros valores",
+                      label: t.dotSecurities(sec),
                       look: "filled",
                       cls: "n-companies",
                     },
                     {
                       key: "otros",
                       count: count("transcribed"),
-                      label: "transcritas, sin valores declarados",
+                      label: t.dotTranscribed,
                       look: "ink",
                     },
                     {
                       key: "pendientes",
                       count: count("pending"),
-                      label: "sin transcribir todavía",
+                      label: t.dotPending,
                       look: "hollow",
                     },
                   ].filter((g) => g.count > 0) as Parameters<
@@ -590,7 +569,7 @@ export default async function PrototypePlace({
               />
               {count("none") > 0 && (
                 <p className="n-meta mt-3">
-                  {`${plural(count("none"), "diputado no tiene", "diputados no tienen")} declaración de bienes enlazada en su ficha del Congreso, y no se dibuja.`}
+                  {t.declNoLink(count("none"), n(count("none")))}
                 </p>
               )}
             </div>
@@ -612,7 +591,7 @@ export default async function PrototypePlace({
                   className={g.k === "securities" ? "n-companies" : undefined}
                 >
                   <h3 className="n-label">
-                    {STATE_LABEL[g.k][g.list.length === 1 ? 0 : 1]}
+                    {t.stateLabel[g.k][g.list.length === 1 ? 0 : 1]}
                   </h3>
                   <ul className="mt-2">
                     {g.list.map((r) => (
@@ -630,11 +609,9 @@ export default async function PrototypePlace({
               ))}
           </div>
           <p className="n-source">
-            Fuente: declaraciones de bienes y rentas registradas en el Congreso,
-            leídas del escaneo oficial y comprobadas antes de publicarse. Las
-            cifras de cada una están en la ficha de la persona.{" "}
+            {t.declSource}{" "}
             <Link href={L("/politicos/declaraciones")}>
-              Ver todas las declaraciones
+              {t.allDeclarations}
             </Link>
           </p>
         </Section>
@@ -642,12 +619,10 @@ export default async function PrototypePlace({
 
       {/* ---------- Public money to their parties ---------- */}
       {lists.length > 0 && (
-        <Section id="partidos" title="Dinero público a sus partidos">
+        <Section id="partidos" title={t.moneyTitle}>
           {moneyFinding && <p className="n-finding">{moneyFinding}</p>}
           <p className="n-body mt-3">
-            Es la subvención de cada partido para toda España. Ninguna fuente la
-            reparte por provincias, y esta página tampoco: no dice cuánto llega
-            a {name}.
+            {t.moneyBody(name)}
           </p>
           {funded.length > 0 && (
             <ul className="n-state mt-8 grid max-w-[52rem] gap-4">
@@ -688,19 +663,16 @@ export default async function PrototypePlace({
                   </span>
                   {": "}
                   {m.nif
-                    ? `sin subvención estatal a su nombre en ${year}.`
+                    ? t.unfundedNif(year)
                     : formationOf(m.label)?.family === "psoe"
-                      ? "es una federación del PSOE; la subvención se concede al PSOE, y no consta por separado."
-                      : "fue una lista de coalición; la subvención se concede a cada partido por separado, y no a la lista."}
+                      ? t.unfundedPsoe
+                      : t.unfundedCoalition}
                 </li>
               ))}
             </ul>
           )}
           <p className="n-source">
-            Fuente: Base de Datos Nacional de Subvenciones, concesiones del
-            Ministerio del Interior a partidos políticos con fecha de {year}{" "}
-            (financiación ordinaria y gastos de seguridad). Es dinero del
-            partido, no de sus diputados.
+            {t.moneySource(year)}
           </p>
         </Section>
       )}
@@ -711,25 +683,28 @@ export default async function PrototypePlace({
         title={
           sameName
             ? territory.id === "18" || territory.id === "19"
-              ? "La ciudad autónoma"
-              : "La comunidad"
-            : `La comunidad: ${ca}`
+              ? t.communityCity
+              : t.communitySame
+            : t.communityOther(ca)
         }
       >
         <p className="n-body">
-          {sameName
-            ? `Lo que sigue está medido para ${ca}, que es la misma provincia.`
-            : `Lo que sigue está medido para toda ${ca}, no para ${name}: estas cifras no existen por provincia, y dividirlas sería inventarlas.`}
+          {sameName ? t.communityBodySame(ca) : t.communityBodyOther(ca, name)}
         </p>
 
         <div className="mt-10 grid gap-x-14 gap-y-14 lg:grid-cols-2">
           {/* Who presides */}
           <article>
-            <h3 className="n-h3">Quién preside</h3>
+            <h3 className="n-h3">{t.whoPresides}</h3>
             {government ? (
               <>
                 <p className="n-finding mt-3">
-                  {`${government.president} (${government.partyLabel}) preside ${ca} desde el ${formatDate(government.since, bcp47)}.`}
+                  {t.presidentFinding(
+                    government.president,
+                    government.partyLabel,
+                    ca,
+                    formatDate(government.since, bcp47),
+                  )}
                 </p>
                 {investiture.investiture &&
                   investiture.status !== "pp-majority" &&
@@ -783,7 +758,7 @@ export default async function PrototypePlace({
                             />
                             PP{" "}
                             <span className="n-num font-bold">
-                              {plural(inv.seatsPP, "escaño", "escaños")}
+                              {plural(inv.seatsPP, t.seat)}
                             </span>
                           </li>
                           <li className="inline-flex items-center gap-2">
@@ -797,7 +772,7 @@ export default async function PrototypePlace({
                             />
                             Vox{" "}
                             <span className="n-num font-bold">
-                              {plural(inv.seatsVox, "escaño", "escaños")}
+                              {plural(inv.seatsVox, t.seat)}
                             </span>
                           </li>
                           <li className="inline-flex items-center gap-2">
@@ -806,9 +781,9 @@ export default async function PrototypePlace({
                               className="inline-block h-3 w-3 rounded-[2px]"
                               style={{ background: "var(--n-rule)" }}
                             />
-                            Resto{" "}
+                            {t.rest}{" "}
                             <span className="n-num font-bold">
-                              {plural(others, "escaño", "escaños")}
+                              {plural(others, t.seat)}
                             </span>
                           </li>
                           <li className="inline-flex items-center gap-2">
@@ -817,37 +792,38 @@ export default async function PrototypePlace({
                               className="inline-block h-3 w-[2px]"
                               style={{ background: "var(--n-ink)" }}
                             />
-                            Mayoría absoluta, {n(majority)}
+                            {t.absMajority(n(majority))}
                           </li>
                         </ul>
                         <p className="n-body mt-3 text-[0.95rem]">
                           {investiture.status === "vox-decisive"
-                            ? `El PP tenía ${n(inv.seatsPP)} de ${n(inv.chamberSeats)} escaños, y la investidura salió adelante con votos de Vox: sin ellos no había mayoría.`
-                            : `El PP tenía ${n(inv.seatsPP)} de ${n(inv.chamberSeats)} escaños, menos de la mayoría absoluta. Esta web recoge la aritmética; el acta de la votación no está verificada aquí.`}
+                            ? t.investVox(n(inv.seatsPP), n(inv.chamberSeats))
+                            : t.investShort(n(inv.seatsPP), n(inv.chamberSeats))}
                         </p>
                       </>
                     );
                   })()}
                 <p className="n-source">
-                  Fuente:{" "}
+                  {t.sourceLabel}{" "}
                   <a href={view.governmentSource.url}>
-                    Wikipedia, {view.governmentSource.body}
+                    {t.wikiPrefix}
+                    {view.governmentSource.body}
                   </a>
-                  , comprobado el{" "}
-                  {formatDate(view.governmentSource.checked, bcp47)}. Es quién
-                  ocupa la presidencia, no el resultado de las elecciones.
+                  {t.checkedTail(
+                    formatDate(view.governmentSource.checked, bcp47),
+                  )}
                 </p>
               </>
             ) : (
               <p className="mt-3 text-[var(--n-ink-2)]">
-                No consta presidencia para este territorio.
+                {t.noPresidency}
               </p>
             )}
           </article>
 
           {/* Officeholders in the register */}
           <article>
-            <h3 className="n-h3">Cargos públicos en el registro</h3>
+            <h3 className="n-h3">{t.registerTitle}</h3>
             <p className="n-finding mt-3">{registerFinding}</p>
             {officeholders.count > 0 && (
               <>
@@ -884,7 +860,7 @@ export default async function PrototypePlace({
                         className="inline-block h-3 w-3 rounded-[2px]"
                         style={{ background: "var(--n-ink-2)" }}
                       />
-                      Con sueldo publicado{" "}
+                      {t.withSalary}{" "}
                       <span className="n-num font-bold">
                         {n(officeholders.withSalary)}
                       </span>
@@ -900,7 +876,7 @@ export default async function PrototypePlace({
                           outlineOffset: -1,
                         }}
                       />
-                      Sin sueldo publicado{" "}
+                      {t.withoutSalary}{" "}
                       <span className="n-num font-bold">
                         {n(officeholders.count - officeholders.withSalary)}
                       </span>
@@ -910,57 +886,72 @@ export default async function PrototypePlace({
               </>
             )}
             <p className="n-meta mt-3">
-              {`${n(view.registerWithoutTerritory)} de las ${n(view.registerTotal)} filas del registro no indican comunidad y no entran en este recuento. `}
+              {t.registerGap(n(view.registerWithoutTerritory), n(view.registerTotal))}
               <Link
                 href={L(
-                  `/politicos?q=${encodeURIComponent(territory.registerName)}`,
+                  `/nuevo/personas?q=${encodeURIComponent(territory.registerName)}`,
                 )}
               >
-                Ver estos cargos
+                {t.seePosts}
               </Link>
-              {", o "}
+              {t.orCompare}
               <Link href={L("/nuevo/territorios#registro")}>
-                compararlos con otras comunidades
+                {t.compareOthers}
               </Link>
               .
             </p>
             <p className="n-source">
-              Fuente: <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>.
-              Sueldo bruto anual.
+              {t.sourceLabel} <a href={SALARIES_SOURCE_URL}>{salaries.source.name}</a>
+              {t.registerSourceTail}
             </p>
           </article>
 
           {/* Wages */}
           <article>
-            <h3 className="n-h3">Lo que se cobra en {ca}</h3>
+            <h3 className="n-h3">{t.wagesTitle(ca)}</h3>
             {wages ? (
               <>
                 <p className="n-finding mt-3">
-                  {`La mitad de los asalariados de ${ca} cobró menos de ${euroExact(wages.median, bcp47)} brutos al año, frente a ${euroExact(wages.nationalMedian, bcp47)} en el conjunto de España.`}
+                  {t.wagesFinding(
+                    ca,
+                    euroExact(wages.median, bcp47),
+                    euroExact(wages.nationalMedian, bcp47),
+                  )}
                 </p>
-                <WageScale wages={wages} fmt={(v) => euroExact(v, bcp47)} />
+                <WageScale
+                  wages={wages}
+                  fmt={(v) => euroExact(v, bcp47)}
+                  labels={{
+                    p10: t.wageP10,
+                    median: t.wageMedian,
+                    p90: t.wageP90,
+                    national: t.wageNational,
+                  }}
+                />
                 <p className="n-source">
-                  Fuente:{" "}
-                  <a href={wages.sourceUrl}>
-                    INE, Encuesta Anual de Estructura Salarial
-                  </a>
-                  , {wages.period}. Salario bruto anual por trabajador.
+                  {t.sourceLabel}{" "}
+                  <a href={wages.sourceUrl}>{t.wagesSource}</a>
+                  {t.wagesSourceTail(wages.period)}
                 </p>
               </>
             ) : (
               <p className="mt-3 text-[var(--n-ink-2)]">
-                {`La encuesta salarial del INE no publica percentiles para ${ca}: sus tablas por comunidad cubren las diecisiete comunidades autónomas y no las dos ciudades autónomas. No se sustituye por la cifra nacional.`}
+                {t.noWages(ca)}
               </p>
             )}
           </article>
 
           {/* Poverty */}
           <article>
-            <h3 className="n-h3">Riesgo de pobreza o exclusión</h3>
+            <h3 className="n-h3">{t.povertyTitle}</h3>
             {poverty ? (
               <>
                 <p className="n-finding mt-3">
-                  {`En ${ca}, el ${pct(poverty.percent / 100)} de la población está en riesgo de pobreza o exclusión social, frente al ${pct(poverty.nationalPercent / 100)} en el conjunto de España.`}
+                  {t.povertyFinding(
+                    ca,
+                    pct(poverty.percent / 100),
+                    pct(poverty.nationalPercent / 100),
+                  )}
                 </p>
                 <Compare
                   rows={[
@@ -971,7 +962,7 @@ export default async function PrototypePlace({
                       strong: true,
                     },
                     {
-                      label: "España",
+                      label: t.spain,
                       value: poverty.nationalPercent,
                       text: pct(poverty.nationalPercent / 100),
                     },
@@ -979,33 +970,35 @@ export default async function PrototypePlace({
                   max={100}
                 />
                 <p className="n-source">
-                  Fuente:{" "}
-                  <a href={poverty.sourceUrl}>
-                    INE, Encuesta de Condiciones de Vida
-                  </a>
-                  , {poverty.period}. Serie {poverty.base}. Es una proporción de
-                  la población, no un recuento.
+                  {t.sourceLabel}{" "}
+                  <a href={poverty.sourceUrl}>{t.povertySource}</a>
+                  {t.povertySourceTail(poverty.period, poverty.base)}
                 </p>
               </>
             ) : (
               <p className="mt-3 text-[var(--n-ink-2)]">
-                La Encuesta de Condiciones de Vida no publica este indicador
-                para este territorio.
+                {t.noPoverty}
               </p>
             )}
           </article>
 
           {/* Hate crime */}
           <article className="lg:col-span-2">
-            <h3 className="n-h3">Delitos de odio registrados</h3>
+            <h3 className="n-h3">{t.hateTitle}</h3>
             {hate ? (
               <div className="grid gap-x-14 lg:grid-cols-2">
                 <div>
                   <p className="n-finding mt-3">
-                    {`En ${ca} constan ${n(hate.total)} hechos conocidos en ${hate.year}, ${rate(hate.ratePer100k, bcp47)} por cada 100.000 habitantes, frente a ${rate(hate.nationalRatePer100k, bcp47)} en el conjunto de España.`}
+                    {t.hateFinding(
+                      ca,
+                      n(hate.total),
+                      hate.year,
+                      rate(hate.ratePer100k, bcp47),
+                      rate(hate.nationalRatePer100k, bcp47),
+                    )}
                   </p>
                   <p className="n-body mt-3 text-[0.95rem]">
-                    {`Por orientación sexual e identidad de género: ${n(hate.sexualOrientationGenderIdentity)}. Son hechos conocidos por las fuerzas de seguridad, no incidencia: una tasa más alta puede reflejar más denuncia y no más delito.`}
+                    {t.hateBody(n(hate.sexualOrientationGenderIdentity))}
                   </p>
                 </div>
                 <div className="lg:pt-4">
@@ -1014,13 +1007,13 @@ export default async function PrototypePlace({
                       {
                         label: ca,
                         value: hate.ratePer100k,
-                        text: `${rate(hate.ratePer100k, bcp47)} por 100.000`,
+                        text: t.per100k(rate(hate.ratePer100k, bcp47)),
                         strong: true,
                       },
                       {
-                        label: "España",
+                        label: t.spain,
                         value: hate.nationalRatePer100k,
-                        text: `${rate(hate.nationalRatePer100k, bcp47)} por 100.000`,
+                        text: t.per100k(rate(hate.nationalRatePer100k, bcp47)),
                       },
                     ]}
                     max={Math.max(hate.ratePer100k, hate.nationalRatePer100k)}
@@ -1029,12 +1022,12 @@ export default async function PrototypePlace({
               </div>
             ) : (
               <p className="mt-3 text-[var(--n-ink-2)]">
-                El informe no localiza hechos conocidos en este territorio.
+                {t.noHate}
               </p>
             )}
             {hate && (
               <p className="n-source">
-                Fuente:{" "}
+                {t.sourceLabel}{" "}
                 <a href={hate.source.url}>
                   {hate.source.body.replace(/\s*·\s*/g, ", ")},{" "}
                   {hate.source.report}
@@ -1046,7 +1039,7 @@ export default async function PrototypePlace({
         </div>
 
         <p className="n-body mt-14 text-[0.95rem]">
-          {`Nada de esta página une una cifra con otra. Lo que cobran o declaran sus diputados, el dinero de sus partidos y las cifras de ${ca} son hechos puestos uno al lado del otro, no una explicación.`}
+          {t.closing(ca)}
         </p>
       </Section>
     </main>
@@ -1118,22 +1111,29 @@ function Compare({
 function WageScale({
   wages,
   fmt,
+  labels,
 }: {
   wages: { median: number; p10: number; p90: number; nationalMedian: number };
   fmt: (v: number) => string;
+  labels: {
+    p10: string;
+    median: string;
+    p90: string;
+    national: (value: string) => string;
+  };
 }) {
   const top = Math.max(wages.p90, wages.nationalMedian) * 1.08;
   const x = (v: number) => `${(v / top) * 100}%`;
   const stations = [
     {
       v: wages.p10,
-      label: "El 10 % peor pagado, por debajo de",
+      label: labels.p10,
       align: "start",
     },
-    { v: wages.median, label: "Mediana", align: "middle" },
+    { v: wages.median, label: labels.median, align: "middle" },
     {
       v: wages.p90,
-      label: "El 10 % mejor pagado, por encima de",
+      label: labels.p90,
       align: "end",
     },
   ] as const;
@@ -1146,7 +1146,7 @@ function WageScale({
           style={{ left: x(wages.nationalMedian) }}
         >
           <p className="n-meta whitespace-nowrap">
-            España, mediana {fmt(wages.nationalMedian)}
+            {labels.national(fmt(wages.nationalMedian))}
           </p>
           <span
             aria-hidden
@@ -1173,7 +1173,7 @@ function WageScale({
               left: x(s.v),
               borderColor: "var(--n-ink-2)",
               background:
-                s.label === "Mediana" ? "var(--n-ink-2)" : "var(--n-card)",
+                s.align === "middle" ? "var(--n-ink-2)" : "var(--n-card)",
             }}
           />
         ))}
