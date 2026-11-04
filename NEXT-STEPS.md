@@ -90,6 +90,14 @@ annexes in an 851-page-class PDF). Later exercises follow the same report series
 annex table, transcribe verbatim into the typed module with its own source block, and add a year
 selector to the party page rather than overwriting 2020.
 
+**Party income by source: 2018, 2019 and 2020 DONE (2026-11-04).** The income tables (public money
+by paying administration, private money by origin) are transcribed for all three years:
+`data/party-income-<year>.json`, read through `lib/party-income.ts`, checked by
+`npm run check:party-income`. 2018 and 2019 come from Informe nº 1.532 (ejercicios 2018 y 2019,
+approved 28/09/2023), PDF pages 551, 552, 554 and 555; its donations chart, which would give the
+per-tranche donations for those two years, has not been transcribed. A 2021 report was not found on
+2026-10-30; check the Tribunal's site search (item 1) before assuming it does not exist.
+
 ---
 
 ## 5. Context layer — wages, poverty, housing, and measures taken
@@ -260,6 +268,35 @@ about 20 filings, each its own pull request:
 **Stop conditions.** Do not publish a reading that has not passed a check. Do not add a net-worth
 total, a ranking of deputies by anything declared, or a tally of how deputies holding a given asset
 voted. Do not use RTVE's figures as a source, even where a reading is missing.
+
+---
+
+## 8. Company appointments in the BORME — NOT BUILT, probed 2026-11-04
+
+**Goal.** Show which companies a politician sits on, from the Boletín Oficial del Registro
+Mercantil, as a second source for the company connections the site currently only takes from the
+deputies' own declarations.
+
+**What the source is.** The BOE's open-data API serves each day's BORME summary as JSON
+(`https://www.boe.es/datosabiertos/api/borme/sumario/YYYYMMDD`, with an `Accept: application/json`
+header; a day with no edition returns a 404). Section A, "Empresarios. Actos inscritos", links one
+PDF per province, and each act names the people appointed or removed by surname and given name only,
+for example "Nombramientos. Adm. Unico: LOZANO PALACIOS DAVID". There is no DNI, no date of birth and
+no other identifier.
+
+**Why it is not built.** A name is the only thing that could join a BORME appointment to a
+politician, and the site does not publish a link between a named person and anything on the strength
+of a name ("no fuzzy identity matching"; an ambiguous match is dropped). Two full surnames and a given
+name are common enough in Spain that a match is not proof, and a wrong match here would put a company
+directorship under the wrong person's name. Wrapping the match in a disclaimer would not change that.
+
+**What would make it possible.** A link that does not rest on the name: a deputy naming the company
+in their own declaration (the *Intereses económicos* and *Bienes y Rentas* filings already ingested),
+with the BORME then used only to add the registry's own record of that company, looked up by the
+company's name and province, never by the person's. That is a narrower feature and needs its own
+decision.
+
+**Stop condition.** Do not match BORME names to people, however unusual the name.
 
 ---
 
