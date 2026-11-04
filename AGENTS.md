@@ -13,6 +13,7 @@ Catalan, deployed on Vercel.
 |-------|--------|-----------|
 | State subsidies to parties | BDNS / SNPSAP REST API | Live, daily cron |
 | Private donations to parties | Tribunal de Cuentas report 1573 (2020) | Fixed, transcribed |
+| Parties' ordinary income, public and private | Tribunal de Cuentas report 1573 (2020), Anexos IV and V | Fixed, transcribed |
 | Party-linked foundations | Tribunal de Cuentas report 1.642 (2021–22) | Fixed, per-dossier |
 | Electoral spending by category | Tribunal de Cuentas report 1.628 (EP 2024) | Fixed, per-formation |
 | Public salaries of officeholders | Registro de Altos Cargos CSV export | Rebuilt from script |
@@ -507,6 +508,7 @@ ordinary browser one, so `FEED_HEADERS` in the registry sends the browser string
 | `lib/normalize.ts` | Parse `beneficiario` into NIF, classify subsidy kind, aggregate, filter |
 | `lib/parties.ts` | Canonical NIF → party (name, colour, bloc) |
 | `lib/donations.ts` | Private donations 2020, transcribed from the TdC report |
+| `lib/party-income.ts` | The 25 audited parties' ordinary income in 2020 (`data/party-income-2020.json`): public by administration, private by origin |
 | `lib/foundations.ts` | Party-linked foundations 2021–22, per-dossier + the legal mechanism |
 | `lib/foundation-people.ts` | Curated: who governs each foundation, and their outside roles, one dated source per record |
 | `lib/salaries.ts` | The pay register: load. Everything about *pay* reads it; the directory does not (see `lib/people.ts`) |
@@ -600,6 +602,7 @@ npm run build:deputies         # Congreso roster, fichas, interest declarations,
 npm run check:deputies         # guards the deputy → register join; lists candidates for DEPUTY_ALIASES
 npm run build:declarations     # publishes only the transcriptions that pass their check
 npm run check:declarations     # re-runs each published entry's check; non-zero on a failure
+npm run check:party-income     # party income rows and columns sum to the report's totals, donations agree with lib/donations.ts
 ```
 
 Endpoint notes that cost real time to work out:

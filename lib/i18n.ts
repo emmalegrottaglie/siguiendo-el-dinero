@@ -1081,6 +1081,10 @@ const es = {
         title: "Donaciones privadas, 2020",
         description: "Donaciones privadas del ejercicio 2020, por partido y tramo, según el Tribunal de Cuentas.",
       },
+      ingresos_partidos: {
+        title: "Ingresos de los partidos, 2020",
+        description: "Ingresos ordinarios de 2020 de los 25 partidos fiscalizados, públicos por administración y privados por origen (cuotas, cargos públicos, donaciones, otros), según el Tribunal de Cuentas.",
+      },
       fundaciones: {
         title: "Fundaciones vinculadas a partidos",
         description: "Un dossier por entidad y ejercicio, del informe 1.642 del Tribunal de Cuentas.",
@@ -2215,6 +2219,10 @@ const en: Dict = {
         title: "Private donations, 2020",
         description: "Private donations for 2020, by party and tranche, per the Court of Auditors.",
       },
+      ingresos_partidos: {
+        title: "Party income, 2020",
+        description: "Ordinary income in 2020 of the 25 audited parties, public by administration and private by origin (member fees, officeholders, donations, other), per the Court of Auditors.",
+      },
       fundaciones: {
         title: "Party-linked foundations",
         description: "One dossier per entity and exercise, from Court of Auditors report 1.642.",
@@ -3345,6 +3353,10 @@ const ca: Dict = {
       donaciones: {
         title: "Donacions privades, 2020",
         description: "Donacions privades de l'exercici 2020, per partit i tram, segons el Tribunal de Comptes.",
+      },
+      ingresos_partidos: {
+        title: "Ingressos dels partits, 2020",
+        description: "Ingressos ordinaris del 2020 dels 25 partits fiscalitzats, públics per administració i privats per origen (quotes, càrrecs públics, donacions, altres), segons el Tribunal de Comptes.",
       },
       fundaciones: {
         title: "Fundacions vinculades a partits",
