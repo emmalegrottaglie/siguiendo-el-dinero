@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Atkinson_Hyperlegible_Next, Literata } from "next/font/google";
+import { getDict } from "@/lib/i18n";
+import { COPY } from "./copy";
 import "./nuevo.css";
 
 /*
@@ -13,8 +15,8 @@ import "./nuevo.css";
  * cannot be mistaken for one another (1 l I, 0 O), which is the job a table of
  * declared amounts has to do.
  *
- * Spanish only while it is a prototype; the strings move to lib/i18n.ts when
- * a design is chosen.
+ * The words live in ./copy.ts (es, en, ca) while it is a prototype; they move
+ * to lib/i18n.ts when a design is chosen.
  */
 const literata = Literata({
   subsets: ["latin"],
@@ -32,15 +34,13 @@ const atkinson = Atkinson_Hyperlegible_Next({
   adjustFontFallback: false,
 });
 
-// Personas still opens the current directory: the prototype has person pages
-// but no directory of its own yet.
 const NAV = [
-  { href: "/nuevo/partidos", label: "Partidos" },
-  { href: "/politicos", label: "Personas" },
-  { href: "/nuevo/territorios", label: "Territorios" },
-  { href: "/nuevo/temas", label: "Temas" },
-  { href: "/metodologia", label: "Datos y método" },
-];
+  { href: "/nuevo/partidos", key: "parties" },
+  { href: "/nuevo/personas", key: "people" },
+  { href: "/nuevo/territorios", key: "territories" },
+  { href: "/nuevo/temas", key: "topics" },
+  { href: "/metodologia", key: "method" },
+] as const;
 
 export default async function PrototypeLayout({
   children,
@@ -49,12 +49,13 @@ export default async function PrototypeLayout({
   children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  const { locale } = getDict(localeParam);
+  const t = COPY[locale];
   return (
     <div className={`n-root ${literata.variable} ${atkinson.variable}`}>
       <p className="n-meta border-b border-[var(--n-rule)] px-4 py-2 text-center">
-        Prototipo del nuevo diseño.{" "}
-        <Link href={`/${locale}`}>Ver el sitio actual</Link>
+        {t.banner} <Link href={`/${locale}`}>{t.bannerLink}</Link>
       </p>
       <header className="n-shell flex flex-wrap items-center justify-between gap-x-8 gap-y-3 py-5">
         <Link
@@ -62,14 +63,14 @@ export default async function PrototypeLayout({
           className="!no-underline"
           style={{ fontFamily: "var(--n-serif)", fontSize: "1.45rem", fontWeight: 600, letterSpacing: "-0.01em" }}
         >
-          Siguiendo el Dinero
+          {t.siteName}
         </Link>
-        <nav aria-label="Secciones">
+        <nav aria-label={t.navLabel}>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {NAV.map((n) => (
               <li key={n.href}>
                 <Link href={`/${locale}${n.href}`} className="!no-underline hover:!underline">
-                  {n.label}
+                  {t.nav[n.key]}
                 </Link>
               </li>
             ))}
@@ -78,14 +79,9 @@ export default async function PrototypeLayout({
       </header>
       {children}
       <footer className="n-shell n-section n-meta grid gap-3 sm:grid-cols-2">
+        <p>{t.footerSources}</p>
         <p>
-          Cada cifra lleva su fuente: el Tribunal de Cuentas, el Congreso de los Diputados, la Base de
-          Datos Nacional de Subvenciones y el Registro de Altos Cargos.
-        </p>
-        <p>
-          Los datos se publican juntos para poder consultarlos. Que dos datos aparezcan uno al lado
-          del otro no significa que uno explique el otro.{" "}
-          <Link href={`/${locale}/metodologia`}>Cómo se hizo</Link>
+          {t.footerJuxta} <Link href={`/${locale}/metodologia`}>{t.footerLink}</Link>
         </p>
       </footer>
     </div>

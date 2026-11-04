@@ -15,6 +15,9 @@
  * Takes its colour from the `n-*` route class on an ancestor or on
  * `className` (normally `n-topic`).
  */
+import type { Locale } from "@/lib/locales";
+import { VOTE_COPY } from "./vote-copy";
+
 export interface VoteCounts {
   si: number;
   no: number;
@@ -23,12 +26,11 @@ export interface VoteCounts {
   noVota?: number;
 }
 
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-
 /** "191 a favor, 60 en contra, 91 abstenciones", with singulars where they apply. */
-export function voteCountsText({ si, no, abst, noVota }: VoteCounts): string {
-  const parts = [`${si} a favor`, `${no} en contra`, plural(abst, "abstención", "abstenciones")];
-  if (noVota) parts.push(`${noVota} no ${noVota === 1 ? "votó" : "votaron"}`);
+export function voteCountsText({ si, no, abst, noVota }: VoteCounts, locale: Locale = "es"): string {
+  const t = VOTE_COPY[locale];
+  const parts = [`${si} ${t.inFavour}`, `${no} ${t.against}`, `${abst} ${t.abstention(abst)}`];
+  if (noVota) parts.push(`${noVota} ${t.didNotVote(noVota)}`);
   return parts.join(", ");
 }
 
@@ -37,12 +39,14 @@ export default function VoteBar({
   size = "md",
   showCounts = true,
   className = "",
+  locale = "es",
 }: {
   counts: VoteCounts;
   /** "md" for a division's overall result, "sm" for one group's. */
   size?: "sm" | "md";
   showCounts?: boolean;
   className?: string;
+  locale?: Locale;
 }) {
   const { si, no, abst } = counts;
   const total = si + no + abst;
@@ -65,17 +69,18 @@ export default function VoteBar({
         )}
         {abst > 0 && <span style={{ ...seg(abst), background: "var(--n-rule-strong)" }} />}
       </div>
-      {showCounts && <p className="n-meta n-num mt-1.5">{voteCountsText(counts)}</p>}
+      {showCounts && <p className="n-meta n-num mt-1.5">{voteCountsText(counts, locale)}</p>}
     </div>
   );
 }
 
 /** The key to the bar, in words beside each swatch. */
-export function VoteLegend({ className = "" }: { className?: string }) {
+export function VoteLegend({ className = "", locale = "es" }: { className?: string; locale?: Locale }) {
+  const t = VOTE_COPY[locale];
   return (
     <span className={`inline-flex flex-wrap items-center gap-x-5 gap-y-1 ${className}`}>
       <span className="n-topic inline-flex items-center gap-2">
-        <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--route)" }} />A favor
+        <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--route)" }} />{t.legendFor}
       </span>
       <span className="inline-flex items-center gap-2">
         <span
@@ -83,11 +88,11 @@ export function VoteLegend({ className = "" }: { className?: string }) {
           className="n-hatch inline-block h-3 w-5 rounded-[2px]"
           style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }}
         />
-        En contra
+        {t.legendAgainst}
       </span>
       <span className="inline-flex items-center gap-2">
         <span aria-hidden className="inline-block h-3 w-5 rounded-[2px]" style={{ background: "var(--n-rule-strong)" }} />
-        Abstención
+        {t.legendAbstention}
       </span>
     </span>
   );

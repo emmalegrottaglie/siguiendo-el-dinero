@@ -5,6 +5,48 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-04 — The prototype in English and Catalan, and a people directory of its own
+
+Two of the gaps left open by the prototype (the "Left out" section of its entry below): it was in
+Spanish only, and its Personas menu item still opened the current site's directory.
+
+**English and Catalan.** Every page under `/nuevo` now renders in all three languages. The words
+moved out of the pages into a `copy.ts` beside each one, with one block per language, so a sentence
+that depends on a number or on agreement (plurals, "menos del 1 %", the Catalan article before a
+percentage, "l'1 %" against "el 54 %") is written out per language, not assembled by concatenation.
+Shared pieces follow the same rule: the route map, the vote bars and the deputies' ballots carry
+their own words, and every component under `components/nuevo/` takes the locale.
+
+- **The Spanish did not change.** The text of 19 Spanish pages (the front page, both indexes, four
+  party hubs, four provinces, the three topics and three people) was captured from the branch before
+  and after the change and compared: identical.
+- **What is not translated**, because it is data as recorded: names of parties, people,
+  foundations, places and laws; vote titles as Congreso records them; posts as the Register of Senior
+  Officials writes them; report titles. Board roles from the foundations' own lists are translated
+  only where they are a plain title (patrono, presidenta, secretario, vocal…), through
+  `components/nuevo/roles.ts`; a role the source wrote out in full is shown as written.
+- **Vocabulary follows the current site's dictionaries** (`lib/i18n.ts`): Court of Auditors /
+  Tribunal de Comptes, Register of Senior Officials / Registre d'Alts Càrrecs, and the ballot labels
+  "In favour / Against / Abstention" and "A favor / En contra / Abstenció", which say what the Spanish
+  says. Topic names were missing from the dictionaries for two of the three topics, so
+  `components/nuevo/topics.ts` holds them.
+- **The rules held in translation**: no sentence gained a causal word, none calls a vote passed or
+  failed, and every stated gap keeps its force ("not on record", "no hi consta").
+
+**A people directory, `/nuevo/personas`.** Everyone the site holds a record of, 6,791 people: the
+sitting deputies and the officeholders in the Register of Senior Officials. Each row is the
+design's line with four stations, one per kind of record the site can hold about a person: recorded
+votes, a transcribed asset declaration, published pay, a seat on a party foundation's board. A filled
+station is on record and a hollow one is not, which the legend says in words and each station repeats
+for screen readers; not on record is not presented as not existing. The rows are alphabetical and
+are never ordered by anything a record contains. Search, a filter for deputies or other posts, and a
+party filter whose counts are taken after the other filters, so the number beside a party is what
+choosing it returns. The menu, the party hubs, the province pages and the person pages now link
+here instead of the current directory.
+
+**Verified.** `npx tsc --noEmit` passes. In the browser: the front page in English, a party hub in
+Catalan at 375px, and the directory in all three languages at desktop width and 375px, with no
+horizontal scroll.
 ## 2026-11-04 — The parties' income in 2018 and 2019, and why the BORME is not used
 
 **2018 and 2019.** The same two tables already held for 2020 — public money by the paying

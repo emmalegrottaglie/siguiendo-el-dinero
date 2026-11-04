@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/locales";
+
 /**
  * One whole, split into its parts: a single bar and, under it, every part
  * named with its share in words.
@@ -14,6 +16,8 @@ export default function ShareBar({
   parts: { label: string; value: number; muted?: boolean }[];
   format: (value: number) => string;
   className?: string;
+  /** Accepted for uniformity; the bar carries no words of its own (labels come from the caller). */
+  locale?: Locale;
 }) {
   const total = parts.reduce((s, p) => s + Math.max(0, p.value), 0);
   const strength = [100, 62, 38, 22];

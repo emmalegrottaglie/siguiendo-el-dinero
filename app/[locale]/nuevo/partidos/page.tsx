@@ -29,6 +29,7 @@ import {
   isCoalition,
   unlinkedFoundations,
 } from "../partido/party-records";
+import { COPY } from "./copy";
 
 export const revalidate = 3600;
 
@@ -48,6 +49,7 @@ export default async function PrototypeParties({
 }) {
   const { locale: localeParam } = await params;
   const { locale, bcp47 } = getDict(localeParam);
+  const t = COPY[locale];
   const [agg, foundations, spend] = await Promise.all([
     getAggregation(),
     getFoundations(),
@@ -60,7 +62,7 @@ export default async function PrototypeParties({
   const listFmt = new Intl.ListFormat(bcp47, { type: "conjunction" });
 
   const years = [...agg.years].sort((a, b) => a - b);
-  const span = `${years[0]} y ${years.at(-1)}`;
+  const span = t.span(years[0], years.at(-1)!);
   const fYears = foundationYears(foundations);
   const fLatest = fYears.at(-1)!;
   const max = agg.parties[0]?.total ?? 1;
@@ -101,7 +103,7 @@ export default async function PrototypeParties({
   const reportParty = (s: string | null) =>
     s
       ? s.replace(/\s*PORCENTAJE DE PARTICIPACI[ÓO]N.*$/i, "").trim()
-      : "sin partido en el informe";
+      : t.noPartyInReport;
 
   // Where the audited parties' own money came from, from the party-accounts report.
   const allIncome = ordinaryIncome(PARTY_INCOME_TOTALS);
@@ -109,43 +111,47 @@ export default async function PrototypeParties({
   const byIncome = [...PARTY_INCOME].sort(
     (a, b) => ordinaryIncome(b) - ordinaryIncome(a),
   );
-  const incomeFinding = `En ${PARTY_INCOME_YEAR}, los ${PARTY_INCOME.length} partidos que fiscalizó el Tribunal de Cuentas ingresaron ${euroM(allIncome, bcp47, 1)}, y el ${percent(PARTY_INCOME_TOTALS.public.total / allIncome, bcp47, 0)} fue dinero público. ${
-    priv.officeholders > priv.memberFees
-      ? `Sus propios cargos públicos aportaron ${euroM(priv.officeholders, bcp47, 1)}, más que las cuotas de los afiliados (${euroM(priv.memberFees, bcp47, 1)}).`
-      : `Las cuotas de los afiliados sumaron ${euroM(priv.memberFees, bcp47, 1)} y las aportaciones de sus cargos públicos, ${euroM(priv.officeholders, bcp47, 1)}.`
-  }`;
+  const incomeFinding = t.incomeFinding(
+    PARTY_INCOME_YEAR,
+    PARTY_INCOME.length,
+    euroM(allIncome, bcp47, 1),
+    percent(PARTY_INCOME_TOTALS.public.total / allIncome, bcp47, 0),
+    priv.officeholders > priv.memberFees,
+    euroM(priv.officeholders, bcp47, 1),
+    euroM(priv.memberFees, bcp47, 1),
+  );
   const PARTS = [
     {
       key: "public",
-      label: "Dinero público",
+      label: t.partPublic,
       cls: "n-state",
       strength: 100,
       pick: (f: (typeof PARTY_INCOME)[number]) => f.public.total,
     },
     {
       key: "fees",
-      label: "Cuotas de afiliados",
+      label: t.partFees,
       cls: "n-donors",
       strength: 100,
       pick: (f: (typeof PARTY_INCOME)[number]) => f.private.memberFees,
     },
     {
       key: "officeholders",
-      label: "Aportaciones de cargos públicos",
+      label: t.partOfficeholders,
       cls: "n-donors",
       strength: 62,
       pick: (f: (typeof PARTY_INCOME)[number]) => f.private.officeholders,
     },
     {
       key: "donations",
-      label: "Donaciones",
+      label: t.partDonations,
       cls: "n-donors",
       strength: 38,
       pick: (f: (typeof PARTY_INCOME)[number]) => f.private.donations,
     },
     {
       key: "other",
-      label: "Otros ingresos privados",
+      label: t.partOther,
       cls: "n-donors",
       strength: 22,
       pick: (f: (typeof PARTY_INCOME)[number]) => f.private.other,
@@ -153,32 +159,37 @@ export default async function PrototypeParties({
   ];
   /** A share in words: a small amount that rounds to 0 % is still not nothing. */
   const share = (n: number) =>
-    n > 0 && n < 0.005 ? "menos del 1 %" : percent(n, bcp47, 0);
+    n > 0 && n < 0.005 ? t.lessThanOne : percent(n, bcp47, 0);
   const fill = (strength: number) =>
     `color-mix(in srgb, var(--route) ${strength}%, var(--n-bg))`;
 
   return (
     <main>
       <div className="n-shell pb-12 pt-6">
-        <h1 className="n-display">Partidos</h1>
+        <h1 className="n-display">{t.title}</h1>
         <p className="n-body mt-6" style={{ fontSize: "1.15rem" }}>
-          Lo que cada partido recibe del Estado, lo que declara en donaciones,
-          lo que entra en sus fundaciones y lo que gastó en campaña, partido a
-          partido y con la fuente de cada cifra.
+          {t.intro}
         </p>
       </div>
 
       {/* ---------- The ranking by state money ---------- */}
-      <Section id="estado" title="Lo que reparte el Estado">
+      <Section id="estado" title={t.stateTitle}>
         <p className="n-finding">
-          {`${listFmt.format(top3.map((p) => p.shortName))} recibieron el ${pct(top3Total / agg.grandTotal)} de los ${euroM(agg.grandTotal, bcp47, 1)} que el Estado concedió a ${agg.parties.length} partidos entre ${span}.`}
+          {t.stateFinding(
+            listFmt.format(top3.map((p) => p.shortName)),
+            pct(top3Total / agg.grandTotal),
+            euroM(agg.grandTotal, bcp47, 1),
+            agg.parties.length,
+            span,
+          )}
         </p>
         <ShareBar
           className="n-state mt-6"
+          locale={locale}
           parts={[
             ...top3.map((p) => ({ label: p.shortName, value: p.total })),
             {
-              label: `Los otros ${agg.parties.length - 3}`,
+              label: t.othersLabel(agg.parties.length - 3),
               value: agg.grandTotal - top3Total,
               muted: true,
             },
@@ -222,38 +233,37 @@ export default async function PrototypeParties({
           ))}
         </ol>
         <p className="n-source">
-          Fuente:{" "}
-          <a href={agg.source.url}>Base de Datos Nacional de Subvenciones</a>,
-          concesiones a partidos políticos entre {span}, consultada el{" "}
-          {formatDate(agg.generatedAt.slice(0, 10), bcp47)}. Financiación
-          ordinaria y gastos de seguridad.
+          {t.stateSourcePre}{" "}
+          <a href={agg.source.url}>{t.stateSourceLink}</a>
+          {t.stateSourcePost(
+            span,
+            formatDate(agg.generatedAt.slice(0, 10), bcp47),
+          )}
         </p>
       </Section>
 
       {/* ---------- What is on record, party by party ---------- */}
-      <Section id="registros" title="Qué consta de cada partido">
+      <Section id="registros" title={t.recordsTitle}>
         <p className="n-finding">
-          {`De los ${agg.parties.length} partidos con dinero del Estado, ${withDonations} aparecen en la tabla de donaciones de ${DONATIONS_SOURCE.year}, ${withFoundations} tienen una fundación vinculada en esta web y ${withCampaign} encabezaron una candidatura en las europeas de 2024.`}
+          {t.recordsFinding(
+            agg.parties.length,
+            withDonations,
+            DONATIONS_SOURCE.year,
+            withFoundations,
+            withCampaign,
+          )}
         </p>
-        <p className="n-body mt-3">
-          Punto lleno: el dato consta en esta web. Punto vacío: no consta. Cada
-          columna es de una fuente y un año distintos, y las cifras de una fila
-          no se suman.
-        </p>
+        <p className="n-body mt-3">{t.recordsKey}</p>
         <div className="mt-8 overflow-x-auto">
           <table className="n-table min-w-[46rem]">
-            <caption className="sr-only">
-              Registros de cada partido en esta web
-            </caption>
+            <caption className="sr-only">{t.recordsCaption}</caption>
             <thead>
               <tr>
-                <th scope="col">Partido</th>
-                <th scope="col">
-                  Del Estado, de {years[0]} a {years.at(-1)}
-                </th>
-                <th scope="col">Donaciones, {DONATIONS_SOURCE.year}</th>
-                <th scope="col">Fundaciones, {fLatest}</th>
-                <th scope="col">Campaña, europeas de 2024</th>
+                <th scope="col">{t.colParty}</th>
+                <th scope="col">{t.colState(years[0], years.at(-1)!)}</th>
+                <th scope="col">{t.colDonations(DONATIONS_SOURCE.year)}</th>
+                <th scope="col">{t.colFoundations(fLatest)}</th>
+                <th scope="col">{t.colCampaign}</th>
               </tr>
             </thead>
             <tbody>
@@ -275,24 +285,28 @@ export default async function PrototypeParties({
                   <td>
                     <Cell cls="n-donors" on={!!r.donations}>
                       {r.donations
-                        ? `${euro(r.donations.total.amount, bcp47)}, ${r.donations.total.donors === 1 ? "un donante" : `${integer(r.donations.total.donors, bcp47)} donantes`}`
-                        : "No consta"}
+                        ? t.donationsCell(
+                            euro(r.donations.total.amount, bcp47),
+                            r.donations.total.donors,
+                            integer(r.donations.total.donors, bcp47),
+                          )
+                        : t.notOnRecord}
                     </Cell>
                   </td>
                   <td>
                     <Cell cls="n-foundations" on={r.foundations > 0}>
                       {r.fLatestCount > 0
-                        ? `${money(r.fMoney)}, ${r.fLatestCount === 1 ? "1 entidad" : `${r.fLatestCount} entidades`}`
+                        ? t.foundationsCell(money(r.fMoney), r.fLatestCount)
                         : r.foundations > 0
-                          ? `Solo en ${fYears.slice(0, -1).join(" y ")}`
-                          : "No consta"}
+                          ? t.onlyIn(fYears.slice(0, -1).join(t.and))
+                          : t.notOnRecord}
                     </Cell>
                   </td>
                   <td>
                     <Cell cls="n-neutral" on={!!r.formation}>
                       {r.formation
-                        ? `${money(r.formation.ordinary.declared)}${r.coalition ? ", en coalición" : ""}`
-                        : "No consta"}
+                        ? `${money(r.formation.ordinary.declared)}${r.coalition ? t.inCoalition : ""}`
+                        : t.notOnRecord}
                     </Cell>
                   </td>
                 </tr>
@@ -301,27 +315,18 @@ export default async function PrototypeParties({
           </table>
         </div>
         <p className="n-source">
-          Fuentes: Base de Datos Nacional de Subvenciones; Tribunal de Cuentas,
-          informes nº 1.573 (donaciones, ejercicio {DONATIONS_SOURCE.year}), nº
-          1.642 (fundaciones, ejercicios {listFmt.format(fYears.map(String))};
-          en la columna, aportaciones y subvenciones de {fLatest}) y nº 1.628
-          (europeas de 2024, gasto ordinario declarado). En coalición: la cifra
-          es de toda la candidatura que el partido encabezó.
+          {t.recordsSource(
+            DONATIONS_SOURCE.year,
+            listFmt.format(fYears.map(String)),
+            fLatest,
+          )}
         </p>
       </Section>
 
       {/* ---------- Where the parties' own money comes from ---------- */}
-      <Section
-        id="ingresos"
-        title="De dónde salen los ingresos de los partidos"
-      >
+      <Section id="ingresos" title={t.incomeTitle}>
         <p className="n-finding">{incomeFinding}</p>
-        <p className="n-body mt-3">
-          Cada barra es el total de ingresos ordinarios de un partido, repartido
-          por origen. Las aportaciones de cargos públicos son lo que dan al
-          partido las personas que ocupan un cargo en su nombre. Las
-          subvenciones electorales van aparte y no están incluidas.
-        </p>
+        <p className="n-body mt-3">{t.incomeBody}</p>
         <ul className="n-meta mt-6 flex flex-wrap gap-x-5 gap-y-1">
           {PARTS.map((x) => (
             <li
@@ -374,32 +379,37 @@ export default async function PrototypeParties({
                   ))}
                 </div>
                 <p className="n-meta mt-1.5">
-                  {`Público, ${share(f.public.total / total)}. Cuotas, ${share(f.private.memberFees / total)}; cargos públicos, ${share(f.private.officeholders / total)}; donaciones, ${share(f.private.donations / total)}.`}
+                  {t.incomeSplit(
+                    share(f.public.total / total),
+                    share(f.private.memberFees / total),
+                    share(f.private.officeholders / total),
+                    share(f.private.donations / total),
+                  )}
                 </p>
               </li>
             );
           })}
         </ol>
         <p className="n-source">
-          Fuente: Tribunal de Cuentas,{" "}
+          {t.incomeSourcePre}{" "}
           <a href={PARTY_INCOME_SOURCE.url}>
-            informe nº 1.573 (ejercicio {PARTY_INCOME_YEAR})
+            {t.incomeSourceLink(PARTY_INCOME_YEAR)}
           </a>
-          , anexos IV y V. Son los partidos que recibieron subvención anual para
-          su funcionamiento. Los nombres son los del informe.
+          {t.incomeSourcePost}
         </p>
       </Section>
 
       {/* ---------- Gaps ---------- */}
-      <Section id="falta" title="Lo que todavía no consta">
+      <Section id="falta" title={t.gapsTitle}>
         <div className="grid gap-x-14 gap-y-14 lg:grid-cols-2">
           {donationsElsewhere.length > 0 && (
             <article>
-              <h3 className="n-h3">Donaciones de partidos fuera de la lista</h3>
+              <h3 className="n-h3">{t.donationsElsewhereTitle}</h3>
               <p className="n-body mt-3">
-                {donationsElsewhere.length === 1
-                  ? `Un partido de la tabla de donaciones de ${DONATIONS_SOURCE.year} no recibe subvenciones del Estado en esta web, o no tiene un NIF con el que unirlo a ellas:`
-                  : `${donationsElsewhere.length} partidos de la tabla de donaciones de ${DONATIONS_SOURCE.year} no reciben subvenciones del Estado en esta web, o no tienen un NIF con el que unirlos a ellas:`}
+                {t.donationsElsewhereIntro(
+                  donationsElsewhere.length,
+                  DONATIONS_SOURCE.year,
+                )}
               </p>
               <ul className="mt-4">
                 {donationsElsewhere.map((d) => (
@@ -419,10 +429,8 @@ export default async function PrototypeParties({
 
           {unlinked.length > 0 && (
             <article className="lg:col-span-2">
-              <h3 className="n-h3">Fundaciones sin un partido de la lista</h3>
-              <p className="n-body mt-3">
-                {`El informe nº 1.642 audita ${unlinked.length} entidades cuyo partido, tal como lo nombra el informe, no identifica a uno solo de los partidos con dinero del Estado en esta web. No se atribuyen a ninguno.`}
-              </p>
+              <h3 className="n-h3">{t.unlinkedTitle}</h3>
+              <p className="n-body mt-3">{t.unlinkedIntro(unlinked.length)}</p>
               <ul className="mt-4 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
                 {unlinked.map((e) => (
                   <li
@@ -440,10 +448,11 @@ export default async function PrototypeParties({
           )}
         </div>
         <p className="n-source">
-          Fuente: Tribunal de Cuentas,{" "}
-          <a href={foundations.source.url}>informe nº 1.642</a> y{" "}
-          <a href={DONATIONS_SOURCE.url}>informe nº 1.573</a>. Candidaturas de
-          las europeas de 2024 que esta web no atribuye a ningún partido:{" "}
+          {t.gapsSourcePre}{" "}
+          <a href={foundations.source.url}>{t.gapsSourceLink1}</a>
+          {t.gapsSourceMid}
+          <a href={DONATIONS_SOURCE.url}>{t.gapsSourceLink2}</a>
+          {t.gapsSourcePost}
           {spend.formations
             .filter(
               (f) =>
@@ -452,7 +461,7 @@ export default async function PrototypeParties({
                 ),
             )
             .map((f) => formationName(f.name))
-            .join(", ") || "ninguna"}
+            .join(", ") || t.none}
           .
         </p>
       </Section>

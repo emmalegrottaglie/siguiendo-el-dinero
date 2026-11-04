@@ -1,4 +1,5 @@
 import type { RegionsFile } from "@/lib/regions";
+import type { Locale } from "@/lib/locales";
 
 /**
  * The comunidades autónomas, drawn plain: an outline per comunidad and nothing
@@ -34,6 +35,8 @@ export default function RegionMap({
   /** Prefix for the title and description ids, unique on the page. */
   id?: string;
   className?: string;
+  /** Accepted for uniformity; title, description and link names come from the caller, and comunidad names are proper names. */
+  locale?: Locale;
 }) {
   const { width, height } = regions.viewBox;
   const box = regions.insetBox;
