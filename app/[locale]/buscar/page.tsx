@@ -1,30 +1,28 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getDict } from "@/lib/i18n";
-import { MIN_QUERY, search, type ResultKind } from "@/lib/search";
-import { fill, integer } from "@/lib/format";
-import SearchBox from "@/components/SearchBox";
+import { MIN_QUERY, search } from "@/lib/search";
+import { integer } from "@/lib/format";
+import { COPY } from "./copy";
 
-// The query is a search param, so the page is rendered per request. Nothing
-// here is cacheable by URL in any useful way — the register is the only large
-// input and it is already cached in the module.
+// The query is a search param, so the page is rendered per request.
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = getDict((await params).locale);
+  return { title: COPY[locale].metaTitle };
+}
+
 /**
- * One search across everything the site publishes.
- *
- * A plain form GET, so it works without JavaScript, the URL is shareable, and
- * the browser announces the change of context by navigating — the same
- * mechanism `/politicos` already relies on. There is no typeahead: an index of
- * the 6,670-row register shipped to every visitor would cost every reader to
- * save the few who search.
- *
- * Two things the page states rather than leaving a reader to infer. It says
- * what is searched — names and titles, not the text of the reports behind them
- * — because a search that finds nothing otherwise reads as proof the thing is
- * absent. And every group prints how many matches exist beyond the ones shown,
- * so a truncated list is visibly truncated.
+ * Search results: `lib/search.ts`, grouped by kind as it returns them. Each
+ * result links to the page the search gives it, so the join to a record is the
+ * one the search made and no name is matched again here.
  */
-export default async function BuscarPage({
+export default async function SearchPage({
   params,
   searchParams,
 }: {
@@ -33,79 +31,103 @@ export default async function BuscarPage({
 }) {
   const { locale: localeParam } = await params;
   const { q } = await searchParams;
-  const { locale, bcp47, t } = getDict(localeParam);
-  const S = t.search;
+  const { locale, bcp47 } = getDict(localeParam);
+  const t = COPY[locale];
+  const L = (path: string) => `/${locale}${path}`;
 
   const query = (q ?? "").trim();
   const outcome = await search(query, locale);
 
-  const kindLabel = (k: ResultKind) => S.kinds[k as keyof typeof S.kinds];
-
   return (
-    <main className="mx-auto max-w-4xl pb-16">
-      <p className="eyebrow pt-8">{S.eyebrow}</p>
-      <h1 className="display mt-3 text-4xl sm:text-5xl">{S.title}</h1>
-
-      <SearchBox locale={locale} t={S} defaultValue={query} autoFocus size="lg" />
-
-      <p className="mt-4 max-w-[68ch] text-sm leading-relaxed text-[var(--ink-3)]">{S.scope}</p>
-
-      {query.length === 0 ? null : query.length < MIN_QUERY ? (
-        // Not "no results": the query was never run. Saying nothing matched a
-        // single letter would be a claim about the data rather than about the
-        // search.
-        <p className="mt-12 text-lg text-[var(--ink-2)]">
-          {fill(S.tooShort, { min: integer(MIN_QUERY, bcp47) })}
+    <main>
+      <div className="n-shell pb-10 pt-6">
+        <h1 className="n-display">{t.title}</h1>
+        <p className="n-body mt-6" style={{ fontSize: "1.15rem" }}>
+          {t.intro}
         </p>
-      ) : outcome.total === 0 ? (
-        <section className="mt-12">
-          <p className="text-lg text-[var(--ink-2)]">{fill(S.empty, { query })}</p>
-          <p className="mt-3 max-w-[68ch] text-sm leading-relaxed text-[var(--ink-3)]">
-            {S.emptyHint}
-          </p>
-        </section>
-      ) : (
-        <>
-          <p className="label-mono mt-8" role="status">
-            {fill(S.count, { total: integer(outcome.total, bcp47), query })}
-          </p>
+        <form action={L("/buscar")} method="get" role="search" className="n-search mt-8">
+          <label htmlFor="n-q" className="sr-only">
+            {t.searchLabel}
+          </label>
+          <input
+            id="n-q"
+            name="q"
+            type="search"
+            defaultValue={query}
+            placeholder={t.searchPlaceholder}
+            autoComplete="off"
+            autoFocus={query.length === 0}
+          />
+          <button type="submit" className="n-button">
+            {t.searchButton}
+          </button>
+        </form>
 
-          <div className="mt-2 flex flex-col">
-            {outcome.groups.map((group) => (
-              <section key={group.kind} className="mt-8">
-                <h2 className="display section-tick text-xl">{kindLabel(group.kind)}</h2>
-                <ul className="mt-4 flex flex-col">
-                  {group.results.map((r) => (
-                    <li key={r.href + r.title} style={{ borderBottom: "1px solid var(--line-soft)" }}>
-                      <Link
-                        href={r.href}
-                        className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3 hover:text-[var(--gold-deep)]"
-                      >
-                        <span>{r.title}</span>
-                        {r.detail && (
-                          <span
-                            className="label-mono text-[var(--ink-3)]"
-                            style={{ textTransform: "none", letterSpacing: "0.02em" }}
-                          >
-                            {r.detail}
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                {/* A truncated list says how much it truncated. Otherwise the
-                    eight rows shown read as the whole answer. */}
-                {group.more > 0 && (
-                  <p className="label-mono mt-3 text-[var(--ink-3)]">
-                    {fill(S.more, { more: integer(group.more, bcp47) })}
-                  </p>
+        {query.length === 0 ? null : query.length < MIN_QUERY ? (
+          // The query was never run, so this is not "no results".
+          <p className="n-finding mt-8" role="status">
+            {t.tooShort(integer(MIN_QUERY, bcp47))}
+          </p>
+        ) : outcome.total === 0 ? (
+          <>
+            <p className="n-finding mt-8" role="status">
+              {t.empty(query)}
+            </p>
+            <p className="n-body mt-3">{t.emptyHint}</p>
+          </>
+        ) : (
+          <p className="n-finding mt-8" role="status">
+            {outcome.total === 1 ? t.countOne(query) : t.count(integer(outcome.total, bcp47), query)}
+          </p>
+        )}
+      </div>
+
+      {outcome.groups.map((group) => (
+        <section key={group.kind} className="n-section" aria-labelledby={`g-${group.kind}`}>
+          <div className="n-shell">
+            <h2 id={`g-${group.kind}`} className="n-h2">
+              {t.kinds[group.kind as keyof typeof t.kinds]}
+            </h2>
+            <ul className="mt-4 flex flex-col">
+              {group.results.map((r) => {
+                return (
+                  <li
+                    key={r.href + r.title}
+                    className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3"
+                    style={{ borderBottom: "1px solid var(--n-rule)" }}
+                  >
+                    <Link href={r.href}>{r.title}</Link>
+                    <span className="n-meta">{r.detail}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* A truncated list says how much it truncated. */}
+            {group.more > 0 && (
+              <p className="n-meta mt-3">
+                {t.more(integer(group.more, bcp47))}
+                {group.kind === "person" && (
+                  <>
+                    {" · "}
+                    <Link href={L(`/personas?q=${encodeURIComponent(query)}`)}>
+                      {t.moreInPeople}
+                    </Link>
+                  </>
                 )}
-              </section>
-            ))}
+              </p>
+            )}
           </div>
-        </>
-      )}
+        </section>
+      ))}
+
+      <section className="n-section" aria-labelledby="gaps">
+        <div className="n-shell">
+          <h2 id="gaps" className="n-h2">
+            {t.gapsTitle}
+          </h2>
+          <p className="n-body mt-3">{t.scope}</p>
+        </div>
+      </section>
     </main>
   );
 }

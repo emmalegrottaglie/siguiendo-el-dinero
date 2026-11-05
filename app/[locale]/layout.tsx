@@ -1,36 +1,46 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Lora } from "next/font/google";
+import type { ReactNode } from "react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Atkinson_Hyperlegible_Next, Literata } from "next/font/google";
 import { getDict, LOCALES, isLocale } from "@/lib/i18n";
-import Masthead from "@/components/Masthead";
+import LocaleToggle from "@/components/LocaleToggle";
+import ThemeToggle from "@/components/ThemeToggle";
+import { COPY } from "./copy";
 import "../globals.css";
+import "./site.css";
 
-/* Two faces only. Cormorant Garamond carries every heading, kicker, tab and
-   display figure; Lora carries body, meta and table amounts. The previous
-   system loaded three (Fraunces, Archivo, IBM Plex Mono) and the mono face
-   existed only to get tabular figures, which both of these provide. */
-
-const cormorant = Cormorant_Garamond({
+/*
+ * The site's frame.
+ *
+ * Literata carries what the site says: headlines, findings, names. It was drawn
+ * for long reading on screens and its figures are sturdy at display sizes.
+ * Atkinson Hyperlegible Next carries what a reader looks up: labels, tables,
+ * figures in running text. It was drawn for legibility, with letterforms that
+ * cannot be mistaken for one another (1 l I, 0 O), which is the job a table of
+ * declared amounts has to do.
+ *
+ * Each page's words live in a copy.ts beside it (es, en, ca); the frame's and
+ * the front page's are in ./copy.ts.
+ */
+const literata = Literata({
   subsets: ["latin"],
-  variable: "--font-cormorant",
-  // 600 is the ceiling: the design system caps headings there, and the large
-  // display sizes take the 400 cut.
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600"],
+  variable: "--font-literata",
   display: "swap",
 });
-
-const lora = Lora({
+const atkinson = Atkinson_Hyperlegible_Next({
   subsets: ["latin"],
-  variable: "--font-lora",
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "700"],
+  variable: "--font-atkinson",
   display: "swap",
+  // next/font has no fallback metrics for this family and logs an error on
+  // every compile without this; the system sans fallback is used unadjusted.
+  adjustFontFallback: false,
 });
 
-/* The masthead dateline is rendered from the request's date, so the shell
-   re-renders on the same hourly cadence as the pages inside it. Without this
-   a statically prerendered locale would carry the build date indefinitely. */
+/* The front page and the indexes are re-rendered on the same hourly cadence as
+   the data pages inside them. */
 export const revalidate = 3600;
 
 export function generateStaticParams() {
@@ -42,113 +52,85 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = await params;
-  const { t } = getDict(locale);
+  const { t } = getDict((await params).locale);
   return { title: t.meta.title, description: t.meta.description };
 }
 
-/* Applies a stored theme choice before first paint. It runs inline in <head>,
-   ahead of the body, so a reader who chose dark never sees a light frame
-   first. With nothing stored it does nothing, and the stylesheet follows
-   prefers-color-scheme on its own — live, so a system switch at dusk is
-   followed without a reload. The key and the values must match
-   components/ThemeToggle.tsx. Wrapped in try/catch because localStorage
-   throws when storage is blocked; the system theme is the right fallback. */
+/* Applies a stored theme choice before first paint, so a reader who chose dark
+   never sees a light frame first. With nothing stored it does nothing and the
+   stylesheet follows prefers-color-scheme. The key and the values must match
+   components/ThemeToggle.tsx. Wrapped in try/catch because localStorage throws
+   when storage is blocked; the system theme is the right fallback. */
 const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
 
-export default async function RootLayout({
+const NAV = [
+  { href: "/financiacion", key: "money" },
+  { href: "/partidos", key: "parties" },
+  { href: "/fundaciones", key: "foundations" },
+  { href: "/personas", key: "people" },
+  { href: "/territorios", key: "territories" },
+  { href: "/temas", key: "topics" },
+  { href: "/contexto", key: "context" },
+  { href: "/metodologia", key: "method" },
+] as const;
+
+export default async function SiteLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) notFound();
-  const { bcp47, t } = getDict(locale);
-
-  // Formatted on the server: a client-side date would either mismatch at
-  // hydration or leave the dateline absent from the HTML.
-  const dateline = new Intl.DateTimeFormat(bcp47, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "Europe/Madrid",
-  }).format(new Date());
-
+  const { locale: localeParam } = await params;
+  if (!isLocale(localeParam)) notFound();
+  const { locale, t: dict } = getDict(localeParam);
+  const t = COPY[locale];
   return (
-    // suppressHydrationWarning on <html> only, which is the one element whose
-    // attributes legitimately differ from the server's: the theme script sets
-    // data-theme on it before React hydrates, and browser extensions (e.g.
-    // Dark Reader) inject attributes there too. It does not reach children.
-    //
-    // The font variables go on <html>, not <body>. `--font-heading` and
-    // `--font-body` are declared on :root and refer to them, and a custom
-    // property is resolved where it is declared: with the variables on <body>
-    // both resolved as invalid at :root, and every page fell back to the
-    // system sans stack instead of Cormorant Garamond and Lora. The theme
-    // script only sets data-theme, so it leaves this className alone.
-    <html
-      lang={locale}
-      className={`${cormorant.variable} ${lora.variable}`}
-      suppressHydrationWarning
-    >
+    // suppressHydrationWarning on <html> only: the theme script sets data-theme
+    // on it before React hydrates. It does not reach children.
+    <html lang={locale} className={`${literata.variable} ${atkinson.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body>
-        {/* Skip link: the nav repeats eight links before the content on every
-            page, so a keyboard or screen-reader user had to pass all of them
-            each time.
-
-            Deliberately not sr-only/focus:not-sr-only. That pair left the link
-            2px tall when focused, because sr-only's `height: 1px` and `clip`
-            survived the reset. Translating it out of view instead is
-            deterministic: the element keeps its real size at all times, stays
-            focusable and in the accessibility tree, and simply slides in. */}
-        <a
-          href="#main"
-          className="label-mono absolute left-0 top-0 z-50 inline-flex min-h-11 -translate-y-full items-center border border-[var(--gold)] bg-[var(--surface)] px-4 text-[var(--gold-deep)] transition-transform focus:translate-y-0"
-        >
-          {t.nav.skipToContent}
+      <body className="n-root">
+        <a href="#main" className="n-skip">
+          {dict.nav.skipToContent}
         </a>
-
-        {/* The 6px ink bar that opens the page. */}
-        <div aria-hidden style={{ height: 6, background: "var(--ink)" }} />
-
-        <Masthead
-          locale={locale}
-          nav={t.nav}
-          masthead={t.masthead}
-          // Three strings, not the whole block: the masthead is a client
-          // component, so anything handed to it ships with every page.
-          search={{
-            label: t.search.label,
-            placeholder: t.search.placeholder,
-            submit: t.search.submit,
-          }}
-          dateline={dateline}
-        />
-
-        {/* tabIndex -1 so the skip link actually moves focus here, not just
-            the scroll position. */}
-        <div
-          id="main"
-          tabIndex={-1}
-          className="mx-auto max-w-[1280px] px-[22px] pb-16 outline-none"
-        >
+        <header className="n-shell py-5">
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <Link
+              href={`/${locale}`}
+              className="!no-underline"
+              style={{ fontFamily: "var(--n-serif)", fontSize: "1.45rem", fontWeight: 600, letterSpacing: "-0.01em" }}
+            >
+              {t.siteName}
+            </Link>
+            <div className="flex flex-wrap items-center gap-x-4">
+              <LocaleToggle current={locale} />
+              <ThemeToggle t={dict.masthead} />
+            </div>
+          </div>
+          <nav aria-label={t.navLabel} className="mt-3">
+            <ul className="flex flex-wrap gap-x-6 gap-y-2">
+              {NAV.map((n) => (
+                <li key={n.href}>
+                  <Link href={`/${locale}${n.href}`} className="!no-underline hover:!underline">
+                    {t.nav[n.key]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </header>
+        <div id="main" tabIndex={-1} className="outline-none">
           {children}
-
-          <footer className="mt-8 flex flex-wrap justify-between gap-x-8 gap-y-2 border-t border-[var(--ink)] pt-3.5">
-            <span className="label-mono" style={{ letterSpacing: "0.1em" }}>
-              {t.footer.source}
-            </span>
-            <span className="label-mono" style={{ letterSpacing: "0.1em" }}>
-              {t.footer.caveat}
-            </span>
-          </footer>
         </div>
+        <footer className="n-shell n-section n-meta grid gap-3 sm:grid-cols-2">
+          <p>{t.footerSources}</p>
+          <p>
+            {t.footerJuxta} <Link href={`/${locale}/metodologia`}>{t.footerLink}</Link>
+          </p>
+        </footer>
       </body>
     </html>
   );

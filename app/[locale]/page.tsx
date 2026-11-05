@@ -1,807 +1,587 @@
 import Link from "next/link";
+import { roleLabel } from "@/components/nuevo/roles";
 import { getAggregation } from "@/lib/data";
-import { getSalaries } from "@/lib/salaries";
-import { getVotes, newestFirst } from "@/lib/votes";
-import { getSpending, spendingTotals, rankedBySpending } from "@/lib/spending";
-import { DONATIONS_2020, DONATIONS_SOURCE } from "@/lib/donations";
-import { fetchTopicNews } from "@/lib/news";
-import { formationColor } from "@/lib/spending";
-import { fillEdge, stanceSegments, TRANCHE_COLORS } from "@/lib/chart-colors";
-import { donationsSource, spendingSource, voteRecordSource, votesSource } from "@/lib/chart-sources";
-import { getDict, relativeTime } from "@/lib/i18n";
-import { euroExact, euroM, fill, integer, percent } from "@/lib/format";
-import Bar, { BarLegend, type Segment } from "@/components/chart/Bar";
-import SourceLine from "@/components/chart/SourceLine";
-import DataTable from "@/components/chart/DataTable";
-import ChartReader from "@/components/chart/ChartReader";
-import ExportButton from "@/components/chart/ExportButton";
-import { exportLabels, exportMeta, type ChartExport } from "@/lib/chart-export";
-import { readerProps, say } from "@/lib/chart-reader";
-import StatStrip, { type StatItem } from "@/components/StatStrip";
-import WhereYouLive from "@/components/WhereYouLive";
+import { getDict } from "@/lib/i18n";
+import type { Locale } from "@/lib/locales";
+import { DONATIONS_SOURCE, DONATIONS_2020 } from "@/lib/donations";
+import { ordinaryIncome, PARTY_INCOME, PARTY_INCOME_TOTALS, PARTY_INCOME_YEAR } from "@/lib/party-income";
+import {
+  channelTotals,
+  displayName,
+  entitySlug,
+  getFoundations,
+  partyNifByFoundation,
+} from "@/lib/foundations";
+import { officeTies, type OfficeTie } from "@/lib/officeholder-ties";
+import { ROLES } from "@/lib/foundation-people";
+import { nameKey } from "@/lib/name-key.mjs";
+import { getDeclarations } from "@/lib/declarations";
+import { getDeputies } from "@/lib/deputies";
+import { getSpending, spendingTotals } from "@/lib/spending";
+import { getVotes } from "@/lib/votes";
+import { euroExact, euroM, integer, percent } from "@/lib/format";
+import { KIND_SHORT, topicLabel } from "@/components/nuevo/topics";
+import { COPY } from "./copy";
+import RouteMap from "@/components/nuevo/RouteMap";
+import ShareBar from "@/components/nuevo/ShareBar";
+import Line from "@/components/nuevo/Line";
+import DotGrid from "@/components/nuevo/DotGrid";
+import VoteBar, { VoteLegend } from "@/components/nuevo/VoteBar";
+import ProvincePicker from "@/components/nuevo/ProvincePicker";
+import CourtRecord from "@/components/nuevo/CourtRecord";
 import { getProvinces } from "@/lib/provinces";
-import StanceByGroup from "@/components/StanceByGroup";
-import CourtRecords from "@/components/CourtRecords";
 
-// The opinion rail reads the NGO feeds, on the same cadence as /api/news.
-export const revalidate = 1800;
+export const revalidate = 3600;
 
 /**
- * The front page, as a front page.
+ * The redesign prototype's front door.
  *
- * The order is editorial and it is the argument. A ticker of the six figures
- * the whole site rests on; then the lead, which is the one finding a reader
- * cannot get anywhere else — that over half of declared electoral spending
- * sits in a line the audit does not break down; then the organisations' own
- * voices beside it, because every other page here reports on the state and
- * they get to speak first about themselves; then the three public registers,
- * summarised; then the three columns of detail.
- *
- * Every figure comes from the data layer, not from the page. The prototype for
- * this screen hardcoded them, which is fine for a prototype and would rot here
- * within one refresh.
+ * One promise, the routes drawn, then each route opened with the one sentence
+ * its figures show, then who appears on the routes, then what is still not on
+ * record. Every sentence with a figure is computed from the same data the
+ * previous site used; none is typed.
  */
-export default async function PortalPage({
+export default async function PrototypeHome({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
-  const { locale, bcp47, t } = getDict(localeParam);
-  const P = t.portal;
-  const L = t.lead;
-  const stanceLabels = {
-    si: t.votes.inFavour,
-    no: t.votes.against,
-    abstention: t.votes.abstention,
-  };
-
-  const [agg, salaries, votes, spend, news, housing, provinceFile] = await Promise.all([
+  const { locale, bcp47, t: dict } = getDict(localeParam);
+  const [agg, foundations, decl, deputies, spend, votes, provinceFile] = await Promise.all([
     getAggregation(),
-    getSalaries(),
-    getVotes(),
+    getFoundations(),
+    getDeclarations(),
+    getDeputies(),
     getSpending(),
-    fetchTopicNews(["lgtbi"], 8, locale === "en" ? "en" : "es"),
-    fetchTopicNews(["vivienda"], 40, locale),
+    getVotes(),
     getProvinces(),
   ]);
+  const t = COPY[locale];
+  const f = channelTotals(foundations);
+  const fYears = Object.keys(foundations.years).sort();
+  const fYearSpan = fYears.length > 1 ? t.yearsAnd(fYears[0], fYears[fYears.length - 1]) : fYears[0];
+  const ties = await officeTies(partyNifByFoundation(foundations));
+  const spending = spendingTotals(spend);
 
-  const totals = spendingTotals(spend);
-  const ranked = rankedBySpending(spend);
+  const pct = (n: number) => percent(n, bcp47, 0);
+  const listFmt = new Intl.ListFormat(bcp47, { type: "conjunction" });
 
-  // Donors against money, by the report's own tranches. Computed here rather
-  // than transcribed: the two shapes are the finding, and a hardcoded pair of
-  // percentages could not survive the 2021 report replacing the 2020 one.
-  const tranche = DONATIONS_2020.reduce(
-    (a, d) => ({
-      smallDonors: a.smallDonors + d.small.donors,
-      midDonors: a.midDonors + d.mid.donors,
-      largeDonors: a.largeDonors + d.large.donors,
-      smallMoney: a.smallMoney + d.small.amount,
-      midMoney: a.midMoney + d.mid.amount,
-      largeMoney: a.largeMoney + d.large.amount,
-    }),
-    {
-      smallDonors: 0,
-      midDonors: 0,
-      largeDonors: 0,
-      smallMoney: 0,
-      midMoney: 0,
-      largeMoney: 0,
-    },
-  );
-  const donorTotal = tranche.smallDonors + tranche.midDonors + tranche.largeDonors;
-  const moneyTotal = tranche.smallMoney + tranche.midMoney + tranche.largeMoney;
+  // Route 1: state subsidies.
+  const top3 = agg.parties.slice(0, 3);
+  const top3Share = top3.reduce((s, p) => s + p.total, 0) / agg.grandTotal;
 
-  // The three register summaries, as the keyboard reads them.
-  const votesNewest = newestFirst(votes.votes);
-  const voteItems = votesNewest.map((v) =>
-    say(
-      v.law,
-      `${t.votes.inFavour} ${integer(v.totals.afavor, bcp47)}`,
-      `${t.votes.against} ${integer(v.totals.enContra, bcp47)}`,
-      `${t.votes.abstention} ${integer(v.totals.abstenciones, bcp47)}`,
-      v.totals.afavor > v.totals.enContra ? P.carried : P.rejected,
-    ),
-  );
-  const spendItems = ranked.map((f) =>
-    say(
-      f.name,
-      euroExact(f.ordinary.declared, bcp47),
-      fill(t.charts.ofTotal, { share: percent(f.ordinary.declared / totals.declared, bcp47) }),
-    ),
-  );
+  // Route 2: donations, by tranche.
+  const sum = (k: "small" | "mid" | "large", m: "donors" | "amount") =>
+    DONATIONS_2020.reduce((s, r) => s + r[k][m], 0);
+  const smallDonorShare = sum("small", "donors") / DONATIONS_SOURCE.grandDonors;
+  const smallMoneyShare = sum("small", "amount") / DONATIONS_SOURCE.grandTotal;
+  // The report gives tranche totals, not gifts. Where a party's top tranche holds exactly one
+  // donor, that total is one gift; where it holds several, no single figure can be read.
+  const singles = DONATIONS_2020.filter((d) => d.large.donors === 1).map((d) => d.large.amount);
+  const largestGift = singles.length > 0 ? Math.max(...singles) : null;
 
-  // The three summaries are the front page's own charts, and the donor
-  // tranches appear nowhere else on the site, so each can be downloaded. Rows
-  // are in the order the page shows them, and each carries the figure the page
-  // prints or reads out beside it.
-  const votesSrc = votesSource(votes, t.charts, bcp47);
-  const donationsSrc = donationsSource(t.charts, bcp47);
-  const spendSrc = spendingSource(spend, t.charts, bcp47);
-  const stanceLegend = stanceSegments({ si: 1, no: 1, abstention: 1 }, stanceLabels).map((s) => ({
-    label: s.label,
-    color: s.color,
-    striped: s.striped,
-  }));
-  const votesImage: ChartExport = {
-    ...exportMeta(t.charts, bcp47, {
-      title: P.bandVotesTitle,
-      caption: P.bandVotesTable,
-      sources: [votesSrc],
-      file: "votaciones-resumen",
-    }),
-    legend: stanceLegend,
-    body: {
-      kind: "bars",
-      rows: votesNewest.map((v) => {
-        const cast = v.totals.afavor + v.totals.enContra + v.totals.abstenciones;
-        return {
-          label: v.law,
-          value: say(
-            `${t.votes.inFavour} ${integer(v.totals.afavor, bcp47)}`,
-            `${t.votes.against} ${integer(v.totals.enContra, bcp47)}`,
-            `${t.votes.abstention} ${integer(v.totals.abstenciones, bcp47)}`,
-            v.totals.afavor > v.totals.enContra ? P.carried : P.rejected,
-          ),
-          segments: stanceSegments(
-            { si: v.totals.afavor, no: v.totals.enContra, abstention: v.totals.abstenciones },
-            stanceLabels,
-          ).map((s) => ({ value: s.value, color: s.color, striped: s.striped })),
-          total: Math.max(1, cast),
-          scale: "share" as const,
-        };
-      }),
-    },
+  // Who appears: officeholders on foundation boards, joined by both conditions.
+  const byFoundation = [
+    ...[...ties.byPerson.entries()]
+      .flatMap(([key, list]) =>
+        ROLES.filter((r) => nameKey(r.person) === key).map((r) => ({
+          foundation: r.foundation,
+          role: r.role,
+          tie: list[0],
+        })),
+      )
+      .reduce((m, x) => m.set(x.foundation, [...(m.get(x.foundation) ?? []), x]), new Map<string, { foundation: string; role: string; tie: OfficeTie }[]>())
+      .entries(),
+  ].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "es"));
+
+  const declarations = decl.declarations;
+  const withSecurities = declarations.filter((d) =>
+    d.otherAssets.some((a) => a.kind === "securities"),
+  ).length;
+  // Deputies whose first filing is linked from their ficha, less those published.
+  const filed = deputies.deputies.filter((d) => d.filings.some((x) => x.kind === "bienes")).length;
+  const notYet = filed - declarations.length;
+
+  // Each topic's votes in date order; dates are published as "16/2/2023".
+  const when = (d: string) => {
+    const [day, month, year] = d.split("/").map(Number);
+    return Date.UTC(year, month - 1, day);
   };
-  const trancheParts = (small: number, mid: number, large: number) => [
-    { n: small, c: TRANCHE_COLORS.small, l: t.donationsTable.trancheSmall },
-    { n: mid, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
-    { n: large, c: TRANCHE_COLORS.large, l: t.donationsTable.trancheLarge },
-  ];
-  const donorsNote = P.bandDonorsNote
-    .replace("{n}", integer(tranche.largeDonors, bcp47))
-    .replace("{donorShare}", percent(tranche.largeDonors / donorTotal, bcp47))
-    .replace("{amount}", euroExact(tranche.largeMoney, bcp47))
-    .replace("{year}", String(DONATIONS_SOURCE.year))
-    .replace("{moneyShare}", percent(tranche.largeMoney / moneyTotal, bcp47));
-  const donorsImage: ChartExport = {
-    ...exportMeta(t.charts, bcp47, {
-      title: P.bandDonorsTitle,
-      caption: donorsNote,
-      sources: [donationsSrc],
-      file: "donantes-por-tramo",
-    }),
-    legend: trancheParts(1, 1, 1).map((p) => ({ label: p.l, color: p.c })),
-    body: {
-      kind: "bars",
-      rows: [
-        { label: P.per100Donors, parts: trancheParts(tranche.smallDonors, tranche.midDonors, tranche.largeDonors), total: donorTotal },
-        { label: P.per100Euros, parts: trancheParts(tranche.smallMoney, tranche.midMoney, tranche.largeMoney), total: moneyTotal },
-      ].map((row) => ({
-        label: row.label,
-        value: row.parts.map((p) => `${p.l} ${percent(p.n / row.total, bcp47)}`).join(" · "),
-        segments: row.parts.map((p) => ({ value: p.n, color: p.c })),
-        total: row.total,
-        scale: "share" as const,
-      })),
-    },
-  };
-  const spendImage: ChartExport = {
-    ...exportMeta(t.charts, bcp47, {
-      title: P.bandSpendTitle,
-      caption: P.bandSpendTable,
-      sources: [spendSrc],
-      file: "gasto-electoral-resumen",
-    }),
-    body: {
-      kind: "bars",
-      rows: ranked.map((f) => ({
-        label: f.name,
-        value: `${euroExact(f.ordinary.declared, bcp47)} · ${percent(f.ordinary.declared / totals.declared, bcp47)}`,
-        segments: [{ value: f.ordinary.declared, color: formationColor(f.name) }],
-        total: totals.declared,
-        scale: "share" as const,
-      })),
-    },
-  };
+  const topics = votes.topics
+    .map((t) => ({
+      topic: t.id,
+      label: topicLabel(t.id, t.label, locale),
+      votes: votes.votes.filter((v) => v.topic === t.id).sort((a, b) => when(a.date) - when(b.date)),
+    }))
+    .filter((t) => t.votes.length > 0);
 
-  const ticker: StatItem[] = [
-    {
-      label: P.tickSubsidies,
-      value: euroM(agg.grandTotal, bcp47, 1),
-      dot: "var(--gold)",
-      note: P.tickSubsidiesNote,
-    },
-    {
-      label: P.tickDonations,
-      value: euroM(DONATIONS_SOURCE.grandTotal, bcp47),
-      dot: "var(--ink)",
-      note: P.tickDonationsNote
-        .replace("{year}", String(DONATIONS_SOURCE.year))
-        .replace("{donors}", integer(DONATIONS_SOURCE.grandDonors, bcp47)),
-    },
-    {
-      label: P.tickSpending,
-      value: euroM(totals.declared, bcp47),
-      dot: "var(--red)",
-      note: P.tickSpendingNote.replace("{n}", integer(spend.formations.length, bcp47)),
-    },
-    {
-      label: P.tickVotes,
-      value: integer(votes.count, bcp47),
-      dot: "var(--verd)",
-      note: P.tickVotesNote,
-    },
-    {
-      label: P.tickPeople,
-      value: integer(salaries.count, bcp47),
-      dot: "var(--ink)",
-      note: P.tickPeopleNote,
-    },
-    {
-      label: P.tickLarge,
-      value: integer(tranche.largeDonors, bcp47),
-      dot: "var(--gold)",
-      note: P.tickLargeNote.replace("{amount}", euroExact(tranche.largeMoney, bcp47)),
-    },
-  ];
-
-  // Rights-affecting items lead; the newest of each topic first within that.
-  const order = ["lgtbi", "aborto", "vivienda"];
-  const tracked = newestFirst(votes.votes).sort(
-    (a, b) => order.indexOf(a.topic) - order.indexOf(b.topic),
+  // Years from the first audited year on this site to now, for the audit-lag lines.
+  const firstYear = Math.min(DONATIONS_SOURCE.year, ...fYears.map(Number));
+  const auditYears = Array.from(
+    { length: new Date().getFullYear() - firstYear + 1 },
+    (_, i) => firstYear + i,
   );
-  const orgItems = news.items.filter((i) => i.sourceKind === "org").slice(0, 3);
-  // The organisations publish far less often than the press, so newest-first alone would never
-  // show them: they get two places of their own, ahead of four from the press. One item per
-  // publisher, so six places show six voices rather than the two busiest twice over.
-  const firstPerSource = (items: typeof housing.items, n: number) => {
-    const seen = new Set<string>();
-    return items.filter((i) => !seen.has(i.source) && seen.add(i.source)).slice(0, n);
-  };
-  const housingItems = [
-    ...firstPerSource(housing.items.filter((i) => i.sourceKind === "org"), 2),
-    ...firstPerSource(housing.items.filter((i) => i.sourceKind !== "org"), 4),
-  ];
+
+  // Where a party's own money comes from in turn, from the party-accounts report.
+  const allIncome = ordinaryIncome(PARTY_INCOME_TOTALS);
+  const priv = PARTY_INCOME_TOTALS.private;
+
+  const L = (path: string) => `/${locale}${path}`;
 
   return (
     <main>
-      <StatStrip items={ticker} className="border-t border-[var(--line)]" />
-
-      {/* Where you live. Above the lead deliberately: the lead is the finding
-          this site owns, but a reader arriving from a link has no reason yet to
-          care about it, and "what does this mean where I am" is the question
-          they actually brought. The lead keeps its place directly below. */}
-      <WhereYouLive provinces={provinceFile.provinces} locale={locale} t={t.where} />
-
-      {/* Lead */}
-      <section className="rule-double lead-grid">
-        <article
-          className="relative flex min-h-[376px] flex-col justify-end overflow-hidden px-9 pb-8 pt-8"
-          style={{ background: "var(--surface)", borderTop: "6px solid var(--ink)" }}
-        >
-          {/* The share, as a ghost numeral. Decorative: the same figure is in
-              the standfirst below and in the ticker above.
-
-              Truncated rather than rounded. The share is 54.5 %, and rounding
-              it to 55 would put a numeral on the page that contradicts the
-              54,5 % in the standfirst two inches below it. The integer part is
-              what a display numeral means. */}
-          <span
-            aria-hidden
-            className="display pointer-events-none absolute select-none"
-            style={{
-              right: -14,
-              top: -42,
-              fontSize: 250,
-              fontWeight: 400,
-              lineHeight: 1,
-              color: "color-mix(in srgb, var(--gold) 22%, transparent)",
-            }}
-          >
-            {Math.trunc(totals.otherShare * 100)}
-          </span>
-
-          <div className="relative">
-            <p className="eyebrow">{L.kicker}</p>
-            <h1
-              className="display mt-3 font-normal"
-              style={{ fontSize: "clamp(34px,4.4vw,58px)", maxWidth: "19ch" }}
-            >
-              {L.title}
-            </h1>
-            <p
-              className="mt-5"
-              style={{ fontSize: "16px", lineHeight: 1.62, color: "var(--ink-2)", maxWidth: "56ch" }}
-            >
-              {L.standfirst
-                .replace("{declared}", euroExact(totals.declared, bcp47))
-                .replace("{residual}", euroExact(totals.other, bcp47))
-                .replace("{share}", percent(totals.otherShare, bcp47))
-                .replace("{ads}", percent(totals.advertising / totals.declared, bcp47))}
-            </p>
-            <p className="mt-5" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-              {spend.source.body}, {spend.source.report} · {spend.source.approved} ·{" "}
-              <Link href={`/${locale}/financiacion`} className="src">
-                {L.link} →
-              </Link>
-            </p>
-          </div>
-        </article>
-
-        <aside className="border-t border-[var(--line)] px-6 pb-6 pt-6 sm:border-l sm:border-t-0">
-          <p className="eyebrow" style={{ color: "var(--verd-text)" }}>
-            {P.opinionKicker}
+      {/* ---------- The promise, and the routes drawn ---------- */}
+      <section className="n-shell grid items-center gap-x-12 gap-y-10 pb-16 pt-8 lg:grid-cols-[1fr_minmax(0,30rem)]">
+        <div>
+          <h1 className="n-display">{t.h1}</h1>
+          <p className="n-body mt-6" style={{ fontSize: "1.15rem" }}>
+            {t.lede}
           </p>
-          <h2 className="display mt-2 text-[21px] font-semibold" style={{ lineHeight: 1.12 }}>
-            {P.opinionTitle}
-          </h2>
+          <form action={L("/buscar")} method="get" role="search" className="n-search mt-8">
+            <label htmlFor="n-q" className="sr-only">
+              {t.searchLabel}
+            </label>
+            <input
+              id="n-q"
+              name="q"
+              type="search"
+              placeholder={t.searchPlaceholder}
+              autoComplete="off"
+            />
+            <button type="submit" className="n-button">
+              {t.searchButton}
+            </button>
+          </form>
+          <p className="n-meta mt-3">
+            {t.forExample}{" "}
+            <Link href={L("/politico/pilar-calvo-gomez")}>Pilar Calvo Gómez</Link>,{" "}
+            <Link href={L("/politico/alberto-nunez-feijoo")}>Alberto Núñez Feijóo</Link>,{" "}
+            <Link href={L("/territorio/madrid")}>Madrid</Link>.
+          </p>
+          {/* Where you live: the question a reader arriving from a link brought, answered in one
+              step. The search box finds a province too, but only through a results page. */}
+          <ProvincePicker
+            provinces={provinceFile.provinces}
+            locale={locale}
+            t={t.where}
+            className="mt-12 border-t border-[var(--n-rule)] pt-8"
+          />
+        </div>
+        <RouteMap
+          f={{
+            subsidies: euroM(agg.grandTotal, bcp47, 1),
+            donations: euroM(DONATIONS_SOURCE.grandTotal, bcp47, 2),
+            donationsYear: String(DONATIONS_SOURCE.year),
+            foundationsFromParty: euroM(f.party, bcp47, 1),
+            foundationsFromCompanies: t.thousandsEur(integer(Math.round(f.companies / 1000), bcp47)),
+            foundationsFromIndividuals: t.thousandsEur(integer(Math.round(f.individuals / 1000), bcp47)),
+            foundationYears: fYearSpan,
+            officeholdersOnBoards: integer(ties.audit.matched, bcp47),
+          }}
+          locale={locale}
+        />
+      </section>
 
-          {orgItems.length === 0 ? (
-            <p className="mt-4" style={{ fontSize: "12.5px", color: "var(--ink-3)" }}>
-              {t.rights.empty}
-            </p>
-          ) : (
-            <ul className="mt-2 flex flex-col">
-              {orgItems.map((item) => (
-                <li
-                  key={item.link}
-                  className="py-3"
-                  style={{ borderTop: "1px solid var(--line)" }}
-                >
-                  <p
-                    className="label-mono"
-                    style={{ color: "var(--verd-text)", letterSpacing: "0.14em" }}
-                  >
-                    {item.source}
-                  </p>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="display mt-1 block text-[17px] font-semibold hover:underline"
-                    style={{ lineHeight: 1.2 }}
-                  >
-                    {item.title}
-                  </a>
-                  <p className="mt-1" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-                    {relativeTime(item.date, locale)}
+      {/* ---------- Each route, opened by its finding ---------- */}
+      <section className="n-shell n-section" aria-labelledby="rutas">
+        <h2 id="rutas" className="n-h2">
+          {t.routesTitle}
+        </h2>
+        <p className="n-body mt-3">
+          {t.routesIntro}
+        </p>
+
+        <div className="mt-10 grid gap-14">
+          <Route
+            cls="n-state"
+            title={t.stateTitle}
+            figure={euroM(agg.grandTotal, bcp47, 1)}
+            figureNote={t.stateFigureNote}
+            finding={t.stateFinding(listFmt.format(top3.map((p) => p.shortName)), pct(top3Share))}
+            bar={[
+              ...top3.map((p) => ({ label: p.shortName, value: p.total })),
+              {
+                label: t.othersLabel(agg.parties.length - 3),
+                value: agg.grandTotal - top3.reduce((s, p) => s + p.total, 0),
+                muted: true,
+              },
+            ]}
+            barFormat={(v) => pct(v / agg.grandTotal)}
+            link={{ href: L("/financiacion#reparto"), text: t.stateLink }}
+            source={t.stateSource}
+            sourceLabel={t.sourceLabel}
+            locale={locale}
+          />
+          <Route
+            cls="n-donors"
+            title={t.donorsTitle}
+            figure={euroM(DONATIONS_SOURCE.grandTotal, bcp47, 2)}
+            figureNote={t.donorsFigureNote(euroExact(DONATIONS_SOURCE.grandTotal, bcp47), integer(DONATIONS_SOURCE.grandDonors, bcp47), DONATIONS_SOURCE.year)}
+            finding={t.donorsFinding(pct(smallDonorShare), pct(smallMoneyShare))}
+            bar={[
+              { label: t.under1000, value: sum("small", "amount") },
+              { label: t.from1000to10000, value: sum("mid", "amount") },
+              { label: t.over10000, value: sum("large", "amount") },
+            ]}
+            barFormat={(v) => pct(v / DONATIONS_SOURCE.grandTotal)}
+            link={{ href: L("/financiacion#donaciones"), text: t.donorsLink }}
+            source={t.donorsSource}
+            sourceLabel={t.sourceLabel}
+            locale={locale}
+          />
+          <Route
+            cls="n-foundations"
+            title={t.foundationsTitle}
+            figure={euroM(f.party + f.companies + f.individuals, bcp47, 1)}
+            figureNote={t.foundationsFigureNote(fYearSpan)}
+            finding={t.foundationsFinding(pct(f.partyShare), pct(f.companiesShare))}
+            findingNote={t.foundationsNote({
+              year: PARTY_INCOME_YEAR,
+              parties: PARTY_INCOME.length,
+              total: euroM(allIncome, bcp47, 1),
+              publicPct: pct(PARTY_INCOME_TOTALS.public.total / allIncome),
+              officeholders: euroM(priv.officeholders, bcp47, 1),
+              members: euroM(priv.memberFees, bcp47, 1),
+              donors: euroM(priv.donations, bcp47, 2),
+            })}
+            bar={[
+              { label: t.fromParty, value: f.party },
+              { label: t.fromCompanies, value: f.companies },
+              { label: t.fromIndividuals, value: f.individuals },
+            ]}
+            barFormat={(v) => pct(v / f.contributions)}
+            link={{ href: L("/fundaciones"), text: t.foundationsLink }}
+            source={t.foundationsSource}
+            sourceLabel={t.sourceLabel}
+            locale={locale}
+          />
+        </div>
+      </section>
+
+      {/* ---------- Who appears on the routes ---------- */}
+      <section className="n-shell n-section" aria-labelledby="quien">
+        <h2 id="quien" className="n-h2">
+          {t.whoTitle}
+        </h2>
+        <p className="n-finding mt-4">
+          {t.whoFinding(integer(ties.audit.matched, bcp47))}
+        </p>
+        <p className="n-body mt-3">
+          {t.whoBody}
+        </p>
+
+        {/* Each foundation is a station on the foundations' line, and its board
+            members with public office hang off it. Every match is listed,
+            grouped by foundation: a first-N list showed one party's
+            foundation only, which read as a choice the data did not make. */}
+        {byFoundation.map(([foundation, list]) => (
+          <div key={foundation} className="n-foundations mt-12">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span
+                aria-hidden
+                className="h-[23px] w-[23px] shrink-0 rounded-full border-[3px]"
+                style={{ borderColor: "var(--route)", background: "var(--n-card)" }}
+              />
+              <h3 className="n-h3">
+                <Link href={L(`/fundacion/${entitySlug(foundation)}`)}>{displayName(foundation)}</Link>
+              </h3>
+              <span aria-hidden className="hidden h-[5px] min-w-8 flex-1 sm:block" style={{ background: "var(--route)" }} />
+              <span className="n-meta">
+                {t.boardCount(list.length, integer(list.length, bcp47))}
+              </span>
+            </div>
+            <ul className="mt-4 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+              {list.map(({ tie, role }) => (
+                <li key={tie.slug + role} className="border-t border-[var(--n-rule)] py-3">
+                  <Link href={L(`/politico/${tie.slug}`)} className="font-bold">
+                    {tie.person}
+                  </Link>
+                  <span className="text-[var(--n-ink-2)]">, {roleLabel(role.toLowerCase(), locale)}</span>
+                  <p className="n-meta mt-0.5">
+                    {tie.organisation}
+                    {tie.role ? `, ${tie.role}` : ""}
                   </p>
                 </li>
               ))}
             </ul>
-          )}
+          </div>
+        ))}
 
-          <p className="label-mono mt-4">
-            <Link href={`/${locale}/derechos`} className="src-org">
-              {P.opinionCta} →
-            </Link>
-          </p>
-        </aside>
+        {/* The declarations, one dot each: how much is read, and what it shows. */}
+        <div className="mt-16 grid gap-x-12 gap-y-6 border-t border-[var(--n-rule)] pt-10 lg:grid-cols-[minmax(0,22rem)_1fr]">
+          <div>
+            <h3 className="n-h3">{t.declTitle}</h3>
+            <p className="n-finding mt-3">
+              {t.declFinding(integer(withSecurities, bcp47), integer(declarations.length, bcp47))}
+            </p>
+            <p className="n-meta mt-3">
+              {t.declMeta}{" "}
+              <Link href={L("/personas?kind=declarations")}>{t.declLink}</Link>
+            </p>
+          </div>
+          <DotGrid
+            locale={locale}
+            groups={[
+              {
+                key: "valores",
+                count: withSecurities,
+                label: t.dotSecurities,
+                look: "filled",
+                cls: "n-companies",
+              },
+              {
+                key: "otros",
+                count: declarations.length - withSecurities,
+                label: t.dotNoSecurities,
+                look: "ink",
+              },
+              { key: "pendientes", count: notYet, label: t.dotPending, look: "hollow" },
+            ]}
+          />
+        </div>
       </section>
 
-      {/* The three registers, summarised */}
-      <section className="rule-ink">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 py-6">
-          <h2 className="display text-[26px] font-semibold" style={{ letterSpacing: "-0.02em" }}>
-            {P.bandTitle}
-          </h2>
-          <p style={{ fontSize: "12px", color: "var(--ink-3)" }}>{P.bandNote}</p>
-        </div>
-
-        <div
-          className="grid border-t border-[var(--line)]"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(236px, 1fr))" }}
-        >
-          {/* Every tracked division, one row each */}
-          <div className="px-5 py-5" style={{ borderRight: "1px solid var(--line)" }}>
-            <p className="eyebrow">{P.bandVotesTitle}</p>
-            <ChartReader
-              className="mt-4"
-              items={voteItems}
-              {...readerProps(t.charts, bcp47, { title: P.bandVotesTitle, count: voteItems.length })}
-            >
-              <ul className="flex flex-col gap-2.5">
-                {votesNewest.map((vote, i) => {
-                  const cast =
-                    vote.totals.afavor + vote.totals.enContra + vote.totals.abstenciones;
-                  const carried = vote.totals.afavor > vote.totals.enContra;
-                  return (
-                    <li
-                      key={vote.id}
-                      data-chart-item={i}
-                      className="grid items-center gap-2"
-                      style={{ gridTemplateColumns: "minmax(0,1fr) 92px" }}
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate" style={{ fontSize: "11.5px" }} title={vote.law}>
-                          {vote.law}
-                        </p>
-                        <Bar
-                          className="mt-1"
-                          segments={stanceSegments(
-                            {
-                              si: vote.totals.afavor,
-                              no: vote.totals.enContra,
-                              abstention: vote.totals.abstenciones,
-                            },
-                            stanceLabels,
-                          )}
-                          total={Math.max(1, cast)}
-                          scale="share"
-                          size="sm"
-                        />
-                      </div>
-                      <span
-                        className="label-mono text-right"
-                        style={{ color: carried ? "var(--verd-text)" : "var(--red)" }}
-                      >
-                        {carried ? P.carried : P.rejected}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </ChartReader>
-            <BarLegend
-              className="mt-4"
-              segments={stanceSegments({ si: 1, no: 1, abstention: 1 }, stanceLabels)}
-            />
-            {/* The bars carry no figures of their own, so the counts are here. */}
-            <DataTable
-              summary={t.charts.showTable}
-              caption={P.bandVotesTable}
-              rows={newestFirst(votes.votes)}
-              rowKey={(v) => v.id}
-              columns={[
-                { header: P.colVote, cell: (v) => v.law },
-                { header: P.colDate, cell: (v) => v.date },
-                { header: t.votes.inFavour, cell: (v) => integer(v.totals.afavor, bcp47), numeric: true },
-                { header: t.votes.against, cell: (v) => integer(v.totals.enContra, bcp47), numeric: true },
-                {
-                  header: t.votes.abstention,
-                  cell: (v) => integer(v.totals.abstenciones, bcp47),
-                  numeric: true,
-                },
-                {
-                  header: P.colResult,
-                  cell: (v) => (v.totals.afavor > v.totals.enContra ? P.carried : P.rejected),
-                },
-              ]}
-            />
-            <SourceLine sources={[votesSrc]} label={t.charts.source} />
-            <ExportButton className="mt-3" spec={votesImage} {...exportLabels(t.charts, P.bandVotesTitle)} />
-          </div>
-
-          {/* Many donors, little money */}
-          <div className="px-5 py-5" style={{ borderRight: "1px solid var(--line)" }}>
-            <p className="eyebrow">{P.bandDonorsTitle}</p>
-            <ChartReader
-              items={[
-                [P.per100Donors, tranche.smallDonors, tranche.midDonors, tranche.largeDonors, donorTotal] as const,
-                [P.per100Euros, tranche.smallMoney, tranche.midMoney, tranche.largeMoney, moneyTotal] as const,
-              ].flatMap(([caption, small, mid, large, whole]) =>
-                (
-                  [
-                    [t.donationsTable.trancheSmall, small],
-                    [t.donationsTable.trancheMid, mid],
-                    [t.donationsTable.trancheLarge, large],
-                  ] as const
-                ).map(([l, n]) => say(caption, l, percent(n / whole, bcp47))),
-              )}
-              {...readerProps(t.charts, bcp47, { title: P.bandDonorsTitle, count: 6 })}
-            >
-                          {[
-                            {
-                              caption: P.per100Donors,
-                              parts: [
-                {
-                                  n: tranche.smallDonors,
-                                  c: TRANCHE_COLORS.small,
-                                  l: t.donationsTable.trancheSmall,
-                                },
-                                { n: tranche.midDonors, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
-                                {
-                                  n: tranche.largeDonors,
-                                  c: TRANCHE_COLORS.large,
-                                  l: t.donationsTable.trancheLarge,
-                                },
-                              ],
-                              total: donorTotal,
-                            },
-                            {
-                              caption: P.per100Euros,
-                              parts: [
-              {
-                                  n: tranche.smallMoney,
-                                  c: TRANCHE_COLORS.small,
-                                  l: t.donationsTable.trancheSmall,
-                                },
-                                { n: tranche.midMoney, c: TRANCHE_COLORS.mid, l: t.donationsTable.trancheMid },
-                                {
-                                  n: tranche.largeMoney,
-                                  c: TRANCHE_COLORS.large,
-                                  l: t.donationsTable.trancheLarge,
-                                },
-                              ],
-                              total: moneyTotal,
-                            },
-                          ].map((block, b) => (
-                            <div key={block.caption} className="mt-4">
-                              <p className="display text-[15px] font-semibold">{block.caption}</p>
-                              <Bar
-                                className="mt-2"
-                                segments={block.parts.map((p) => ({ value: p.n, color: p.c, label: p.l }))}
-                                total={block.total}
-                                scale="share"
-                                size="xl"
-                              />
-                              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                                {block.parts.map((p, k) => (
-                                  <li key={p.l} className="flex items-center gap-1.5" data-chart-item={b * 3 + k}>
-                                    <span
-                                      aria-hidden
-                                      style={{ width: 10, height: 10, borderRadius: 1, background: p.c }}
-                                    />
-                                    <span className="label-mono">
-                                      {p.l} · <span className="mono">{percent(p.n / block.total, bcp47)}</span>
-                                    </span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-            </ChartReader>
-            <p className="mt-4" style={{ fontSize: "11.5px", lineHeight: 1.5, color: "var(--ink-3)" }}>
-              {donorsNote}
-            </p>
-            <DataTable
-              summary={t.charts.showTable}
-              caption={P.bandDonorsTable.replace("{year}", String(DONATIONS_SOURCE.year))}
-              rows={[
-                {
-                  l: t.donationsTable.trancheSmall,
-                  donors: tranche.smallDonors,
-                  money: tranche.smallMoney,
-                },
-                { l: t.donationsTable.trancheMid, donors: tranche.midDonors, money: tranche.midMoney },
-                {
-                  l: t.donationsTable.trancheLarge,
-                  donors: tranche.largeDonors,
-                  money: tranche.largeMoney,
-                },
-              ]}
-              rowKey={(r) => r.l}
-              columns={[
-                { header: P.colTranche, cell: (r) => r.l },
-                { header: P.colDonors, cell: (r) => integer(r.donors, bcp47), numeric: true },
-                {
-                  header: P.colDonorShare,
-                  cell: (r) => percent(r.donors / donorTotal, bcp47),
-                  numeric: true,
-                },
-                { header: P.colAmount, cell: (r) => euroExact(r.money, bcp47), numeric: true },
-                {
-                  header: P.colMoneyShare,
-                  cell: (r) => percent(r.money / moneyTotal, bcp47),
-                  numeric: true,
-                },
-              ]}
-            />
-            <SourceLine sources={[donationsSrc]} label={t.charts.source} />
-            <ExportButton className="mt-3" spec={donorsImage} {...exportLabels(t.charts, P.bandDonorsTitle)} />
-          </div>
-
-          {/* Electoral spending by formation */}
-          <div className="px-5 py-5">
-            <p className="eyebrow">{P.bandSpendTitle}</p>
-            <ChartReader
-              items={spendItems}
-              {...readerProps(t.charts, bcp47, { title: P.bandSpendTitle, count: spendItems.length })}
-            >
-              <Bar
-                className="mt-4"
-                segments={ranked.map(
-                  (f): Segment => ({
-                    value: f.ordinary.declared,
-                    color: formationColor(f.name),
-                    label: f.name,
-                  }),
-                )}
-                total={totals.declared}
-                scale="share"
-                size="xl"
+      {/* ---------- Themes ---------- */}
+      <section className="n-shell n-section" aria-labelledby="temas">
+        <h2 id="temas" className="n-h2">
+          {t.topicsTitle}
+        </h2>
+        <p className="n-body mt-3">
+          {t.topicsIntro}
+        </p>
+        <div className="mt-10 grid gap-x-12 gap-y-14 lg:grid-cols-3">
+          {topics.map((t) => (
+            <article key={t.topic} className="n-topic">
+              <h3 className="n-h3">
+                <Link href={L(`/tema/${t.topic}`)}>{t.label}</Link>
+              </h3>
+              <Line
+                locale={locale}
+                cls="n-topic"
+                className="mt-5"
+                stops={t.votes.map((v) => ({
+                  key: v.id,
+                  label: v.date.split("/").slice(2).join(""),
+                  note: KIND_SHORT[locale][v.kind] ?? v.kindLabel,
+                  on: true,
+                }))}
               />
-              <ul className="mt-3 flex flex-col gap-1">
-                {ranked.map((f, i) => (
-                  <li key={f.name} className="flex items-center gap-2" data-chart-item={i}>
-                    <span
-                      aria-hidden
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: 1,
-                        flex: "none",
-                        background: formationColor(f.name),
-                        ...fillEdge(formationColor(f.name)),
-                      }}
+              <ol className="mt-6 grid gap-5">
+                {t.votes.map((v) => (
+                  <li key={v.id}>
+                    <a href={v.sourceUrl} className="text-[0.95rem] font-bold">
+                      {v.law}
+                    </a>
+                    <span className="n-meta">, {v.date}</span>
+                    <VoteBar
+                      locale={locale}
+                      className="mt-2"
+                      counts={{ si: v.totals.afavor, no: v.totals.enContra, abst: v.totals.abstenciones }}
                     />
-                    {/* Wraps rather than truncating: a cut coalition name names nobody. */}
-                    <span className="min-w-0 flex-1 break-words" style={{ fontSize: "11.5px" }}>
-                      {f.name}
-                    </span>
-                    <span className="mono" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-                      {percent(f.ordinary.declared / totals.declared, bcp47)}
-                    </span>
                   </li>
                 ))}
-              </ul>
-            </ChartReader>
-            <DataTable
-              summary={t.charts.showTable}
-              caption={P.bandSpendTable}
-              rows={ranked}
-              rowKey={(f) => f.name}
-              columns={[
-                { header: P.colFormation, cell: (f) => f.name },
-                {
-                  header: P.colDeclared,
-                  cell: (f) => euroExact(f.ordinary.declared, bcp47),
-                  numeric: true,
-                },
-                {
-                  header: P.colShare,
-                  cell: (f) => percent(f.ordinary.declared / totals.declared, bcp47),
-                  numeric: true,
-                },
-              ]}
-            />
-            <SourceLine sources={[spendSrc]} label={t.charts.source} />
-            <ExportButton className="mt-3" spec={spendImage} {...exportLabels(t.charts, P.bandSpendTitle)} />
-          </div>
+              </ol>
+            </article>
+          ))}
+        </div>
+        <p className="n-meta mt-8 flex flex-wrap items-center gap-x-5 gap-y-1">
+          <VoteLegend locale={locale} />
+          <span>{t.topicsSource}</span>
+        </p>
+        {/* What the front page used to carry from the press and the organisations now lives
+            beside each topic's votes. Linked only where the topic is tracked. */}
+        {(() => {
+          const also = [
+            { id: "lgtbi", text: t.topicsAlsoLgtbi, hash: "organizaciones" },
+            { id: "vivienda", text: t.topicsAlsoHousing, hash: "noticias" },
+          ].filter((a) => topics.some((tp) => tp.topic === a.id));
+          return also.length > 0 ? (
+            <p className="mt-4">
+              <span className="n-label">{t.topicsAlso}</span>{" "}
+              {also.map((a, i) => (
+                <span key={a.id}>
+                  {i > 0 && (i === also.length - 1 ? t.and : ", ")}
+                  <Link href={L(`/tema/${a.id}#${a.hash}`)}>{a.text}</Link>
+                </span>
+              ))}
+              .
+            </p>
+          ) : null;
+        })()}
+      </section>
+
+      {/* ---------- The judicial record ---------- */}
+      <section className="n-shell n-section" aria-labelledby="tribunales">
+        <h2 id="tribunales" className="n-h2">
+          {dict.court.title}
+        </h2>
+        <p className="n-body mt-3">{t.courtIntro}</p>
+        <div className="mt-10">
+          <CourtRecord locale={locale} bcp47={bcp47} />
         </div>
       </section>
 
-      {/* Housing, in the news: the registry's housing press and organisations together, newest
-          first and at most two items per source, each named with its source and its kind. */}
-      <section className="rule-ink px-6 pb-7 pt-6">
-        <p className="eyebrow">{P.housingKicker}</p>
-        <h2 className="display mt-2 text-[25px] font-semibold" style={{ lineHeight: 1.1 }}>
-          {P.housingTitle}
+      {/* ---------- What is not on record ---------- */}
+      <section className="n-shell n-section" aria-labelledby="falta">
+        <h2 id="falta" className="n-h2">
+          {t.gapTitle}
         </h2>
-        <p className="mt-2 max-w-2xl" style={{ fontSize: "12.5px", lineHeight: 1.5, color: "var(--ink-3)" }}>
-          {P.housingNote}
+        <p className="n-body mt-3">
+          {t.gapIntro}
         </p>
-        {housingItems.length === 0 ? (
-          <p className="mt-4" style={{ fontSize: "12.5px", color: "var(--ink-3)" }}>
-            {t.rights.empty}
-          </p>
-        ) : (
-          <ul className="mt-3 grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-            {housingItems.map((item) => (
-              <li key={item.link} className="py-3" style={{ borderTop: "1px solid var(--line)" }}>
-                <p className="label-mono" style={{ letterSpacing: "0.14em", color: "var(--ink-2)" }}>
-                  {item.source}
-                  <span style={{ color: "var(--ink-3)" }}>
-                    {" · "}
-                    {item.sourceKind === "org" ? t.rights.kindOrg : t.rights.kindMedia}
-                    {item.lang && item.lang !== "es" && item.lang !== locale ? ` · ${item.lang.toUpperCase()}` : ""}
-                  </span>
-                </p>
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="display mt-1 block text-[17px] font-semibold hover:underline"
-                  style={{ lineHeight: 1.2 }}
-                >
-                  {item.title}
-                </a>
-                <p className="mt-1" style={{ fontSize: "11.5px", color: "var(--ink-3)" }}>
-                  {relativeTime(item.date, locale)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
 
-      {/* Three columns */}
-      <section className="rule-ink">
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(268px, 1fr))" }}
-        >
-          <div className="px-6 pb-7 pt-6" style={{ borderRight: "1px solid var(--line)" }}>
-            <p className="eyebrow">{P.colRecordKicker}</p>
-            <h3 className="display mt-2 text-[25px] font-semibold" style={{ lineHeight: 1.1 }}>
-              {P.stanceTitle}
-            </h3>
-            <div className="mt-5 flex flex-col gap-5">
-              {tracked.slice(0, 2).map((vote) => (
-                <StanceByGroup
-                  key={vote.id}
-                  vote={vote}
-                  t={t}
-                  source={voteRecordSource(votes, vote, t.charts, bcp47)}
-                  bcp47={bcp47}
-                />
+        <div className="mt-12 grid gap-x-14 gap-y-16 lg:grid-cols-2">
+          {/* Campaign spending: the unitemised line, drawn at its size. */}
+          <article>
+            <h3 className="n-h3">{t.campaignTitle}</h3>
+            <p className="n-finding mt-3">
+              {t.campaignFinding(pct(spending.otherShare))}
+            </p>
+            <div aria-hidden className="mt-5 flex h-7 w-full gap-[2px] overflow-hidden rounded-[3px]">
+              <span style={{ flexGrow: 1 - spending.otherShare, flexBasis: 0, background: "var(--n-ink-2)" }} />
+              <span className="n-hatch" style={{ flexGrow: spending.otherShare, flexBasis: 0, outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
+            </div>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-[0.95rem]">
+              <li className="inline-flex items-center gap-2">
+                <span aria-hidden className="inline-block h-3 w-3 rounded-[2px]" style={{ background: "var(--n-ink-2)" }} />
+                {t.brokenDown} <span className="n-num font-bold">{pct(1 - spending.otherShare)}</span>
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <span aria-hidden className="n-hatch inline-block h-3 w-3 rounded-[2px]" style={{ outline: "1px solid var(--n-ink-3)", outlineOffset: -1 }} />
+                {t.singleLine} <span className="n-num font-bold">{pct(spending.otherShare)}</span>
+              </li>
+            </ul>
+            <p className="n-source">{t.campaignSource}</p>
+          </article>
+
+          {/* Donors: the names the source does not publish, drawn as redacted. */}
+          <article>
+            <h3 className="n-h3">{t.whoDonatedTitle}</h3>
+            <p className="n-finding mt-3">
+              {t.whoDonatedFinding(integer(DONATIONS_SOURCE.grandDonors, bcp47), DONATIONS_SOURCE.year)}
+            </p>
+            <table className="n-table mt-4">
+              <caption className="sr-only">{t.donorsCaption(DONATIONS_SOURCE.year)}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{t.colDonor}</th>
+                  <th scope="col">{t.colTranche}</th>
+                  <th scope="col" className="n-r">{t.colDonors}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(
+                  [
+                    ["small", t.under1000, "78%"],
+                    ["mid", t.from1000to10000, "64%"],
+                    ["large", t.over10000, "90%"],
+                  ] as const
+                ).map(([k, label, w]) => (
+                  <tr key={k}>
+                    <td>
+                      <span
+                        className="inline-block h-[0.9em] rounded-[2px] align-middle"
+                        style={{ width: w, background: "var(--n-ink)" }}
+                      />
+                      <span className="sr-only">{t.nameNotPublished}</span>
+                    </td>
+                    <td>{label}</td>
+                    <td className="n-r">{integer(sum(k, "donors"), bcp47)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {largestGift !== null && (
+              <p className="n-body mt-4">
+                {t.largestGift(euroExact(largestGift, bcp47), DONATIONS_SOURCE.year)}
+              </p>
+            )}
+            <p className="n-source">
+              {t.donorsNote}
+            </p>
+          </article>
+
+          {/* The years each audited source covers on this site. */}
+          <article className="lg:col-span-2">
+            <h3 className="n-h3">{t.yearsTitle}</h3>
+            <p className="n-finding mt-3">
+              {t.yearsFinding(fYears[fYears.length - 1], DONATIONS_SOURCE.year)}
+            </p>
+            <div className="mt-8 grid gap-10">
+              {[
+                { key: "d", name: t.rowDonations, cls: "n-donors", on: [DONATIONS_SOURCE.year] },
+                { key: "f", name: t.rowFoundations, cls: "n-foundations", on: fYears.map(Number) },
+              ].map((row) => (
+                <div key={row.key} className="grid gap-4 md:grid-cols-[14rem_1fr] md:items-start">
+                  <p className="font-bold">{row.name}</p>
+                  <Line
+                    locale={locale}
+                    cls={row.cls}
+                    stops={auditYears.map((y) => ({
+                      key: String(y),
+                      label: String(y),
+                      note: y === auditYears[auditYears.length - 1] ? t.today : undefined,
+                      on: row.on.includes(y),
+                    }))}
+                  />
+                </div>
               ))}
             </div>
-            <p className="mt-4" style={{ fontSize: "12px", lineHeight: 1.5, color: "var(--ink-3)" }}>
-              {P.stanceNote}
-            </p>
-            <p className="label-mono mt-3">
-              <Link href={`/${locale}/votaciones`} className="src">
-                {t.nav.votes} →
-              </Link>
-            </p>
-          </div>
-
-          <div className="px-6 pb-7 pt-6" style={{ borderRight: "1px solid var(--line)" }}>
-            <p className="eyebrow">{P.colReportKicker}</p>
-            {/* Awaiting licensed imagery. A hatched plate rather than a stock
-                photograph: a placeholder that looks like a photograph is a
-                claim about something that was never photographed. */}
-            <div className="plate hatch mt-4" style={{ aspectRatio: "4 / 3" }} role="presentation" />
-            <p className="mt-1.5" style={{ fontSize: "10.5px", color: "var(--ink-3)" }}>
-              {P.photoPending}
-            </p>
-            <h3 className="display mt-3 text-[25px] font-semibold" style={{ lineHeight: 1.1 }}>
-              {P.colReportTitle
-                .replace("{donors}", integer(DONATIONS_SOURCE.grandDonors, bcp47))
-                .replace("{largest}", euroExact(tranche.largeMoney > 0 ? largestSingle() : 0, bcp47))}
-            </h3>
-            <p
-              className="justified mt-3"
-              style={{ fontSize: "14px", lineHeight: 1.68, color: "var(--ink-2)" }}
-            >
-              {P.colReportBody}
-            </p>
-            <p className="label-mono mt-3">
-              <Link href={`/${locale}/financiacion`} className="src">
-                {P.colReportLink} →
-              </Link>
-            </p>
-          </div>
-
-          <div className="px-6 pb-7 pt-6">
-            <p className="eyebrow" style={{ color: "var(--red)" }}>
-              {t.court.eyebrow}
-            </p>
-            <h3 className="display mt-2 text-[25px] font-semibold" style={{ lineHeight: 1.1 }}>
-              {t.court.title}
-            </h3>
-            <div className="mt-4">
-              <CourtRecords t={t} bcp47={bcp47} />
-            </div>
-          </div>
+            <p className="n-meta mt-6">{t.yearsKey}</p>
+          </article>
         </div>
-
-        <p
-          className="pb-7 pt-6"
-          style={{ fontSize: "12px", lineHeight: 1.6, color: "var(--ink-3)", maxWidth: "88ch" }}
-        >
-          {P.linkFraming}{" "}
-          <Link href={`/${locale}/metodologia`} className="src">
-            {t.method.title} →
-          </Link>
-        </p>
       </section>
     </main>
   );
 }
 
-/**
- * The single largest declared donation in the report's top tranche.
- *
- * The report publishes tranche totals and donor counts, not individual gifts,
- * so where one party's >€10,000 tranche holds exactly one donor its total *is*
- * that gift. Where a tranche holds several, no single figure can be extracted
- * and it is skipped.
- */
-function largestSingle(): number {
-  const singles = DONATIONS_2020.filter((d) => d.large.donors === 1).map((d) => d.large.amount);
-  return singles.length > 0 ? Math.max(...singles) : 0;
+function Route({
+  cls,
+  title,
+  figure,
+  figureNote,
+  finding,
+  findingNote,
+  bar,
+  barFormat,
+  link,
+  source,
+  sourceLabel,
+  locale,
+}: {
+  cls: string;
+  title: string;
+  figure: string;
+  figureNote: string;
+  finding: string;
+  /** Says what the finding's figures do not, right under it. */
+  findingNote?: string;
+  bar: { label: string; value: number; muted?: boolean }[];
+  barFormat: (v: number) => string;
+  link: { href: string; text: string };
+  source: string;
+  sourceLabel: string;
+  locale: Locale;
+}) {
+  return (
+    <article className={`${cls} grid gap-x-12 gap-y-5 md:grid-cols-[minmax(0,16rem)_1fr]`}>
+      <div className="border-l-[6px] pl-5" style={{ borderColor: "var(--route)" }}>
+        <h3 className="n-h3">{title}</h3>
+        <p className="n-figure n-route-text mt-3" style={{ fontSize: "2.4rem" }}>
+          {figure}
+        </p>
+        <p className="n-meta mt-2">{figureNote}</p>
+      </div>
+      <div>
+        <p className="n-finding">{finding}</p>
+        {findingNote && <p className="n-body mt-3">{findingNote}</p>}
+        <ShareBar locale={locale} parts={bar} format={barFormat} className="mt-5" />
+        <p className="mt-4">
+          <Link href={link.href}>{link.text}</Link>
+        </p>
+        <p className="n-source">{sourceLabel}: {source}</p>
+      </div>
+    </article>
+  );
 }

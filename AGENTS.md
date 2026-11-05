@@ -98,6 +98,15 @@ dossier — the absence is a finding, because apartado Seis requires publication
 
 ## The design system, and the two accents that are not text colours
 
+> **Superseded in part (2026-11-05).** The site now uses the design in `app/[locale]/site.css`
+> and `components/nuevo/`; see the "redesign prototype", "The prototype in English and Catalan" and
+> "The new design becomes the site" entries in `CHANGELOG.md`. The components named in this
+> section and the two that follow (`Bar`, `SourceLine`, `ChartReader`, `VoteFlow`, `RightsMap`…)
+> were removed with the old pages. The rules they encoded still hold: contrast measured in both
+> themes, a source line on every figure, a scale named on every bar, no horizontal scroll at
+> 375px, and the meaning of a mark said in words as well as by colour or pattern.
+
+
 The visual system is newsprint, light by default with a measured dark theme (below). In the light
 theme the ground is `#f3f2f2` and the ink `#201f1d`; Cormorant Garamond sets every heading and
 display figure and Lora everything else. Two structural rules run through
@@ -442,26 +451,30 @@ the same variables at export time, so it takes the reader's theme — keep it th
 
 | Path | Role |
 |------|------|
-| `page.tsx` | The front page: ticker, lead investigation, the organisations' rail, the three registers, three columns |
-| `financiacion/page.tsx` | The three declared money flows: electoral spending (each formation's share + the report's lines), 2020 donations by tranche, subsidies |
+| `layout.tsx` | The frame: fonts, theme script, header with language and theme toggles, the menu, footer |
+| `site.css` | The design system: `--n-*` tokens and `n-*` classes, scoped under `.n-root` (see the redesign entries in `CHANGELOG.md`) |
+| `page.tsx` | The front page: where the money comes from, drawn as a route map, and what the site holds |
+| `financiacion/page.tsx` | The money: state subsidies per year, 2020 donations by tranche, electoral spending, the foundations layer |
+| `partidos/page.tsx` | Index of the parties |
+| `partido/[nif]/page.tsx` | One party: public and private money by year, its foundation, its people, its recorded votes and the investiture record, court records, news |
 | `fundaciones/page.tsx` | The foundation channel: who pays the party foundations and who governs them |
-| `fundacion/[slug]/page.tsx` | One party-linked entity: money in by source, public money by grantor, findings |
-| `mapa/page.tsx` | The territorial map: which party governs each community, and the recorded hate-crime rate there |
-| `politicos/page.tsx` | Politician directory: featured record-holders + everyone with a profile (the pay register, plus the sitting deputies it does not carry) |
-| `politicos/declaraciones/page.tsx` | What the sitting deputies declared, side by side: each transcribed declaration's totals by section in surname order, a party filter, and the deputies still waiting for a transcription. Shares the `PeopleTabs` sub-navigation with the directory |
-| `politico/[slug]/page.tsx` | One person: pay, party funding, what a deputy declared to Congreso, recorded ballots, social, news |
-| `party/[nif]/page.tsx` | Party detail: formation switcher, public + private money, faces, ledger, group stances, court record, news |
-| `votaciones/page.tsx` | Tracked votes: the money→party→vote flow, then result, per-group breakdown, deputy search |
-| `derechos/page.tsx` | The rights section: the LGBTQ+ organisations' own feeds, with images, plus the source directory |
-| `donde/[provincia]/page.tsx` | What this site holds about one comunidad autónoma, reached by province: who presides, officeholders from there, wages, poverty, recorded hate crime — each beside its national figure |
+| `fundacion/[slug]/page.tsx` | One party-linked entity: money in by source, public money by grantor, board, findings |
+| `personas/page.tsx` | Everyone the site holds a record of, one line per person with a station per kind of record; `?kind=declarations` shows the deputies' transcribed declarations side by side (`Declarations.tsx`) |
+| `politico/[slug]/page.tsx` | One person: pay, what a deputy declared to Congreso, recorded ballots, social, news |
+| `territorios/page.tsx` | The comunidades: who governs each, and the investiture votes (absorbed what was `/mapa`) |
+| `territorio/[provincia]/page.tsx` | What this site holds about one comunidad, reached by province, each figure beside its national one (was `/donde/[provincia]`) |
+| `temas/page.tsx` | The topics, each built from recorded votes (absorbed what was `/votaciones`) |
+| `tema/[id]/page.tsx` | One topic: its votes, each group's and each deputy's ballot, and related records; the LGTBI topic carries the organisations' own feeds (was `/derechos`) |
 | `contexto/page.tsx` | The country the money is spent in: wages by sector, the payroll in multiples of the minimum wage, and the poverty indicators — INE figures, never joined to a vote |
 | `buscar/page.tsx` | One search across the register, parties, entities, comunidades, provinces, tracked divisions and the site's own sections — a form GET, server-rendered |
 | `datos/page.tsx` | Every dataset this site publishes, one section per table, each with a stable anchor, a row count, its source, and a CSV download |
 | `datos/[table]/route.ts` | The CSV itself, for one table id from `lib/datasets.ts` |
 | `metodologia/page.tsx` | Methodology and legal caveats |
 
-`/sueldos`, `/caras` and `/politician/[slug]` are redirects in `next.config.ts` — the salary and
-Caras sections were merged into `politicos`.
+Each page keeps its words in a `copy.ts` (or `copy.tsx`) beside it, one block per locale. Retired
+addresses are permanent redirects in `next.config.ts`: the `/nuevo` prototype paths, `/party`,
+`/donde`, `/politicos`, `/votaciones`, `/mapa`, `/derechos`, and the older `/sueldos`, `/caras` and
+`/politician/[slug]`.
 
 `app/api/`: `refresh` (BDNS pull, cron-protected), `news`, `bluesky`, `news-image`.
 
@@ -546,18 +559,23 @@ the build checked must be the totals the page prints.
 
 ### Components
 
-`Masthead` (the ink bar, masthead row and tab nav — replaced `Sidebar`), `StatStrip` (the ticker
-and the section stat strips, one component because the anatomy is identical), `SpendShares`
-(each formation's share of declared electoral spending, as labelled bars),
-`DonationsTable`, `ElectoralSpending`, `VoteFlow` (the money→party→vote ribbons), `RightsMap`
-(the only client-side chart), `CourtRecords`, `PartySwitcher`, `FoundationChannel` +
-`FoundationGovernance`, `Dashboard` (party funding, client), `StanceByGroup`, `ArticleCard`,
-`Avatar` + `PhotoCredit`, `NewsFeed`, `BlueskyFeed`, `CountUp`, `LocaleToggle`, `ThemeToggle`,
-`Caveat` (a `<details>`-based progressive-disclosure wrapper — `SourceLine`'s `note` renders through it, and
-it is the standard way to collapse a limitation without deleting it; see the "Every caveat is
-still there" entry in `CHANGELOG.md` for which caveats were and were not converted, and why).
-`components/chart/` holds the chart primitives: `Bar` + `BarLegend`, `SourceLine`, and `DataTable`
-(a chart's numbers as a table, in a closed `<details>`).
+Everything in the design lives in `components/nuevo/` (the folder name dates from the prototype;
+the components are the site's). Each one takes the locale and carries its own words for the three
+languages, either in its props from the page's `copy.ts` or in a `*-copy.ts` beside it.
+
+- The motif: `Line` (a route drawn as a line with stations), `RouteMap` (the front page's map of
+  where the money comes from), `ShareBar` and `DotGrid` (shares and counts), `Ladder`.
+- Votes: `VoteBar` (one division's result by group), `DeputyBallots`, `BallotStrip` (one cell per
+  tracked division on a person page, including those with no ballot on record),
+  `InvestitureRecord`.
+- People: `Portrait`, `PayDistribution`, `SmiPosition`, `Interests`, `SourceText`.
+- Places: `RegionMap`, `ProvincePicker` (postcode or province, resolved in the browser).
+- Records and feeds: `CourtRecord` (status words keyed by the `CourtStatus` type), `OrgVoices`
+  (the organisations' own feeds on a topic), `NewsFeed`, `BlueskyFeed`.
+- Shared vocabulary: `topics.ts`, `roles.ts`, `vote-copy.ts`, `investiture-copy.ts`,
+  `court-copy.ts`, `feed-copy.ts`.
+
+`components/LocaleToggle.tsx` and `components/ThemeToggle.tsx` are the frame's two toggles.
 
 Data files in `data/`: `subsidies.json` (live), `salaries.json` (~1.7 MB), `votes.json`,
 `photos.json`, `foundations.json`, `electoral-spending.json`, `regions.json` (projected SVG
@@ -567,10 +585,10 @@ declaration scans (`data/_declaraciones/*.pdf`) and their working transcriptions
 
 Read server-side only — pages render a filtered slice, so the browser never receives the large
 datasets. `data/_*.json` are scraper caches and are gitignored. `regions.json` is the one file
-whose contents do reach the browser, as props on `RightsMap`; that is why the build script
+whose contents do reach the browser, drawn into the page by `RegionMap`; that is why the build script
 rounds the path data to one decimal place.
 
-**A client component may not import a module that reads the filesystem.** `RightsMap` imported
+**A client component may not import a module that reads the filesystem.** `RightsMap`, the old map, imported
 `lib/regions.ts` for its curated presidency data and pulled `node:fs` into the browser bundle,
 which fails the build outright. The split is by who needs what: `lib/governments.ts` is pure
 data, `lib/regions.ts` owns the loaders. The same boundary bites a second way — `Dict` carries
@@ -578,7 +596,7 @@ functions (`news.hoursAgo`), and a function cannot cross to a client component, 
 block a component needs (`Dict["map"]`) and never the whole dictionary.
 
 Locale comes from the URL (`/es`, `/en`, `/ca`), which keeps pages statically generated. Pages
-that read query strings (`politicos`, `votaciones`) render per request.
+that read query strings (`buscar`) render per request.
 
 ## Data pipelines
 

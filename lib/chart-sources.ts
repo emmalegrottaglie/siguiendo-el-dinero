@@ -1,4 +1,3 @@
-import type { ChartSource } from "@/components/chart/SourceLine";
 import type { Aggregation } from "./types";
 import type { VotesData, KeyVote } from "./votes";
 import { voteDateISO } from "./votes";
@@ -12,11 +11,30 @@ import { formatDate, fill } from "./format";
 import type { Dict } from "./i18n";
 
 /**
+ * Where a figure's numbers came from: the producing body, its own name for the
+ * series or report, the period covered and a link. Built from the record the
+ * data carries, never typed at the chart, so the period cannot drift from the
+ * figures. `asOf` is the data date (the fetch, the register's own update or the
+ * report's approval) where the source has one.
+ */
+export interface ChartSource {
+  /** The producing body, e.g. "INE" or "Tribunal de Cuentas". */
+  publisher: string;
+  /** The series or report as its publisher names it. */
+  name: string;
+  /** Period the figures cover, as the source states it. */
+  period: string;
+  url: string;
+  /** The data date as ISO (YYYY-MM-DD), where the source has one. */
+  asOf?: string;
+}
+
+/**
  * The source line for each chart, built from the record the data itself
  * carries.
  *
  * Every chart now prints its publisher, dataset, data date and link inside its
- * own frame (`SourceLine`). Writing those by hand at each chart is how a period
+ * own source line. Writing those by hand at each chart is how a period
  * drifts from the data it describes, so each builder here reads the loaded file
  * or the module constant that the figures came from. Only the connecting words
  * ("updated", "approved") are translated; a publisher's own title for its
