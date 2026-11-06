@@ -5,6 +5,29 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — The chosen theme survives a change of language
+
+Emma found that a reader who had picked the light theme and then switched language got the dark
+theme, while the theme buttons still showed light pressed. It happened whenever the system was set
+to dark (and the other way round for a dark pick on a light system).
+
+The pick is applied by a small script in `app/[locale]/layout.tsx` that writes `data-theme` on
+`<html>` before the first paint. That script runs only on the first page load. Changing language is
+a client-side navigation to another value of the root layout's `locale` param; React re-renders the
+layout, resets the attributes of `<html>` to the ones it renders itself, and so drops `data-theme`.
+The stylesheet then followed the system again. The toggle still read the stored pick from
+`localStorage`, so it kept showing it.
+
+`components/ThemeToggle.tsx` now writes the stored pick back in a layout effect each time it
+mounts, which happens in the same commit as the reset, before the browser paints, so there is no
+flash of the other theme. "System" still removes the attribute.
+
+**Verified** in a browser with the system set to dark and the pick set to light, and the reverse:
+switching ES to EN to CA to ES keeps the pick and the matching background on every step. Before the
+change, the first switch lost it. `npx tsc --noEmit` passes.
+
+---
+
 ## 2026-11-06 — Unused dictionary keys removed
 
 The follow-up named in the previous entry. `lib/i18n.ts` still carried the words of the pages and
