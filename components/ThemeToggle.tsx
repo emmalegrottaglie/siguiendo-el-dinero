@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useLayoutEffect, useSyncExternalStore } from "react";
 
 /**
  * Light, dark, or whatever the system says.
@@ -9,9 +9,14 @@ import { useSyncExternalStore } from "react";
  * A pick is stored in localStorage under `theme` and written to <html> as
  * `data-theme`; "system" removes both, so the media query in app/[locale]/site.css
  * takes over again and follows the system live. The inline script in
- * app/[locale]/layout.tsx applies a stored pick before first paint, so this
- * component only ever changes the theme in response to a click — it never has
- * to correct one after the page has drawn.
+ * app/[locale]/layout.tsx applies a stored pick before first paint.
+ *
+ * That script runs once, on the first page load. Switching language changes the
+ * root layout's `locale` param; React then re-renders the layout, resets the
+ * attributes of <html> to the ones it renders and drops `data-theme`. The page
+ * fell back to the system theme while this toggle still showed the stored pick.
+ * The layout effect below writes the stored pick back each time the layout
+ * mounts this toggle, in the same commit, before the browser paints.
  *
  * Three buttons with `aria-pressed` rather than one button that cycles: each
  * choice is one press away, and which one is in force can be read without
@@ -96,6 +101,7 @@ export default function ThemeToggle({ t }: { t: ThemeToggleStrings }) {
   // null on the server and during hydration: the server cannot know the
   // reader's choice, so no button claims to be pressed until the client does.
   const current = useSyncExternalStore<ThemeChoice | null>(subscribe, read, () => null);
+  useLayoutEffect(() => apply(read()), []);
 
   const options: { id: ThemeChoice; label: string }[] = [
     { id: "light", label: t.themeLight },
