@@ -43,16 +43,18 @@ verified, the feature was cut rather than faked.
   together so they can be looked up, not because one explains the other.
 - **Say what was voted, not what it meant.** A ballot is a side taken on the subject actually put
   to the vote, never a position on the law in general. This matters: on the Ley 4/2023 ballot,
-  which was on the Senate's amendments, a group-level "en contra" read on its own put EH Bildu
-  against the trans law, when a vote against there can mean rejecting the amendment. The first
-  version of the site therefore labelled ballots "votó Sí / votó No / se abstuvo" and showed each
-  ballot's subject on its card. The new design adopted "a favor / en contra / abstención" in all
-  three languages (`components/nuevo/vote-copy.ts`; CHANGELOG, 2026-11-04). The topic page prints
-  each division's subject in the record's own wording (`whatWasVoted()` in
-  `components/nuevo/topics.ts`) beside the ballots; the person page, the party page and the front
-  page show the law's name and the date (and, on the person page, the kind of vote), with a link to
-  the official record, but not the subject (see "Known gaps"). A new place that shows a ballot
-  label must show the subject with it.
+  taken under the heading "Enmiendas del Senado", a group-level "en contra" read on its own put EH
+  Bildu against the trans law, when a vote against there can mean rejecting the amendment. So
+  ballots are named as cast: "Votó sí / Votó no / Se abstuvo" for a person's ballot or a group's
+  majority, "Sí / No / Abstención" in legends and tables, and tallies as "191 votos sí, 60 votos
+  no, 91 abstenciones" (`components/nuevo/vote-copy.ts`, the party and person pages' `copy`
+  files, and the `votes` block of `lib/i18n.ts`); never "a favor / en contra". Investiture votes
+  are the exception: they are votes for a candidate and the record words them "a favor". Wherever
+  a ballot or a tally is shown beside a law's name, the ballot's subject is shown with it, in the
+  record's own Spanish and marked `lang="es"`: `whatWasVoted()` in `components/nuevo/topics.ts`
+  gives the item, and for a vote on a law also the heading it was taken under. A new place that
+  shows a ballot must do the same. (The redesign briefly used "a favor / en contra" without the
+  subject; it was put right on 2026-11-06.)
 - **Vote kinds are labelled.** A *proposición no de Ley* or a *moción* is a non-binding position
   statement, not the passage of a law, and the UI says so. Amendment votes are excluded from the
   published set so the selection cannot be cherry-picked.
@@ -897,12 +899,10 @@ paying a permanent prefix cost to chase it would be the wrong trade.
 - **Autonomous presidencies.** Curated in `lib/governments.ts` against one secondary source, dated
   `2026-09-09`. There is no machine-readable national register of them; each community's own
   official gazette is the primary route and has not been walked.
-- **Ballot subjects outside the topic pages.** The person page and the party page label a ballot
-  "a favor / en contra / abstención" beside the law's name and the date, and the
-  front page shows each division's tally under the law's name; none of them prints the subject
-  actually voted, which the topic page does. On a ballot such as
-  Ley 4/2023's, which was on the Senate's amendments, that is the reading the first version of the
-  site was built to prevent (see "Say what was voted" above). It needs a decision and a code change.
+- **How the Ley 4/2023 division is classed.** `data/votes.json` (from `scripts/fetch-votes.mjs`)
+  classes it as a "Votación final de ley", and the topic page explains that kind as voting the text
+  that goes to the BOE. It was taken under "Enmiendas del Senado"; whether that explanation fits a
+  vote on the Senate's amendments needs a look at the record and a decision.
 - **Scrolling tables and the keyboard.** A wide table scrolls inside an `overflow-x-auto` box that
   is not made a tab stop. Firefox and recent Chromium versions make such a box focusable on their
   own; the old `ScrollBox` did it explicitly, and nothing does now.
