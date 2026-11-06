@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T10:28:13.124Z",
+  "generatedAt": "2026-11-06T00:42:18.984Z",
   "source": {
     "name": "Congreso de los Diputados — Declaraciones de Bienes y Rentas, XV Legislatura (transcripción propia)",
     "url": "https://www.congreso.es/es/busqueda-de-diputados"
@@ -8,7 +8,7 @@
     "name": "RTVE",
     "url": "https://www.rtve.es/noticias/2023/declaracion-bienes-diputados-congreso/"
   },
-  "count": 124,
+  "count": 144,
   "declarations": [
     {
       "deputy": "Abades Martínez, Cristina",
@@ -72,7 +72,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -129,7 +129,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -210,7 +210,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -282,7 +282,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -366,7 +366,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -419,7 +419,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -533,7 +533,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -620,7 +620,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -738,7 +738,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -798,7 +798,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -881,7 +881,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -971,7 +971,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1013,7 +1013,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1139,7 +1139,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1199,7 +1199,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1254,7 +1254,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1311,7 +1311,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1415,7 +1415,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1492,7 +1492,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1524,7 +1524,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1593,7 +1593,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1674,7 +1674,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1731,7 +1731,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1804,7 +1804,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1869,7 +1869,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1942,7 +1942,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -1995,7 +1995,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2086,7 +2086,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2170,7 +2170,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2221,7 +2221,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2272,7 +2272,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2308,7 +2308,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2382,7 +2382,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2498,7 +2498,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2572,7 +2572,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2620,7 +2620,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2700,7 +2700,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2733,7 +2733,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2826,7 +2826,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2874,7 +2874,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -2949,7 +2949,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3046,7 +3046,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3165,7 +3165,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3237,7 +3237,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3286,7 +3286,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3386,7 +3386,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3424,7 +3424,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3538,7 +3538,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3609,7 +3609,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3696,7 +3696,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3776,7 +3776,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3847,7 +3847,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3923,7 +3923,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -3956,7 +3956,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4009,7 +4009,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4074,7 +4074,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4175,7 +4175,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4239,7 +4239,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4292,7 +4292,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4363,7 +4363,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4466,7 +4466,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4531,7 +4531,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4614,7 +4614,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4672,7 +4672,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4749,7 +4749,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4800,7 +4800,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4869,7 +4869,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -4944,7 +4944,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5044,7 +5044,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5156,7 +5156,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5364,7 +5364,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5468,7 +5468,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5575,7 +5575,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5644,7 +5644,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5743,7 +5743,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5830,7 +5830,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5863,7 +5863,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5905,7 +5905,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -5954,7 +5954,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6036,7 +6036,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6090,7 +6090,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6156,7 +6156,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6246,7 +6246,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6386,7 +6386,7 @@
       ],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6453,7 +6453,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6486,7 +6486,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6546,7 +6546,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6588,7 +6588,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6697,7 +6697,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6768,7 +6768,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6861,7 +6861,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -6970,7 +6970,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7019,7 +7019,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7083,7 +7083,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7150,7 +7150,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7229,7 +7229,7 @@
       ],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7314,7 +7314,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7390,7 +7390,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7471,7 +7471,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7504,7 +7504,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7575,7 +7575,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7641,7 +7641,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7724,7 +7724,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7837,7 +7837,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -7955,7 +7955,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8041,7 +8041,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8196,7 +8196,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8275,7 +8275,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8326,7 +8326,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8386,7 +8386,274 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gallardo Barrena, Pedro Ignacio",
+      "cod": 74,
+      "filed": "2023-08-03",
+      "url": "https://www.congreso.es/docbienes/leg15/000084/000084_000_e_0000360_20230803.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "ASAJA CADIZ",
+          "amount": 70000
+        },
+        {
+          "group": "salary",
+          "concept": "EFRIASA SA",
+          "amount": 14814.84
+        },
+        {
+          "group": "dividends",
+          "concept": "CAJA RURAL DEL SUR",
+          "amount": 9.62
+        }
+      ],
+      "irpf": 24042.87,
+      "realEstate": [
+        {
+          "kind": "company",
+          "description": "EXPLOTACIÓN AGRÍCOLA Y VIVIENDA CORTIJO CARVAJAL AGRICOLA SL",
+          "location": "CÁDIZ",
+          "acquired": "2017",
+          "title": "PLENO DOMINIO COMPRA VENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": null,
+          "amount": 1982.11
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "CARVAJAL AGRICOLA SL",
+          "amount": 99939.22
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2001",
+          "description": "TRACTOR VALTRA 160CV (CARVAJAL AGRICOLA SL)"
+        },
+        {
+          "acquired": "2013",
+          "description": "COCHE MITSUBISHI ASX (CARVAJAL AGRICOLA SL)"
+        },
+        {
+          "acquired": "2021",
+          "description": "COCHE HYUNDAI KONA ELECTRICO (CARVAJAL AGRICOLA SL)"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": "NO EXSITE VALOR DE LA SOCIEDAD CARVAJAL AGRICOLA A DIA DE HOY NI DESDE HACE DOS MESES ATRAS PORQUE LA SOCIEDAD NO TIENE ACTUALIZADA LA CONTABILIDAD. EL ÚLTIMO DATO OFICIAL ES EL IMPUESTO SOBRE SOCIEDADES CON FECHA 31 DE DICIEMBRE DE 2022 CUYO VALOR NETO CONTABLE ES DE 99.939,22",
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gamarra Ruiz-Clavijo, Concepción",
+      "cod": 314,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000301/000301_000_e_0001257_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "PARTIDO POPULAR. GASTOS REPRESENTACIÓN",
+          "amount": 26860
+        },
+        {
+          "group": "salary",
+          "concept": "GRUPO PARLAMENTARIO POPULAR",
+          "amount": 28759
+        }
+      ],
+      "irpf": 72540,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA. LOGROÑO",
+          "location": "LA RIOJA",
+          "acquired": "23 FEBRERO 2018",
+          "title": "PLENO DOMINIO COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "PLAZA GARAJE. LOGROÑO",
+          "location": "LA RIOJA",
+          "acquired": "23 FEBRERO 2018",
+          "title": "PLENO DOMINIO COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "BANCO DE SANTANDER. CUENTA A LA VISTA, DEPÓSITOS DE VALORES Y FONDOS DE INVERSIÓN",
+          "amount": 22250
+        },
+        {
+          "description": "IBERCAJA, CUENTAS Y PLAN DE PENSIONES",
+          "amount": 170061
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [
+        {
+          "description": "HIPOTÉCA AHORA",
+          "granted": "23 febrero 2019",
+          "amount": 229000,
+          "pending": 191920
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "irpf",
+          "written": "72,540"
+        },
+        {
+          "path": "loans[0].pending",
+          "written": "191,920"
+        }
+      ],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "García Adanero, Carlos",
+      "cod": 266,
+      "filed": "2023-08-11",
+      "url": "https://www.congreso.es/docbienes/leg15/000254/000254_000_e_0001067_20230811.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 16978.19,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "NAVARRA",
+          "acquired": "07/01/2011",
+          "title": "50% PROPIEDAD COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE EN ENTIDAD BANCARIA",
+          "amount": 21227
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "11/01/2023",
+          "description": "VOLVO XC60"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRÉSTAMO HIPOTECARIO CAIXABANK",
+          "granted": "07/01/2011",
+          "amount": 300000,
+          "pending": 172804
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "García Chavarría, María Montserrat",
+      "cod": 380,
+      "filed": "2024-04-23",
+      "url": "https://www.congreso.es/docbienes/leg15/000380/000380_000_e_0022508_20240423.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Congreso Diputados",
+          "amount": null
+        }
+      ],
+      "irpf": 11763.34,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "vivienda",
+          "location": "A Coruña",
+          "acquired": "1996",
+          "title": "Ganancial"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "4 c/corrientes",
+          "amount": 27156.88
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "Acciones Banco Santander",
+          "amount": 1292.74
+        },
+        {
+          "kind": "other",
+          "description": "Planes Previsión y Pensiones",
+          "amount": 20008.69
+        },
+        {
+          "kind": "other",
+          "description": "Microcrédito PSOE",
+          "amount": 500
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2011",
+          "description": "caravana"
+        },
+        {
+          "acquired": "2015",
+          "description": "Audi A 6"
+        },
+        {
+          "acquired": "2019",
+          "description": "M. GLA"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Préstamo personal B. Santander",
+          "granted": "2021",
+          "amount": 20000,
+          "pending": 13042
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8498,7 +8765,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8549,7 +8816,1178 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "García Gurrutxaga, María Luisa",
+      "cod": 113,
+      "filed": "2023-08-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000292/000292_000_e_0001216_20230816.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Funcionaria de educaciónn del Gobierno vasco",
+          "amount": 45026.61
+        }
+      ],
+      "irpf": 11027.61,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "Kutxabank",
+          "amount": 75891.98
+        },
+        {
+          "description": "Caja labotral Kutxa",
+          "amount": 24185.2
+        },
+        {
+          "description": "Plan de pensiones Baskepensiones",
+          "amount": null
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "García López, Maribel",
+      "cod": 49,
+      "filed": "2023-08-02",
+      "url": "https://www.congreso.es/docbienes/leg15/000038/000038_000_e_0000175_20230802.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "TRIENIOS CUERPO DE MAESTROS - CONSEJERÍA DE EDUCACIÓN Y EMPLEO - JUNTA DE EXTREMADURA",
+          "amount": 1892.84
+        }
+      ],
+      "irpf": 13997.78,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA (50%)",
+          "location": "BADAJOZ",
+          "acquired": "2001",
+          "title": "GANANCIAL COMPREVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "2 GARAJES (50%)",
+          "location": "BADAJOZ",
+          "acquired": "2001",
+          "title": "GANANCIAL COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "2 TRASTEROS (50%)",
+          "location": "BADAJOZ",
+          "acquired": "2001",
+          "title": "GANANCIAL COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE",
+          "amount": 10631.78
+        },
+        {
+          "description": "CUENTA CORRIENTE (50%)",
+          "amount": 1750.23
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "other",
+          "description": "PLAN DE PENSIONES",
+          "amount": 13628.03
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [
+        {
+          "description": "HIPOTECA (50%)",
+          "granted": "2005",
+          "amount": 80000,
+          "pending": 37983.19
+        },
+        {
+          "description": "PERSONAL (50%)",
+          "granted": "2021",
+          "amount": 35000,
+          "pending": 13558.5
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [
+        {
+          "path": "income[0].amount",
+          "written": "1,892,84"
+        },
+        {
+          "path": "irpf",
+          "written": "13,997,78"
+        }
+      ],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "García Morís, Roberto",
+      "cod": 195,
+      "filed": "2023-08-09",
+      "url": "https://www.congreso.es/docbienes/leg15/000182/000182_000_e_0000776_20230809.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 14057.9,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA CON GARAJE",
+          "location": "ASTURIAS",
+          "acquired": "1990",
+          "title": "HERENCIA MULTIPROPIEDAD (25%)"
+        },
+        {
+          "kind": "urban",
+          "description": "APARTAMENTO",
+          "location": "ASTURIAS",
+          "acquired": "2012",
+          "title": "HERENCIA MULTIPROPIEDAD (50%)"
+        },
+        {
+          "kind": "urban",
+          "description": "VIVIENDA",
+          "location": "ASTURIAS",
+          "acquired": "2015",
+          "title": "HERENCIA MULTIPROPIEDAD (50%)"
+        },
+        {
+          "kind": "rustic",
+          "description": "FINCA RÚSTICA",
+          "location": "ASTURIAS",
+          "acquired": "1990",
+          "title": "HERENCIA MULTIPROPIEDAD (25%)"
+        },
+        {
+          "kind": "rustic",
+          "description": "FINCAS RÚSTICAS",
+          "location": "ASTURIAS",
+          "acquired": "2012",
+          "title": "HERENCIA MULTIPROPIEDAD (50%)"
+        },
+        {
+          "kind": "rustic",
+          "description": "FINCA RÚSTICA",
+          "location": "ASTURIAS",
+          "acquired": "2016",
+          "title": "HERENCIA MULTIPROPIEDAD (50%)"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "5 CUENTAS CORRIENTES EN DIFERENTES ENTIDADES BANCARIAS",
+          "amount": 17215.83
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2007",
+          "description": "VEHÍCULO TOYOTA YARIS SOL"
+        },
+        {
+          "acquired": "2012",
+          "description": "VEHÍCULO MERCEDES CLASE A"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRESTAMO HIPOTECARIO",
+          "granted": "22/03/2023",
+          "amount": 60000,
+          "pending": 55165.6
+        }
+      ],
+      "otherDebts": null,
+      "observations": "MICROCRÉDITO PSOE",
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Garre Murcia, Cristóbal",
+      "cod": 84,
+      "filed": "2023-08-03",
+      "url": "https://www.congreso.es/docbienes/leg15/000090/000090_000_e_0000383_20230803.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "sueldo de concejal de corporación ayuntamiento de marbella",
+          "amount": 45000
+        },
+        {
+          "group": "interest",
+          "concept": "intereses de cuentas bancarias/otros",
+          "amount": 100
+        },
+        {
+          "group": "other",
+          "concept": "arrendamiento de vivienda",
+          "amount": 18000
+        }
+      ],
+      "irpf": 16684.96,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "vivienda",
+          "location": "malaga",
+          "acquired": "2009/2022",
+          "title": "propiedad 50% compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "vivienda",
+          "location": "malaga",
+          "acquired": "2022",
+          "title": "plena propiedad herencia y compraventa"
+        },
+        {
+          "kind": "company",
+          "description": "vivienda \"garre asesores, sl\"",
+          "location": "malaga",
+          "acquired": "2009",
+          "title": "propiedad 50% compraventa"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "saldos en cuentas bancarias",
+          "amount": 40000
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "96,15% garre asesores, sl (valor balance)",
+          "amount": 260000
+        },
+        {
+          "kind": "securities",
+          "description": "25% pericia abogados y economistas, sl (valor balance)",
+          "amount": 4000
+        },
+        {
+          "kind": "securities",
+          "description": "16,66% Colbrain networks, sl (inactiva) (valor balance)",
+          "amount": 0
+        },
+        {
+          "kind": "securities",
+          "description": "17 participaciones cooperativa de crédito cajamar",
+          "amount": 1037
+        },
+        {
+          "kind": "other",
+          "description": "arrendamiento vivienda en 2023",
+          "amount": 18000
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "julio de 2017",
+          "description": "Volkswagen touareg en garre asesores, sl"
+        }
+      ],
+      "loans": [
+        {
+          "description": "prestamo hipotecario vivienda calle enebro",
+          "granted": "2009",
+          "amount": 240000,
+          "pending": 130000
+        },
+        {
+          "description": "prestamo hipotecario vivienda calle los geraneos",
+          "granted": "2022",
+          "amount": 175000,
+          "pending": 170000
+        }
+      ],
+      "otherDebts": "Pensión alimentos en favor de mi Hija (Marina Garre Bandera) por 7.200 euros anuales)",
+      "observations": null,
+      "notes": [
+        {
+          "path": "otherAssets[2].amount",
+          "written": "0'00"
+        }
+      ],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Garrido Jiménez, Elisa",
+      "cod": 116,
+      "filed": "2023-08-04",
+      "url": "https://www.congreso.es/docbienes/leg15/000105/000105_000_e_0000448_20230804.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Salario como Alcaldesa de Calahorra",
+          "amount": 56445.51
+        }
+      ],
+      "irpf": 12697.81,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "vivienda",
+          "location": "La Rioja",
+          "acquired": "2015",
+          "title": "Pleno Dominio Compraventa"
+        },
+        {
+          "kind": "urban",
+          "description": "solar (50%)",
+          "location": "La Rioja",
+          "acquired": "2004",
+          "title": "Pleno Dominio (50%) Herencia"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Cuenta corriente",
+          "amount": 7013.39
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2018",
+          "description": "Turismo Dacia Lodgy"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Prestamo hipotecario vivienda Ktutxabank",
+          "granted": "2018",
+          "amount": 130000,
+          "pending": 96900.35
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Garrido Valenzuela, Irene",
+      "cod": 42,
+      "filed": "2023-08-02",
+      "url": "https://www.congreso.es/docbienes/leg15/000041/000041_000_e_0000184_20230802.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "SALARIO NETO UNIVERSIDAD DE VIGO",
+          "amount": 47268.27
+        }
+      ],
+      "irpf": 16935.03,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "VIVIENDA URBANA",
+          "location": "VIGO-PONTEVEDRA",
+          "acquired": "1991",
+          "title": "GANANCIAL 50%/COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "VIVIENDA URBANA",
+          "location": "PANXON-NIGRAN-PONTEVEDRA",
+          "acquired": "2022",
+          "title": "GANANCIAL 50% COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE",
+          "amount": 54000
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2020",
+          "description": "JEEP COMPASS"
+        },
+        {
+          "acquired": "2022",
+          "description": "OPEL CROSSLAND"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRESTAMO HIPOTECARIO",
+          "granted": "2022",
+          "amount": 140000,
+          "pending": 131571
+        }
+      ],
+      "otherDebts": null,
+      "observations": "SEGURO VIDA COLEGIO ECONOMISTAS: 19.437\nSEGURO ACCIDENTES COLEGIO ECONOMISTAS: 16.759\nSEGURO DE VIDA AXA: 120.000\nPLANPENSIONES UNIVERSIDAD DE VIGO: 9.035",
+      "notes": [
+        {
+          "path": "income[0].amount",
+          "written": "47.268.27"
+        },
+        {
+          "path": "irpf",
+          "written": "16.935.03"
+        }
+      ],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gavin i Valls, Isidre",
+      "cod": 239,
+      "filed": "2023-08-10",
+      "url": "https://www.congreso.es/docbienes/leg15/000240/000240_000_e_0001007_20230810.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Retribución como Director de negocio de la empresa pública CIMALSA",
+          "amount": 96984.71
+        },
+        {
+          "group": "interest",
+          "concept": "Participaciones y acciones en dos entidades bancarias",
+          "amount": 227.98
+        }
+      ],
+      "irpf": 32715.25,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Casa unifamiliar. Vivienda habitual",
+          "location": "LLEIDA",
+          "acquired": "2013",
+          "title": "Propiedad 100%"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Dos cuentas",
+          "amount": 6527.88
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "Capital social Caixa dEnginyers",
+          "amount": 4100
+        },
+        {
+          "kind": "securities",
+          "description": "Valores Caixabank",
+          "amount": 2577.76
+        },
+        {
+          "kind": "other",
+          "description": "FONDTESORO",
+          "amount": 15041
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2021",
+          "description": "CUPRA Formentor PEHV 1.5"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Préstamo hipotecario",
+          "granted": "3/06/2002",
+          "amount": 171000,
+          "pending": 26497.57
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gil de Reboleño Lastortres, Esther",
+      "cod": 86,
+      "filed": "2023-08-03",
+      "url": "https://www.congreso.es/docbienes/leg15/000080/000080_000_e_0000350_20230803.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Sueldo como empleada en Cadigenia s.l",
+          "amount": 26381.22
+        }
+      ],
+      "irpf": 1924.82,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE EN ENTIDAD BANCARIA",
+          "amount": 24578.7
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "CADIGENIA S.L 33.3% ORBITA S.L 33,3%",
+          "amount": 1200.33
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "MARZO 2021",
+          "description": "Furgoneta VW TRANSPORTER"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gil Lázaro, Ignacio",
+      "cod": 117,
+      "filed": "2023-08-04",
+      "url": "https://www.congreso.es/docbienes/leg15/000110/000110_000_e_0000467_20230804.pdf",
+      "reason": "toma",
+      "income": [],
+      "irpf": 34889.4,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "DOS CUENTAS CORRIENTES",
+          "amount": 313044.25
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2008",
+          "description": "OPEL ZAFIRA [matrícula omitida]"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": "EN VIRTUD DEL REGIMEN ECONÓMICO MATRIMONIAL DE GANANCIALES CORRESPONDE INCLUIR EL 50 POR CIEN DEL DOMICILIO FAMILIAR, PROPIEDAD DE MI ESPOSA, BIEN INMUEBLE DE NATURALEZA URBANA CON DOS PLAZAS DE GARAJE SITO EN LA CALLE BLANQUERIAS NÚM. 12 DE LA CIUDAD DE VALENCIA.",
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gómez Piña, Luis Antonio",
+      "cod": 396,
+      "filed": "2025-02-18",
+      "url": "https://www.congreso.es/docbienes/leg15/000394/000394_000_e_0056886_20250218.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "SALARIO COMO ALCALDE DEL AYUNTAMIENTO DE A CAÑIZA (BRUTO 2024)",
+          "amount": 53971
+        },
+        {
+          "group": "salary",
+          "concept": "DIETAS Y KM POR GASTOS DE ACTIVIDAD DE ALCALDE (2024)",
+          "amount": 1152.97
+        }
+      ],
+      "irpf": 12143.48,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO (SIN GARAJE)",
+          "location": "A CAÑIZA (PONTEVEDRA)",
+          "acquired": "2022",
+          "title": "50%PROPIETARIO GANANCIALES/ COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "A CAÑIZA (PONTEVEDRA)",
+          "acquired": "2022",
+          "title": "50%PROPIETARIO GANANCIALES/ COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "A CAÑIZA (PONTEVEDRA)",
+          "acquired": "2022",
+          "title": "50%PROPIETARIO GANANCIALES/ COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "VIGO (PONTEVEDRA)",
+          "acquired": "2012",
+          "title": "50%PROPIETARIO GANANCIALES/ COMPRAVENTA"
+        },
+        {
+          "kind": "urban",
+          "description": "GARAJE",
+          "location": "VIGO (PONTEVEDRA)",
+          "acquired": "2012",
+          "title": "50%PROPIETARIO GANANCIALES/ COMPRAVENTA"
+        },
+        {
+          "kind": "company",
+          "description": "LOCAL COMERCIAL",
+          "location": "VIGO (PONTEVEDRA)",
+          "acquired": "2005",
+          "title": "PARTICIPACIÓN 1/3 VILAMIDE SL"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE EN TRES ENTIDADES BANCARIAS (BBVA, SABADELL E ING)",
+          "amount": 865.31
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "1/3 DE SOCIEDAD LIMITADA VILAMIDE SL",
+          "amount": 1010
+        },
+        {
+          "kind": "other",
+          "description": "PLAN DE PENSIONES EN ING A FECHA FEBRERO 2025",
+          "amount": 35208.55
+        },
+        {
+          "kind": "other",
+          "description": "PLAN DE PENSIONES BBVA PPA A FECHA ENERO 2025",
+          "amount": 23507.98
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2020",
+          "description": "TURISMO VOLVO XC40"
+        },
+        {
+          "acquired": "2017",
+          "description": "TURISMO HIUNDAY I10"
+        }
+      ],
+      "loans": [
+        {
+          "description": "HIPOTECA POR PISO EN ENTIDAD BANCARIA BBVA",
+          "granted": "OCTUBRE 2012",
+          "amount": 119848.9,
+          "pending": 85754.13
+        },
+        {
+          "description": "HIPOTECA POR PISO EN ENTIDAD BANCARIA BBVA",
+          "granted": "OCTUBRE 2012",
+          "amount": 29950,
+          "pending": 22888.06
+        },
+        {
+          "description": "HIPOTECA POR PISO EN ENTIDAD BANCARIA SABADELL",
+          "granted": "AGOSTO 2022",
+          "amount": 48800,
+          "pending": 44638.58
+        },
+        {
+          "description": "PRÉSTAMO ADQUISICIÓN VEHÍCULO CON CONCESIONARIO VOLVO",
+          "granted": "MARZO 2020",
+          "amount": 28906.5,
+          "pending": 15530.24
+        },
+        {
+          "description": "PRÉSTAMO PERSONAL CON ENTIDAD BANCARIA BBVA",
+          "granted": "OCTUBRE 2023",
+          "amount": 33200,
+          "pending": 15123.5
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "González Gracia, Juan Antonio",
+      "cod": 228,
+      "filed": "2023-08-10",
+      "url": "https://www.congreso.es/docbienes/leg15/000217/000217_000_e_0000915_20230810.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "salario bruto  2022 Junta de Extremadura",
+          "amount": 73929.13
+        }
+      ],
+      "irpf": 19560.55,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Piso",
+          "location": "Badajoz",
+          "acquired": "2005",
+          "title": "100%. Plenon Dominio. Compraventa"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "cuenta ahorro",
+          "amount": 87500
+        },
+        {
+          "description": "plan de ahorro",
+          "amount": null
+        },
+        {
+          "description": "plan de pensiones",
+          "amount": null
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2016",
+          "description": "volvo v40"
+        }
+      ],
+      "loans": [
+        {
+          "description": "prestamo hipotecario ibercaja",
+          "granted": "2005",
+          "amount": 60000,
+          "pending": 18000
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "González Herdaro, Ana",
+      "cod": 407,
+      "filed": "2026-02-05",
+      "url": "https://www.congreso.es/docbienes/leg15/000406/000406_000_e_0097697_20260205.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "RETRIBUCIONES DINERARIAS ( DIPUTACIÓN DE VALENCIA HASTA EL 04/02/2026 ) ANUALES 2025",
+          "amount": 33374.77
+        },
+        {
+          "group": "salary",
+          "concept": "AYUNTAMIENTO DE LLAURÍ DIETAS ANUALES 2025",
+          "amount": 784
+        },
+        {
+          "group": "salary",
+          "concept": "MANCOMUNIDAD INTERMUNICIPAL DE LA RIBERA BAIXA DIETAS ANUALES 2025",
+          "amount": 392
+        },
+        {
+          "group": "interest",
+          "concept": "CAJAMAR CAJA RURAL SDAD COOP DE CREDITO",
+          "amount": 0.91
+        }
+      ],
+      "irpf": 8459.56,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "VALENCIA",
+          "acquired": "27/04/2009",
+          "title": "PLENO DOMINIO COMPRAVENTA"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE PERSONAL (Saldo medio 2025)",
+          "amount": 5180.68
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "14/02/2020",
+          "description": "VEHICULO TOYOTA CHR 125 H ADVANCE"
+        }
+      ],
+      "loans": [
+        {
+          "description": "PRESTAMO HIPOTECARIO",
+          "granted": "09/07/2009",
+          "amount": 93000,
+          "pending": 38477.09
+        },
+        {
+          "description": "PRESTAMO PERSONAL ( VEHICULO )",
+          "granted": "08/03/2024",
+          "amount": 12833.89,
+          "pending": 7422.16
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "González López, Nahuel",
+      "cod": 166,
+      "filed": "2023-08-08",
+      "url": "https://www.congreso.es/docbienes/leg15/000156/000156_000_e_0000671_20230808.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "CONCEJAL Y TENIENTE DE ALCALDE EN EL AYUNTAMIENTO DE GANDIA",
+          "amount": 42442.05
+        }
+      ],
+      "irpf": 10124.24,
+      "realEstate": [],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE",
+          "amount": 4800
+        }
+      ],
+      "otherAssets": [],
+      "holdingsOver5pct": null,
+      "vehicles": [],
+      "loans": [
+        {
+          "description": "TARJETA CAIXABANK",
+          "granted": "2020",
+          "amount": 4000,
+          "pending": 2500
+        },
+        {
+          "description": "PRÉSTAMO COFIDIS",
+          "granted": "2021",
+          "amount": 2000,
+          "pending": 2000
+        },
+        {
+          "description": "PRÉSTAMO GASTOS PERSONALES CAIXA POPULAR",
+          "granted": "2019",
+          "amount": 15000,
+          "pending": 12000
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "González Vázquez, Marta",
+      "cod": 200,
+      "filed": "2023-08-09",
+      "url": "https://www.congreso.es/docbienes/leg15/000189/000189_000_e_0000806_20230809.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Percepciones por condición de diputada",
+          "amount": null
+        }
+      ],
+      "irpf": 30603.41,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Vivienda habitual",
+          "location": "A Coruña",
+          "acquired": "02/08/2001",
+          "title": "Pleno dominio. Compraventa"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Cuenta corriente",
+          "amount": 62613
+        },
+        {
+          "description": "Cuenta corriente",
+          "amount": 87142
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "Fondos de inversión Abanca (información bancaria 9/8/2023)",
+          "amount": 63574.88
+        },
+        {
+          "kind": "securities",
+          "description": "Participaciones ING Superfondo dinámico a 9/8/2023",
+          "amount": 3598
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "03/06/2011",
+          "description": "Citroen Gran Picasso Avatar HDI 110 (fecha matriculación 24/06/2010)"
+        },
+        {
+          "acquired": "21/01/2016",
+          "description": "Mazda 2 (fecha matriculación 21/01/2016)"
+        }
+      ],
+      "loans": [
+        {
+          "description": "préstamo hipotecario sobre vivienda habitual",
+          "granted": "2001",
+          "amount": 181505.66,
+          "pending": 2347.85
+        }
+      ],
+      "otherDebts": null,
+      "observations": "En el año fiscal de 2022 accedí a la herencia por fallecimiento de padre y madre, lo que ha supuesto un incremento patrimonial en las cuentas corrientes y en el fondo de inversión.",
+      "notes": [
+        {
+          "path": "otherAssets[1].amount",
+          "written": "3598.00"
+        }
+      ],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "González-Robatto Perote, Jacobo",
+      "cod": 121,
+      "filed": "2023-08-04",
+      "url": "https://www.congreso.es/docbienes/leg15/000112/000112_000_e_0000476_20230804.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "Sueldos y Salarios.",
+          "amount": 32601.25
+        }
+      ],
+      "irpf": 12826.43,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "Terreno Urbano",
+          "location": "Madrid",
+          "acquired": "marzo 2023",
+          "title": "50% propiedad. Compraventa."
+        }
+      ],
+      "deposits": [
+        {
+          "description": "Depósito a cuenta el 4 de agosto de 2023.",
+          "amount": 124588.32
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "33.308 acciones de Mugardos S.A. (valor de acciones a diciembre 2022)",
+          "amount": 73277.6
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "2010",
+          "description": "Jeep Wrangler JK"
+        },
+        {
+          "acquired": "2018",
+          "description": "Harley Davidson Breakout 2017"
+        },
+        {
+          "acquired": "2021",
+          "description": "BMW RT1150 año 2001"
+        },
+        {
+          "acquired": "2022",
+          "description": "Land Rover Defender"
+        }
+      ],
+      "loans": [],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "rtve",
+        "checkedAt": "2026-11-06"
+      }
+    },
+    {
+      "deputy": "Gracia Blanco, Marta",
+      "cod": 370,
+      "filed": "2024-01-16",
+      "url": "https://www.congreso.es/docbienes/leg15/000369/000369_000_e_0008387_20240116.pdf",
+      "reason": "toma",
+      "income": [
+        {
+          "group": "salary",
+          "concept": "SALARIO",
+          "amount": 52272.48
+        },
+        {
+          "group": "salary",
+          "concept": "PENSIÓN VIUDEDAD",
+          "amount": 5898.02
+        },
+        {
+          "group": "interest",
+          "concept": "rendimientos de depósitos",
+          "amount": 19.61
+        }
+      ],
+      "irpf": 13808.73,
+      "realEstate": [
+        {
+          "kind": "urban",
+          "description": "PISO",
+          "location": "LA ALMUNIA (ZARAGOZA)",
+          "acquired": "05/08/2021",
+          "title": "25% HERENCIA PLENO DOMINIO"
+        },
+        {
+          "kind": "urban",
+          "description": "PARCELA URBANA",
+          "location": "LA ALMUNIA (ZARAGOZA)",
+          "acquired": "05/08/2021",
+          "title": "50 % HERENCIA PLENO DOMINIO"
+        },
+        {
+          "kind": "rustic",
+          "description": "PARCELA RÚSTICA",
+          "location": "GALLOCANTA (ZARAGOZA)",
+          "acquired": "02/03/2007",
+          "title": "Suscripción de participaciones de LA S.L.TITULAR (DELICIAS)"
+        }
+      ],
+      "deposits": [
+        {
+          "description": "CUENTA CORRIENTE",
+          "amount": 26727
+        },
+        {
+          "description": "LIBRERA DE AHORRO",
+          "amount": null
+        },
+        {
+          "description": "LIBRETA DE AHORRO",
+          "amount": null
+        }
+      ],
+      "otherAssets": [
+        {
+          "kind": "securities",
+          "description": "PARTICIPACIONES EN DELICIAS FORESTALES LA PEÑUELA, S.L. VALOR DE LA APORTACIÓN SEGÚN ESCRITURA DE CONSTITUCIÓN DE LA SOCIEDAD",
+          "amount": 4637
+        }
+      ],
+      "holdingsOver5pct": null,
+      "vehicles": [
+        {
+          "acquired": "05/08/2021",
+          "description": "CITROEN C3"
+        },
+        {
+          "acquired": "19/11/2013",
+          "description": "HONDA CRV"
+        }
+      ],
+      "loans": [
+        {
+          "description": "Hipoteca (Avalista). Acreedor. Titular fallecido (Pareja de hecho de la declarante) IBERCAJA",
+          "granted": "30/07/2008",
+          "amount": 224603,
+          "pending": 108000
+        }
+      ],
+      "otherDebts": null,
+      "observations": null,
+      "notes": [],
+      "verified": {
+        "method": "second-reading",
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8611,7 +10049,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8687,7 +10125,7 @@
       ],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8751,7 +10189,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8804,7 +10242,7 @@
       "notes": [],
       "verified": {
         "method": "second-reading",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8860,7 +10298,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -8987,7 +10425,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9082,7 +10520,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9167,7 +10605,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9407,7 +10845,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9470,7 +10908,7 @@
       ],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9599,7 +11037,7 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     },
     {
@@ -9702,111 +11140,11 @@
       "notes": [],
       "verified": {
         "method": "rtve",
-        "checkedAt": "2026-11-04"
+        "checkedAt": "2026-11-06"
       }
     }
   ],
   "unresolved": [
-    {
-      "deputy": "Gallardo Barrena, Pedro Ignacio",
-      "cod": 74,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gamarra Ruiz-Clavijo, Concepción",
-      "cod": 314,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "García Adanero, Carlos",
-      "cod": 266,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "García Chavarría, María Montserrat",
-      "cod": 380,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "García Gurrutxaga, María Luisa",
-      "cod": 113,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "García López, Maribel",
-      "cod": 49,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "García Morís, Roberto",
-      "cod": 195,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Garre Murcia, Cristóbal",
-      "cod": 84,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Garrido Jiménez, Elisa",
-      "cod": 116,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Garrido Valenzuela, Irene",
-      "cod": 42,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gavin i Valls, Isidre",
-      "cod": 239,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gil de Reboleño Lastortres, Esther",
-      "cod": 86,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gil Lázaro, Ignacio",
-      "cod": 117,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gómez Piña, Luis Antonio",
-      "cod": 396,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "González Gracia, Juan Antonio",
-      "cod": 228,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "González Herdaro, Ana",
-      "cod": 407,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "González López, Nahuel",
-      "cod": 166,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "González Vázquez, Marta",
-      "cod": 200,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "González-Robatto Perote, Jacobo",
-      "cod": 121,
-      "reason": "not-transcribed"
-    },
-    {
-      "deputy": "Gracia Blanco, Marta",
-      "cod": 370,
-      "reason": "not-transcribed"
-    },
     {
       "deputy": "Granollers Cunillera, Inés",
       "cod": 221,
