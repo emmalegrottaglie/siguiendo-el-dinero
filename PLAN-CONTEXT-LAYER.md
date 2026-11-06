@@ -1,8 +1,14 @@
 # Plan: the context layer — wages, poverty, housing, and what parties actually did
 
-Status: **design, nothing built.** This document exists so the work can start cold. It records the
-sources that were verified on 2026-09-01, the ones that turned out to be traps, the visualisations
-worth building, and the honesty rules that apply to each new number.
+Status (updated 2026-11-06): **partly built.** Steps 1 to 3 of the build order in §8 are done: the
+news registry (`lib/news-sources.mjs`, `lib/news.ts`), the INE ingest (`scripts/fetch-ine.mjs` into
+`data/indicators.json`) and the wage and poverty page at `/contexto`, plus each person's pay in
+multiples of the SMI on their page. Steps 4 to 7 (housing, AEAT, Congreso initiatives, the
+juxtaposition grid) are not built; `NEXT-STEPS.md` item 5 tracks them. The site was redesigned on
+2026-11-05, so where this plan names components or chart technology of the time, a note says what
+exists now. The rest of this document is the design as written on 2026-09-01: the sources verified
+then, the ones that turned out to be traps, the visualisations worth building, and the honesty rules
+that apply to each new number.
 
 The site currently answers *who funds the parties* and *how the parties voted*. This layer adds the
 third side: *what the country the parties govern actually looks like*. Wages by sector, poverty
@@ -249,15 +255,16 @@ a dead feed in a "recent news" panel is worse than no panel.
   have quietly filled a "latest news" panel with two-year-old articles. Exclude it, or label it as
   an archive.
 - **Arcópoli is stale**, latest 12 Feb 2026 — include but do not rely on it for "trending".
-- **El Salto is Atom, not RSS** — `<feed>`/`<entry>`, not `<channel>`/`<item>`. The current parser in
-  `lib/news.ts` matches `<item>` only and will return an empty array. It needs an Atom branch.
+- **El Salto is Atom, not RSS** — `<feed>`/`<entry>`, not `<channel>`/`<item>`. The parser in
+  `lib/news.ts` matched `<item>` only and returned an empty array. (Fixed: it has an Atom branch
+  since step 1.)
 - **Dead or unreachable:** `chrysallis.org.es/feed/` (connection failure), `kifkif.info/feed/` (404),
   `fundacion26d.org/feed/` (404), `lambdavalencia.org/feed/` (404), `observatoriolgtb.org/feed/`
   (unreachable), `eapn.es/feed` and `/rss` (404). For these, either find the real feed path or fall
   back to the existing Google News RSS query scoped to the organisation's name.
 
-**Implementation notes.** `lib/news.ts` currently hardcodes one Google News query. It should become a
-registry of named sources — each with a URL, a format (`rss` | `atom`), an organisation name, a
+**Implementation notes.** `lib/news.ts` then hardcoded one Google News query. It should become a
+registry (done in step 1: `lib/news-sources.mjs`) of named sources — each with a URL, a format (`rss` | `atom`), an organisation name, a
 topic tag, and a language — merged, de-duplicated by link, sorted by date, and rendered with the
 source name always visible. Add a **staleness guard**: a source whose newest item is older than N
 days is dropped from the merged feed and reported in a build log, so the dosmanzanas failure mode
@@ -317,9 +324,10 @@ non-principal) with the methodological difference in one sentence each.
 
 The site's centrepiece. Rows are parliamentary groups. Columns are grouped into three bands:
 
-1. **Votes** — one cell per pinned roll call, using the existing ballot-language labels ("Votó Sí"),
-   not interpreted positions, and showing the ballot subject on hover, exactly as `StanceByGroup`
-   already does.
+1. **Votes** — one cell per pinned roll call, labelled by the side taken on the ballot, not by an
+   interpreted position, with the ballot's subject shown beside it (as the topic pages do with
+   `whatWasVoted()` in `components/nuevo/topics.ts`; `StanceByGroup`, which this originally pointed
+   to, was removed in the redesign).
 2. **Money** — state subsidies received, foundation donations, donation-band data where held.
 3. **Measures** — initiative counts from §4, split filed / admitted / approved.
 
@@ -351,8 +359,10 @@ A single shared time axis. Dragging it moves every other panel on the page to th
 indicator values, the funding totals for that year, the votes that had happened by then. Expensive,
 and worth it only after A, B, E and F exist.
 
-**Charting technology.** The project currently hand-rolls SVG bars with `motion` and has no chart
-dependency, which is why the pages are fast and look like the rest of the site. A, B, D, H and I are
+**Charting technology.** The project hand-rolls its graphics and has no chart dependency, which is
+why the pages are fast and look like the rest of the site. (When this was written the bars were
+animated with `motion`; since the redesign of 2026-11-05 there is no animation library either, and
+the graphics are the server-rendered components in `components/nuevo/`.) A, B, D, H and I are
 all achievable that way. Recommendation: stay hand-rolled, and if a real need appears for scales,
 paths or a Sankey layout, add `d3-scale` / `d3-shape` / `d3-sankey` only — they are pure maths, run
 server-side, and add no DOM layer. Do not add a full charting framework; it will not match the

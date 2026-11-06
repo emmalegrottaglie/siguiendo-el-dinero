@@ -9,15 +9,16 @@ Available in **Spanish, English and Catalan**.
 
 ## Documentation map
 
-Six documents, each with one job. Start with the one that matches your question.
+Six documents, each with one job, plus the research notes in `research/` and
+`RESEARCH-DATAVIZ/`. Start with the one that matches your question.
 
 | Document | Answers |
 |---|---|
 | **README.md** (this file) | What the project is, how to run it, where things live |
-| [`AGENTS.md`](AGENTS.md) | How it is built: architecture, data flow, endpoint gotchas, honesty rules |
+| [`AGENTS.md`](AGENTS.md) | How it is built: architecture, the design system, data flow, endpoint gotchas, honesty rules |
 | [`NEXT-STEPS.md`](NEXT-STEPS.md) | What is planned, with enough detail to pick any item up cold |
-| [`PLAN-CONTEXT-LAYER.md`](PLAN-CONTEXT-LAYER.md) | Design for the wages / poverty / housing layer, with verified sources |
-| [`PLAN-VISUAL.md`](PLAN-VISUAL.md) | Design critique, the WCAG 2.1 AA audit, and the plan to make the site visual |
+| [`PLAN-CONTEXT-LAYER.md`](PLAN-CONTEXT-LAYER.md) | Design for the wages / poverty / housing layer, with verified sources; the wage and poverty half is built (`/contexto`) |
+| [`PLAN-VISUAL.md`](PLAN-VISUAL.md) | The September 2026 design critique and WCAG 2.1 AA audit of the first design. Overtaken by the redesign of 2026-11-05 and kept as a record |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed, why, the source behind each figure, and what was left out |
 
 ## What it shows
@@ -34,7 +35,7 @@ Six documents, each with one job. Start with the one that matches your question.
 | Deputies' asset declarations | Congreso scans, transcribed here and checked against RTVE or a second reading | First XV filing (2023), transcribed in batches |
 | Portraits | Wikipedia / Wikimedia Commons | Rebuilt on demand |
 | Politician social presence | Curated registry + Bluesky public API | Live per request |
-| Rights, housing and poverty news | Curated RSS/Atom registry (`lib/news-sources.mjs`) | Live, 30-minute cache |
+| Rights and housing news, on the topic pages | Curated RSS/Atom registry (`lib/news-sources.mjs`) | Live, 30-minute cache |
 
 ### Honest limits
 
@@ -54,8 +55,8 @@ Read `/metodologia` in the app before drawing conclusions. In short:
   person. Politician pages link to their party's funding instead of inventing a personal number.
 - **Private data is not an API.** Donation and foundation figures come from annual Tribunal de
   Cuentas PDF reports, published one to two years late — hence fixed snapshots, not live feeds.
-- **Recorded votes only**, and labelled by ballot language. Vote positions come from named roll
-  calls, pinned by hand in `scripts/fetch-votes.mjs` with the tally expected on the official
+- **Recorded votes only**, each shown with what was actually put to the vote. Vote positions come
+  from named roll calls, pinned by hand in `scripts/fetch-votes.mjs` with the tally expected on the official
   record; the fetcher refuses to publish a vote whose tally does not match. Each item is labelled
   by type, because a "proposición no de Ley" or a motion is a non-binding position, not the
   passage of a law. A person has a position only if their vote is on record — never inferred from
@@ -77,7 +78,8 @@ Read `/metodologia` in the app before drawing conclusions. In short:
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript + Tailwind v4
-- `motion` for animations
+- The site's own design system in `app/[locale]/site.css` and `components/nuevo/`: no chart or
+  animation library (see `AGENTS.md`, "The design system")
 - Vercel KV / Upstash Redis for the refreshed data snapshot (filesystem fallback in dev)
 - No API keys required: BDNS, Bluesky, the news feeds and Google News RSS are all public
 
@@ -163,7 +165,10 @@ Locale lives in the URL (`/es`, `/en`, `/ca`), which keeps pages statically gene
   then `Accept-Language`, then the Spanish default.
 - `lib/locales.ts` holds the locale constants only, so the edge middleware does not pull in the
   translation tables.
-- `lib/i18n.ts` holds the dictionaries and `getDict(locale)`.
+- Each page keeps its words in a `copy.ts` beside it, exporting `COPY: Record<Locale, Copy>`: one
+  block per language, with sentences that depend on a number written as functions so plurals and
+  agreement are right in each language. Components carry their own words the same way.
+- `lib/i18n.ts` holds `getDict(locale)` and the dictionary blocks several pages share.
 - Numbers and dates are formatted with the locale's BCP-47 tag via `lib/format.ts`.
 
 Party names, official job titles and cited report titles stay in their original language on
@@ -205,11 +210,11 @@ A healthy response reports `"storage":{"configured":"kv","writtenTo":"kv"}`.
 | `/[locale]/fundacion/[slug]` | One foundation: public grants, board members, the companies and bodies that funded it |
 | `/[locale]/personas` | Every officeholder and sitting deputy, with what the site holds on each; `?kind=declarations` shows the deputies' asset declarations side by side |
 | `/[locale]/politico/[slug]` | One person: pay, declarations to Congress, recorded ballots, social posts, news |
-| `/[locale]/territorios` | The comunidades and provinces, with their recorded investiture votes |
-| `/[locale]/territorio/[provincia]` | One province: money paid there and its representatives |
+| `/[locale]/territorios` | The 52 provinces by comunidad, who governs each comunidad, the recorded investiture votes, and recorded hate crime |
+| `/[locale]/territorio/[provincia]` | One province: the deputies it elects, their pay and declarations, their parties' money, and the figures measured for its comunidad beside the national ones |
 | `/[locale]/temas` | The topics, each built from the recorded votes on it |
-| `/[locale]/tema/[id]` | One topic: the votes, how each group and deputy voted, and related records |
-| `/[locale]/contexto` | Background on how party funding works in Spain |
+| `/[locale]/tema/[id]` | One topic: the votes, how each group and deputy voted, and related records; the LGTBI and housing topics also carry the organisations' and the press's own feeds |
+| `/[locale]/contexto` | The country the money is spent in: wages by sector, pay in multiples of the minimum wage, and poverty indicators, from the INE |
 | `/[locale]/buscar` | Search across people, parties, foundations, places and votes |
 | `/[locale]/metodologia` | Methodology, legal caveats and sources |
 | `/[locale]/datos` | The downloadable datasets, with their columns; each CSV is served from `/[locale]/datos/[table]` |
@@ -221,7 +226,8 @@ redesign prototype) to the same path at the root, `/party/[nif]` to `/partido/[n
 `/territorios`, `/derechos` to `/tema/lgtbi`, and `/sueldos`, `/caras` and `/politician/[slug]` to
 `/personas`. See `next.config.ts`.
 
-API routes: `/api/refresh` (BDNS pull, cron-protected), `/api/news`, `/api/bluesky`.
+API routes: `/api/refresh` (BDNS pull, cron-protected), `/api/news` (news search), `/api/bluesky`, and
+`/api/news-image` (an allowlisted image proxy, so a reader's browser never calls a publisher's host).
 
 ## Key files
 
@@ -249,13 +255,18 @@ API routes: `/api/refresh` (BDNS pull, cron-protected), `/api/news`, `/api/blues
 | `lib/photos.ts` + `scripts/fetch-photos.mjs` | Freely-licensed portraits with attribution |
 | `lib/news.ts` | Feed fetching and merging: RSS and Atom, staleness guards, per-source cap |
 | `lib/news-sources.mjs` + `scripts/check-feeds.mjs` | The feed registry and its health check |
-| `lib/i18n.ts`, `lib/locales.ts` | Dictionaries and locale constants |
+| `lib/i18n.ts`, `lib/locales.ts` | Shared dictionary blocks and locale constants |
 | `middleware.ts` | Locale redirects |
-| `components/Sidebar.tsx` | Left rail navigation and the mobile menu |
-| `components/Dashboard.tsx` | Overview: totals, filters, ranked bars |
-| `components/StanceByGroup.tsx` | Per-group ballots, labelled by how each group voted |
-| `components/Declarations.tsx` | Profile section: asset declaration, economic interests, caveat |
-| `components/NewsFeed.tsx` | News panel: topic mode (registry) or query mode (search) |
+| `app/[locale]/layout.tsx` | The frame: fonts, theme script, skip link, header, menu, footer |
+| `app/[locale]/site.css` | The design system: `--n-*` tokens and `n-*` classes, both themes |
+| `app/[locale]/*/copy.ts` | Each page's words in Spanish, English and Catalan |
+| `components/nuevo/` | The design's components: the route map and line, bars, ballots, portraits, maps, court record, feeds |
+| `components/nuevo/BallotStrip.tsx` | A person's whole recorded voting record, one cell per tracked division |
+| `components/nuevo/CourtRecord.tsx` | The court and electoral-board record, each status named by its type |
+| `components/nuevo/OrgVoices.tsx` | The organisations' own feeds on a topic page, apart from the press |
+| `components/nuevo/NewsFeed.tsx` | Recent headlines for a name, from a news search |
+| `app/[locale]/personas/Declarations.tsx` | The deputies' transcribed declarations side by side |
+| `components/ThemeToggle.tsx`, `components/LocaleToggle.tsx` | The header's theme and language toggles |
 
 ## Sources
 

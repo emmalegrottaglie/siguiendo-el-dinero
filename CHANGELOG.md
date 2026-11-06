@@ -5,6 +5,69 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — Documentation brought up to date with the new design
+
+The documents still described parts of the site that the switch-over of 2026-11-05 removed: the
+old chart components, the old stylesheet's tokens and classes, and pages that now redirect. This
+change touches documentation only; no code changed.
+
+- **`AGENTS.md`.** The design-system section, marked "Superseded in part" since the switch-over,
+  is rewritten to describe the system that exists: the route-map motif and its route classes
+  (`n-state`, `n-donors`, `n-foundations`, `n-companies`, `n-topic`, `n-neutral`), filled or solid
+  for on record and hollow or dashed for not on record, always also said in words (with the one
+  different use, the route map's dashed "not money" links, named); the two typefaces and their
+  jobs; every `n-` class; how a page is built (title, plain intro, one computed finding per
+  section, the figures in words or a table, the source on the page); missing figures as "—" and
+  tiny shares as "menos del 1 %"; the table pattern (own scroll box, hidden caption, scoped
+  headers); the `copy.ts` translation pattern; accessibility at 375px, focus, reduced motion and
+  both themes. The old "Every bar goes through one primitive" and "Charts" sections are replaced by
+  a short "Graphics" section listing the components that draw figures and the rules they share,
+  and saying what was left out at the switch-over. Rules whose component is gone but whose reason
+  holds were kept and pointed at what now carries them (the cascade-layer trap now applies to
+  `site.css`, which is unlayered; the localised-percentage trap; measured contrast in both
+  themes; party colours never adjusted and never on text). The map section is rewritten for
+  `/territorios`, where the map encodes nothing and the investiture record is drawn by
+  `InvestitureRecord`. The library table loses `lib/chart-colors.ts` and gains thirteen modules it
+  never listed; the client-component boundary, the news-registry description (now read on the
+  topic pages, not on a front-page panel), the sanity checks and the known gaps are brought up to
+  date. The "Superseded in part" note is gone.
+- **A rule that the redesign changed, recorded rather than smoothed over.** The first version of
+  the site labelled ballots "votó Sí / votó No / se abstuvo" and showed each ballot's subject,
+  because the Ley 4/2023 ballot was on the Senate's amendments and an unqualified "en contra" put
+  EH Bildu against the trans law. The new design uses "a favor / en contra / abstención", and only
+  the topic pages print the ballot's subject; the person page, the party page and the front page
+  do not. `AGENTS.md` now says so under the honesty rules and lists it as a known gap needing a
+  decision; no code was changed here.
+- **`README.md`.** The stack no longer lists `motion`; the key-files table names the frame, the
+  stylesheet, the copy files and the new components instead of five removed ones; the
+  descriptions of `/contexto`, `/territorios`, `/territorio/[provincia]` and `/tema/[id]` match the
+  pages; `/api/news-image` is listed; the internationalisation notes describe the `copy.ts`
+  pattern; the documentation map says what state each plan is in.
+- **`NEXT-STEPS.md`.** A note at the top says entries finished before the switch-over name the
+  components of the time; the removed `components/SmiPosition.tsx` and
+  `components/ElectoralSpending.tsx` and the `SmiLadder` chart are pointed at what replaced them.
+- **`PLAN-VISUAL.md`.** Marked at the top as finished and then overtaken by the redesign, with
+  where to read about what replaced it and which of its findings still apply. Each removed file it
+  names is marked as removed; the audit itself is unchanged.
+- **`PLAN-CONTEXT-LAYER.md`.** The status line said "nothing built"; it now says steps 1 to 3 are
+  built and where. The pointers to `StanceByGroup`, the `motion` dependency and the old news parser
+  are marked as of their time.
+- **`RESEARCH-DATAVIZ/`.** The README pointed at `docs/` files as "this repo's own docs"; they are
+  the Bot Traffic Monitor repository's, and it now says so (as does the one pointer in
+  `02-honest-presentation.md`). The pointer to `components/chart/Finding.tsx` and the treemap in
+  `03-chart-recipes.md` are marked as removed, with what carries them now.
+
+**Left as it was, on purpose:** the findings in `research/` and `RESEARCH-DATAVIZ/` (they are
+records; their remaining pointers are still correct), `scripts/declaration-transcription.md` (it
+names nothing the redesign removed), the past entries of this changelog (history stays history),
+and `CLAUDE.md`.
+
+**Checked mechanically:** every backticked repository path in the documents above was tested for
+existence with a script. Of 288 paths, 269 exist. The 19 that do not are each marked in the text as
+removed on 2026-11-05 (in `PLAN-VISUAL.md`, `AGENTS.md`'s "do not reintroduce" line and
+`03-chart-recipes.md`) or as belonging to the Bot Traffic Monitor repository (the `docs/` files in
+`RESEARCH-DATAVIZ/`). Paths under `data/_*` are local caches, gitignored, and absent from a clean
+checkout; the documents say so where they name them.
 ## 2026-11-06 — The foundations page says where the parties' own money comes from
 
 Emma read the finding at the top of `/fundaciones` ("in 2022, 89 % of what was contributed to the

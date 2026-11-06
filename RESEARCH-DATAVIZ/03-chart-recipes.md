@@ -91,11 +91,13 @@ combined") rather than with what they are ("Biggest individual donors"), and the
 evidence for the sentence. Three of its devices transfer to this site; one does not.
 
 - **The finding as the lead.** One sentence above the chart, computed from the chart's own rows
-  so it cannot drift from the marks (`components/chart/Finding.tsx`). It states a size or a
-  share, never a reason.
+  so it cannot drift from the marks (`components/chart/Finding.tsx` when this was written; since
+  the redesign of 2026-11-05 it is the `n-finding` sentence each page computes from its
+  `copy.ts`). It states a size or a share, never a reason.
 - **The whole as one shape.** A treemap of all state subsidies in the current selection, above the
   ranked bars that give the exact figures. Area is read less precisely than length, so it never
-  replaces them.
+  replaces them. (The treemap was removed with the first design on 2026-11-05; the route map and
+  `ShareBar` carry the whole now.)
 - **An explainer of the routes.** Numbered rows, each drawn as source, rules and recipient, with
   the rules taken from the consolidated text of the law and the figure its official source gives.
 - **Large figures on the graphic itself.** The amounts sit in the treemap's cells and beside each

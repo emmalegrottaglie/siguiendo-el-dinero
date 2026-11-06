@@ -1,5 +1,23 @@
 # Design critique, accessibility audit, and plan: making the portal visual
 
+> **Status (2026-11-06): finished, then overtaken. Kept as a record.** Every defect and audit item
+> below was fixed on the first design by 2026-09-07, and the plan in §4 was carried out between
+> September and October 2026 (the coverage chart, the chart primitives, a lead visual per page). On 2026-11-05 that whole
+> design was replaced by the redesign built at `/nuevo`: the route-map motif, the `--n-*` tokens and
+> `n-*` classes in `app/[locale]/site.css`, and the components in `components/nuevo/`. See
+> `CHANGELOG.md` ("A redesign prototype at /nuevo, built on the route map", 2026-10-30, and "The new
+> design becomes the site", 2026-11-05), and `AGENTS.md`, "The design system", for what exists now.
+>
+> The files, tokens and routes named below are those of the first design and mostly no longer
+> exist: `components/Dashboard.tsx`, `components/Sidebar.tsx`, `components/GroupBreakdown.tsx`,
+> `components/chart/`, `lib/motion.ts`, the `motion` dependency, the old stylesheet in
+> `app/globals.css` (`--ink`, `--paper-*`, `--gold`, `--line-*`, `.label-mono`, `.eyebrow`,
+> `.panel`), and the `/votaciones`, `/politicos` and `/party/[nif]` routes, which now redirect. The
+> findings still worth carrying into the new design are kept in `AGENTS.md`: the cascade-layer trap
+> (D1), no content at `opacity: 0` without JavaScript (D3b), the skip link built by translation
+> rather than `sr-only` (O1), a caption and scoped headers on every table (R3, N1), and the 3:1
+> boundary on interactive controls (P3).
+
 Audited 2026-09-01 against the running app: seven routes at 1440×900 and at 375×812, with contrast
 ratios and element counts measured in the page rather than estimated by eye. Everything numbered
 below was measured; where a figure is stated, the method is stated with it.
@@ -45,9 +63,9 @@ lighter, so contrast improves. Two are not harmless:
 
 | Where | Code asks for | Actually renders | Contrast |
 |---|---|---|---|
-| Active filter chip, `components/Dashboard.tsx:113` | `--ink` on `--gold` | `--paper-dim` on `--gold` | **1.14 : 1** |
-| Active chip, `app/[locale]/votaciones/page.tsx:76` | `--ink` on `--gold` | `--paper-dim` on `--gold` | **1.14 : 1** |
-| Reset button, `components/Dashboard.tsx:145` | `--red` | `--paper-dim` | n/a |
+| Active filter chip, `components/Dashboard.tsx:113` (removed 2026-11-05) | `--ink` on `--gold` | `--paper-dim` on `--gold` | **1.14 : 1** |
+| Active chip, `app/[locale]/votaciones/page.tsx:76` (removed 2026-11-05) | `--ink` on `--gold` | `--paper-dim` on `--gold` | **1.14 : 1** |
+| Reset button, `components/Dashboard.tsx:145` (removed) | `--red` | `--paper-dim` | n/a |
 
 1.14 : 1 is invisible. The currently-selected filter — the one control that tells the reader what
 they are looking at — is the least readable text on the page. Confirmed by reading
@@ -86,7 +104,7 @@ elements to the failing value.
 `@media (prefers-reduced-motion: reduce)` in `globals.css` disabled `scroll-behavior` and nothing
 else. Four components animated with `motion`, and none consulted `useReducedMotion()`.
 
-**Applied.** A shared `useEntrance()` hook in `lib/motion.ts` now builds every entrance's
+**Applied.** A shared `useEntrance()` hook in `lib/motion.ts` (removed 2026-11-05) built every entrance's
 `initial` / `animate` / `transition`, collapsing to the final state with a zero duration under
 reduced motion. All four components use it: `Dashboard` (masthead, party rows, bars), `NewsFeed`,
 `BlueskyFeed` and `CountUp`, which skips its count-up entirely and shows the figure. The skeleton
@@ -204,7 +222,7 @@ the page partway through this session — the Browser pane reports itself hidden
 recording every `keydown` saw nothing for either Escape or a letter key. O2’s fix is therefore
 verified the two ways that remain available: by code, and by dispatching a `KeyboardEvent` on
 `document`, which exercises the exact listener the handler registers. The original finding does not
-depend on that plumbing either — `components/Sidebar.tsx` had no key handler at all, which is
+depend on that plumbing either — `components/Sidebar.tsx` (removed 2026-11-05) had no key handler at all, which is
 visible in the source.
 
 **On P3's fix.** `--line-strong` was doing two jobs: the boundary of interactive controls and
@@ -254,7 +272,7 @@ Two new findings, both verified live; the fixed items were re-checked and hold.
 
 | # | Issue | Criterion | Severity | Fix |
 |---|---|---|---|---|
-| N1 | ~~On `/votaciones` the per-group rows announce as “GS 116/0/1”. There are no column headers and no legend in that section, so what the three numbers mean is carried only by the colour of the bars — and those sit in a *different* widget higher up the page. The group codes themselves (`GS`, `GCUP-EC-GC`, `GPlu`) are never expanded either~~ **FIXED 2026-09-01** — rebuilt as `components/GroupBreakdown.tsx`: a real table with a caption, `scope="col"` headers, `scope="row"` group names, Sí/No/abstención in their own columns, and the bar reduced to `aria-hidden` decoration | 1.3.1 Info and Relationships | 🟡 Major | done |
+| N1 | ~~On `/votaciones` the per-group rows announce as “GS 116/0/1”. There are no column headers and no legend in that section, so what the three numbers mean is carried only by the colour of the bars — and those sit in a *different* widget higher up the page. The group codes themselves (`GS`, `GCUP-EC-GC`, `GPlu`) are never expanded either~~ **FIXED 2026-09-01** — rebuilt as `components/GroupBreakdown.tsx` (removed 2026-11-05; the topic pages' group tables replace it): a real table with a caption, `scope="col"` headers, `scope="row"` group names, Sí/No/abstención in their own columns, and the bar reduced to `aria-hidden` decoration | 1.3.1 Info and Relationships | 🟡 Major | done |
 | N2 | ~~`aria-controls="mobile-nav"` dangles when the menu is closed~~ **FIXED 2026-09-04** — the panel is always mounted and its display switched by class, so the IDREF always resolves; zero dangling `aria-controls` across eight route/locale combinations | 4.1.2 Name, Role, Value | 🟢 Minor | done |
 
 **Newly tested and passing.** These had been listed as untested:
@@ -359,7 +377,7 @@ filtered pages.
 
 The plan in `PLAN-CONTEXT-LAYER.md` already settled this: stay hand-rolled, add `d3-scale` /
 `d3-shape` only if a real need appears, no charting framework. What is missing is the shared piece
-every chart needs. Build `components/chart/` with:
+every chart needs. Build `components/chart/` (built in October 2026, removed 2026-11-05) with:
 
 - `Frame` — viewBox, responsive sizing, axis rules in `--line`, the site's type scale for ticks.
 - `Bars`, `Line`, `Dots` — thin wrappers over `<rect>`, `<path>`, `<circle>`.
