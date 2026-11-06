@@ -5,6 +5,33 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — The foundations page says where the parties' own money comes from
+
+Emma read the finding at the top of `/fundaciones` ("in 2022, 89 % of what was contributed to the
+34 audited entities came from the parties themselves") and asked the question it leaves open:
+where do the parties get that money? The front page and the party pages already answered it from
+the party-accounts report; the foundations page, where the question arises, did not.
+
+The page now has a section, "De dónde sacan los partidos lo que aportan", after the year-by-year
+figures, and a link to it under the finding at the top. It shows:
+
+- a finding computed from `lib/party-income.ts`: in 2020 the 25 audited parties had 233.6 M€ of
+  ordinary income, and 72 % was public money; then, in a sentence, the private part's largest
+  sources (their own officeholders' contributions, member fees, donations);
+- two bars with every part named in words: all ordinary income by source, and the public money by
+  who pays it (regional parliaments, the State, local bodies, regional governments, the Cortes);
+- what the figures cannot say. A party pays out of its income as a whole, so neither report shows
+  how much of what it gave its entities was public money and how much private. The foundation
+  figures are for 2021 and 2022 and the income is for 2020: different years and not always the
+  same parties, so nothing is added or subtracted, and the page says the parties' income for 2021
+  and 2022 is not on the site yet;
+- a link to the party index's income section, and the source (Informe nº 1.573, annexes IV and V).
+
+All three languages. Verified in the browser in es, en and ca, at 375 px (no horizontal scroll) and
+in both themes; `npx tsc --noEmit` passes.
+
+---
+
 ## 2026-11-06 — Asset declarations, seventh batch: 144 published
 
 **What was read.** The next 20 first filings in Congreso's surname order, from Pedro Ignacio
