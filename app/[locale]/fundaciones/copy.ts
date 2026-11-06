@@ -24,6 +24,36 @@ const es = {
     `En ${year}, el ${pctParty} de lo que se aportó a las ${n} entidades fiscalizadas lo pusieron los propios partidos; las empresas, el ${pctCompanies}.`,
   findingNote:
     "Aparte de las aportaciones, las entidades reciben subvenciones públicas. Cada ejercicio se muestra por separado: las cifras de un año no se suman con las del otro.",
+  toMoney: "¿Y de dónde sacan los partidos ese dinero?",
+  moneyTitle: "De dónde sacan los partidos lo que aportan",
+  moneyFinding: (year: number, n: string, total: string, publicPct: string) =>
+    `Lo que un partido aporta a sus entidades sale de sus propios ingresos. En ${year}, los ${n} partidos fiscalizados ingresaron ${total}, y el ${publicPct} fue dinero público.`,
+  moneyPrivate: (officeholders: string, members: string, donors: string) =>
+    `De la parte privada, ${officeholders} los aportaron sus propios cargos públicos, ${members} sus afiliados y ${donors} los donantes.`,
+  moneyAllHead: "Todos sus ingresos ordinarios",
+  moneyPublicHead: "El dinero público, según quién lo paga",
+  incomeParts: {
+    public: "Dinero público",
+    officeholders: "Aportaciones de sus cargos públicos",
+    memberFees: "Cuotas de afiliados",
+    donations: "Donaciones",
+    otherPrivate: "Otros ingresos privados",
+  },
+  publicParts: {
+    state: "Del Estado",
+    regionalGovernments: "De gobiernos autonómicos",
+    cortes: "De las Cortes Generales",
+    regionalParliaments: "De parlamentos autonómicos",
+    local: "De entidades locales",
+    other: "Otras subvenciones",
+  },
+  moneyCaveat: (foundationYears: string, incomeYear: number) =>
+    `Un partido paga con el conjunto de sus ingresos, así que ni este informe ni el de las fundaciones permiten saber qué parte de lo que aportó a sus entidades fue dinero público y qué parte privado. Las aportaciones de arriba son de ${foundationYears} y estos ingresos, de ${incomeYear}: son años distintos y no siempre los mismos partidos, así que las cifras no se suman ni se restan. Los ingresos de los partidos en ${foundationYears} aún no están en esta web.`,
+  moneyLinkPre: "Partido por partido, en ",
+  moneyLink: "Partidos",
+  moneySourcePre: "Fuente: Tribunal de Cuentas,",
+  moneySourcePost:
+    ", anexos IV y V: los partidos que recibieron subvención anual para su funcionamiento. No incluye las subvenciones electorales.",
   parts: {
     party: { label: "Del propio partido", short: "partido" },
     companies: { label: "De empresas", short: "empresas" },
@@ -97,6 +127,36 @@ const en: Copy = {
     `In ${year}, ${pctParty} of what was contributed to the ${n} audited entities came from the parties themselves; ${pctCompanies} came from companies.`,
   findingNote:
     "On top of contributions, the entities receive public subsidies. Each exercise is shown on its own: one year’s figures are not added to the other’s.",
+  toMoney: "And where do the parties get that money?",
+  moneyTitle: "Where the parties get what they put in",
+  moneyFinding: (year: number, n: string, total: string, publicPct: string) =>
+    `What a party puts into its entities comes out of its own income. In ${year}, the ${n} audited parties took in ${total}, and ${publicPct} of it was public money.`,
+  moneyPrivate: (officeholders: string, members: string, donors: string) =>
+    `Of the private part, ${officeholders} came from their own officeholders, ${members} from their members and ${donors} from donors.`,
+  moneyAllHead: "All their ordinary income",
+  moneyPublicHead: "The public money, by who pays it",
+  incomeParts: {
+    public: "Public money",
+    officeholders: "Contributions from their officeholders",
+    memberFees: "Member fees",
+    donations: "Donations",
+    otherPrivate: "Other private income",
+  },
+  publicParts: {
+    state: "From the State",
+    regionalGovernments: "From regional governments",
+    cortes: "From the Cortes Generales",
+    regionalParliaments: "From regional parliaments",
+    local: "From local authorities",
+    other: "Other subsidies",
+  },
+  moneyCaveat: (foundationYears: string, incomeYear: number) =>
+    `A party pays out of its income as a whole, so neither this report nor the foundations report shows how much of what it put into its entities was public money and how much private. The contributions above are from ${foundationYears} and this income is from ${incomeYear}: different years and not always the same parties, so the figures are neither added nor subtracted. The parties' income for ${foundationYears} is not on this site yet.`,
+  moneyLinkPre: "Party by party, in ",
+  moneyLink: "Parties",
+  moneySourcePre: "Source: Court of Auditors,",
+  moneySourcePost:
+    ", annexes IV and V: the parties that received an annual operating subsidy. Electoral subsidies are not included.",
   parts: {
     party: { label: "From the party itself", short: "party" },
     companies: { label: "From companies", short: "companies" },
@@ -167,6 +227,36 @@ const ca: Copy = {
     `El ${year}, ${caEl(pctParty)} del que es va aportar a les ${n} entitats fiscalitzades ho van posar els mateixos partits; les empreses, ${caEl(pctCompanies)}.`,
   findingNote:
     "A part de les aportacions, les entitats reben subvencions públiques. Cada exercici es mostra per separat: les xifres d’un any no se sumen amb les de l’altre.",
+  toMoney: "I d’on treuen els partits aquests diners?",
+  moneyTitle: "D’on treuen els partits el que aporten",
+  moneyFinding: (year: number, n: string, total: string, publicPct: string) =>
+    `El que un partit aporta a les seves entitats surt dels seus propis ingressos. El ${year}, els ${n} partits fiscalitzats van ingressar ${total}, i ${caEl(publicPct)} va ser diner públic.`,
+  moneyPrivate: (officeholders: string, members: string, donors: string) =>
+    `De la part privada, ${officeholders} els van aportar els seus propis càrrecs públics, ${members} els seus afiliats i ${donors} els donants.`,
+  moneyAllHead: "Tots els seus ingressos ordinaris",
+  moneyPublicHead: "Els diners públics, segons qui els paga",
+  incomeParts: {
+    public: "Diners públics",
+    officeholders: "Aportacions dels seus càrrecs públics",
+    memberFees: "Quotes d’afiliats",
+    donations: "Donacions",
+    otherPrivate: "Altres ingressos privats",
+  },
+  publicParts: {
+    state: "De l’Estat",
+    regionalGovernments: "De governs autonòmics",
+    cortes: "De les Corts Generals",
+    regionalParliaments: "De parlaments autonòmics",
+    local: "D’entitats locals",
+    other: "Altres subvencions",
+  },
+  moneyCaveat: (foundationYears: string, incomeYear: number) =>
+    `Un partit paga amb el conjunt dels seus ingressos, així que ni aquest informe ni el de les fundacions permeten saber quina part del que va aportar a les seves entitats van ser diners públics i quina part privats. Les aportacions de dalt són de ${foundationYears} i aquests ingressos, del ${incomeYear}: són anys diferents i no sempre els mateixos partits, així que les xifres no se sumen ni es resten. Els ingressos dels partits del ${foundationYears} encara no són en aquest web.`,
+  moneyLinkPre: "Partit per partit, a ",
+  moneyLink: "Partits",
+  moneySourcePre: "Font: Tribunal de Comptes,",
+  moneySourcePost:
+    ", annexos IV i V: els partits que van rebre subvenció anual per al seu funcionament. No inclou les subvencions electorals.",
   parts: {
     party: { label: "Del propi partit", short: "partit" },
     companies: { label: "D’empreses", short: "empreses" },

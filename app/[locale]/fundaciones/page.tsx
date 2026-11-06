@@ -20,6 +20,13 @@ import {
 import { governanceCoverage, ROLES } from "@/lib/foundation-people";
 import { officeTies } from "@/lib/officeholder-ties";
 import { nameKey } from "@/lib/name-key.mjs";
+import {
+  ordinaryIncome,
+  PARTY_INCOME,
+  PARTY_INCOME_SOURCE,
+  PARTY_INCOME_TOTALS,
+  PARTY_INCOME_YEAR,
+} from "@/lib/party-income";
 import ShareBar from "@/components/nuevo/ShareBar";
 import Line from "@/components/nuevo/Line";
 import DotGrid from "@/components/nuevo/DotGrid";
@@ -85,6 +92,14 @@ export default async function PrototypeFoundations({
 
   // ---------- The finding, from the latest exercise alone ----------
   const y = data.years[String(fLatest)];
+  // Where the parties' own money comes from, from the party-accounts report.
+  // A different year from the foundations' exercises: shown beside them, never
+  // added to or subtracted from them.
+  const income = PARTY_INCOME_TOTALS;
+  const incomeTotal = ordinaryIncome(income);
+  const incomeShare = (v: number) => `${euroM(v, bcp47, 1)} (${share(v / incomeTotal)})`;
+  const publicShare = (v: number) => `${euroM(v, bcp47, 1)} (${share(v / income.public.total)})`;
+
   const finding = t.finding(
     fLatest,
     integer(y.entities, bcp47),
@@ -245,6 +260,9 @@ export default async function PrototypeFoundations({
         </p>
         <p className="n-finding mt-8">{finding}</p>
         <p className="n-body mt-3">{t.findingNote}</p>
+        <p className="n-body mt-3">
+          <a href="#de-donde">{t.toMoney}</a>
+        </p>
       </div>
 
       {/* ---------- The channel, one exercise at a time ---------- */}
@@ -285,6 +303,64 @@ export default async function PrototypeFoundations({
         <p className="n-body mt-8">{F.publicNote}</p>
         <p className="n-source">
           {t.channelSource(yearsList)} <a href={data.source.url}>{data.source.report}</a>
+        </p>
+      </Section>
+
+      {/* ---------- Where the parties' own money comes from ---------- */}
+      <Section id="de-donde" title={t.moneyTitle}>
+        <p className="n-finding">
+          {t.moneyFinding(
+            PARTY_INCOME_YEAR,
+            integer(PARTY_INCOME.length, bcp47),
+            euroM(incomeTotal, bcp47, 1),
+            share(income.public.total / incomeTotal),
+          )}
+        </p>
+        <p className="n-body mt-3">
+          {t.moneyPrivate(
+            euroM(income.private.officeholders, bcp47, 1),
+            euroM(income.private.memberFees, bcp47, 1),
+            euroM(income.private.donations, bcp47, 2),
+          )}
+        </p>
+        <div className="mt-8 grid gap-x-14 gap-y-10 lg:grid-cols-2">
+          <div className="n-neutral min-w-0">
+            <h3 className="n-h3">{t.moneyAllHead}</h3>
+            <ShareBar
+              locale={locale}
+              className="mt-4"
+              parts={[
+                { label: t.incomeParts.public, value: income.public.total },
+                { label: t.incomeParts.officeholders, value: income.private.officeholders },
+                { label: t.incomeParts.memberFees, value: income.private.memberFees },
+                { label: t.incomeParts.donations, value: income.private.donations },
+                { label: t.incomeParts.otherPrivate, value: income.private.other },
+              ]}
+              format={incomeShare}
+            />
+          </div>
+          <div className="n-state min-w-0">
+            <h3 className="n-h3">{t.moneyPublicHead}</h3>
+            <ShareBar
+              locale={locale}
+              className="mt-4"
+              parts={(
+                ["state", "regionalParliaments", "local", "regionalGovernments", "cortes", "other"] as const
+              )
+                .map((k) => ({ label: t.publicParts[k], value: income.public[k] }))
+                .sort((a, b) => b.value - a.value)}
+              format={publicShare}
+            />
+          </div>
+        </div>
+        <p className="n-body mt-8">{t.moneyCaveat(yearsList, PARTY_INCOME_YEAR)}</p>
+        <p className="n-body mt-3">
+          {t.moneyLinkPre}
+          <Link href={`/${locale}/partidos#ingresos`}>{t.moneyLink}</Link>.
+        </p>
+        <p className="n-source">
+          {t.moneySourcePre} <a href={PARTY_INCOME_SOURCE.url}>{PARTY_INCOME_SOURCE.report}</a>
+          {t.moneySourcePost}
         </p>
       </Section>
 
