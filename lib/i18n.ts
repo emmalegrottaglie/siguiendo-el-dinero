@@ -16,8 +16,6 @@ const es = {
   },
   nav: {
     panel: "Panel",
-    faces: "Caras",
-    salaries: "Sueldos",
     people: "Políticos",
     votes: "Votaciones",
     methodology: "Metodología",
@@ -26,10 +24,6 @@ const es = {
     rights: "Derechos",
     map: "Mapa",
     foundations: "Fundaciones",
-    data: "Datos",
-    sectionData: "Datos",
-    sectionAbout: "Sobre",
-    menu: "Menú",
     skipToContent: "Saltar al contenido",
   },
   people: {
@@ -208,151 +202,13 @@ const es = {
     colBallot: "Voto",
   },
   votes: {
-    eyebrow: "Votaciones nominales",
-    title: "Votaciones clave",
-    intro:
-      "Posiciones registradas en votaciones nominales del Congreso sobre asuntos concretos. Cada posición es un voto realmente emitido y verificable, no una opinión atribuida.",
-    caveat:
-      "Cada votación se etiqueta según su tipo: unas aprueban leyes, otras son proposiciones no de Ley o mociones, que no son vinculantes. Se excluyen las votaciones de enmiendas. Un diputado aparece solo si consta su voto; no se deduce la postura de nadie a partir de su partido.",
-    searchLabel: "Buscar diputado",
-    searchPlaceholder: "Apellido o nombre…",
     inFavour: "A favor",
     against: "En contra",
     abstention: "Abstención",
     noVote: "No vota",
-    present: "Presentes",
-    byGroup: "Por grupo parlamentario",
-    group: "Grupo",
-    byGroupCaption: "Un grupo por fila, con sus votos contados y el enlace a la financiación del partido cuando el grupo lo forma uno solo.",
-    distribution: "Reparto",
-    funding: "Financiación",
-    severalParties: "Varios partidos",
-    groupUnknown: "Grupo no identificado en el registro",
-    groupNote:
-      "Un grupo parlamentario no es un partido. Cuando el grupo lo forma un solo partido, la última columna enlaza a la financiación de ese partido; cuando lo forman varios, no se enlaza a ninguno, porque atribuir el dinero de una coalición a uno de sus miembros sería falso.",
-    groupSource: "Composición de los grupos ↗",
-    officialRecord: "Acta oficial ↗",
-    lawText: "Texto de la ley ↗",
-    session: "Sesión",
-    noMatch: "Sin votos registrados para esa búsqueda.",
-    results: "diputados",
-    kinds: {
-      ley: "Votación final de ley",
-      toma: "Toma en consideración",
-      pnl: "Proposición no de Ley",
-      mocion: "Moción consecuencia de interpelación",
-    },
-    nonBinding: "no vinculante",
-    legislature: "Legislatura",
-  },
-  salaries: {
-    title: "Sueldos públicos",
-    intro:
-      "Retribuciones de los cargos públicos en activo, según el Registro de Altos Cargos y los portales de transparencia. Busca por nombre, cargo, municipio o comunidad.",
-    search: "Buscar",
-    searchPlaceholder: "Nombre, cargo, municipio…",
-    party: "Partido",
-    all: "Todos",
-    role: "Cargo",
-    where: "Ámbito",
-    annual: "Bruto anual",
-    people: "cargos",
-    results: "resultados",
-    noResults: "Sin resultados para esta búsqueda.",
-    prev: "Anterior",
-    next: "Siguiente",
-    page: "Página",
-    of: "de",
-    median: "Mediana",
-    sourceNote:
-      "Fuentes · Registro de Altos Cargos / transparencia.gob.es; los diputados que el registro no recoge, de los datos abiertos del Congreso",
-    caveat:
-      "Retribución del cargo, no patrimonio ni ingresos privados. Solo cargos marcados como activos en la fuente.",
-  },
-  map: {
-    investitureTitle: "Investidura",
-    investitureDecisive:
-      "El PP tenía {pp} de {seats} escaños y la mayoría absoluta era {majority}. En la votación del {date} la investidura salió por {for} votos frente a {against}, y {voxVotes} de esos votos los puso Vox: sin ellos no había mayoría.",
-    investitureShort:
-      "El PP tenía {pp} de {seats} escaños y la mayoría absoluta era {majority}, así que no la alcanzaba solo; los {vox} escaños de Vox habrían bastado para cubrir la diferencia. El acta de la votación no está verificada aquí, y en segunda vuelta basta la mayoría simple, así que no se afirma quién invistió a nadie.",
-    investitureCarried: "aprobada",
-    investitureFailed: "rechazada",
-    hatchDecisive: "Investidura con votos de Vox, según el acta",
-    hatchShort: "El PP no llegaba solo a la mayoría absoluta",
-    eyebrow: "Mapa territorial",
-    title: "Dónde manda cada partido, y qué consta registrado allí",
-    standfirst:
-      "Pase el cursor para ver la comunidad. Pulse para fijarla en el panel. Las dos capas se muestran por separado y ninguna explica a la otra.",
-    svgLabel: "Mapa de las comunidades autónomas",
-    layerGov: "Gobierno autonómico",
-    layerGovNote:
-      "El partido de quien presidía cada comunidad en la fecha de comprobación, con la fecha en que tomó posesión. No es el resultado de las elecciones ni la composición del gobierno: es quién ocupa la presidencia.",
-    layerHate: "Delitos de odio registrados",
-    layerHateNote:
-      "Tasa de delitos, infracciones administrativas y otros incidentes de odio por cada 100.000 habitantes, 2024. Son hechos conocidos por las fuerzas de seguridad, no condenas: la cifra depende de cuánto se denuncia y de cómo registra cada policía lo que se denuncia.",
-    perHundredThousand: "por 100.000 hab.",
-    panelKicker: "Ficha territorial",
-    rowPresident: "Presidencia",
-    rowParty: "Partido",
-    rowSince: "Desde",
-    rowRecorded: "Hechos conocidos 2024",
-    rowRate: "Tasa por 100.000 hab.",
-    barSogi: "Orientación sexual e identidad de género",
-    barRacism: "Racismo y xenofobia",
-    barsNote:
-      "Dos de las doce motivaciones que distingue el informe, como proporción de los hechos conocidos de esa comunidad.",
-    noData: "No consta",
-    tableCaption:
-      "Un territorio por fila, con las dos capas del mapa como cifras. El orden sigue a la capa activa: por partido en la de gobierno, por tasa en la de delitos de odio.",
-    tableCaptionSorted:
-      "Un territorio por fila, con las dos capas del mapa como cifras. Ordenado por la columna que ha elegido; pulse otra cabecera para cambiarlo.",
-    sortHint: "Ordenar por {column}",
-    colTerritory: "Territorio",
-    colRate: "Tasa / 100.000",
-    sourcesTitle: "Fuentes",
-    tablesLabel: "tablas",
-    checkedLabel: "comprobado el",
-    limits:
-      "Los hechos conocidos incluyen infracciones administrativas y otros incidentes, no sólo delitos, y no son condenas. Las dos comunidades con policía autonómica propia —la Policía Foral de Navarra y la Ertzaintza— encabezan la tabla de tasas, lo que dice algo sobre cómo se registra y no necesariamente sobre dónde ocurre más. Un incidente del informe no consta en ningún territorio y por eso las columnas de aquí suman uno menos que la cifra nacional.",
-    missingLayers:
-      "El diseño de esta sección preveía tres capas más: un índice de derechos LGTBI, el estado de las reformas de las leyes trans y el voto a las formaciones que votaron en contra de las normas que este portal sigue. No están porque no hay todavía una fuente citable por comunidad para ninguna de las tres. El sombreado de las investiduras sí está, pero marca un hecho con fecha —cómo salió una votación concreta— y no quién se sienta hoy en un gobierno, que es lo que habría quedado desfasado: Vox salió de tres de esos gobiernos en julio de 2024.",
   },
   court: {
     title: "Lo que consta en el registro judicial",
-    eyebrow: "En los tribunales",
-    sourceLink: "Fuente",
-    statusNone: "Sin resoluciones",
-    noneBody:
-      "No consta en este portal ninguna resolución judicial ni acuerdo de junta electoral referido a cargos de esta formación en las materias que se siguen.",
-    noneNote:
-      "La ausencia de registro no es una declaración sobre la conducta de nadie: sólo significa que no hay una resolución citable.",
-    status: {
-      archived: "Causa archivada",
-      "awaiting-trial": "Pendiente de juicio",
-      "advertising-infringement": "Infracción de publicidad",
-      "complaint-archived": "Querella archivada",
-      "none-on-record": "Sin resoluciones",
-    },
-    records: {
-      "menas-2021": {
-        text: "El cartel de los «menas» de Vox en la campaña de la Asamblea de Madrid de 2021. El juzgado archivó por auto y la Audiencia Provincial lo confirmó: «no existe delito de odio ni delito electoral».",
-        note: "Recurrieron la Fiscalía, PSOE, Podemos, Izquierda Unida y Progresa. Es un archivo en fase de instrucción, no una absolución: ningún tribunal entró en el fondo.",
-      },
-      "herrero-valencia": {
-        text: "La concejala de Vox en València Cecilia Herrero irá a juicio oral por delitos de odio: unas treinta publicaciones en X entre abril de 2020 y abril de 2024. La Fiscalía pide 3 años de prisión, multa de 12 meses a 20 €/día e inhabilitación.",
-        note: "Auto de apertura de juicio oral, no sentencia. La calificación es alternativa: 510.1 a) más 510.3, 510.5 y 510.6, o bien 510.2 a) con los mismos apartados.",
-      },
-      "jez-madrid-2023": {
-        text: "La Junta Electoral de Zona de Madrid ordenó retirar una lona de la calle Alcalá en «plazo de un día», por propaganda contratada fuera del periodo de campaña.",
-        note: "LOREG art. 53 e Instrucción 3/2011 de la JEC. La junta se declaró expresamente no competente sobre el contenido y no abrió expediente sancionador: es una infracción de calendario publicitario, nada más.",
-      },
-      "belarra-querella": {
-        text: "La Sala de lo Penal del Tribunal Supremo archivó la querella de Vox contra Ione Belarra por sus palabras en un mitin de Collado Villalba: el art. 510 CP protege a las minorías sociales, no a los partidos políticos.",
-        note: "Ponente Sánchez Melgar; el recurso de súplica fue rechazado. El registro documenta una querella contra ella, nunca una conducta suya.",
-      },
-    },
-    policy:
-      "Cuatro resoluciones verificadas una a una, no un censo: el número de registros de una formación no es comparable con el de otra. Una causa archivada se etiqueta como archivada y nunca como absolución; una causa abierta, como pendiente de juicio. De esto no se deriva ninguna puntuación ni clasificación.",
   },
   masthead: {
     edition: "Edición nº 001",
@@ -364,11 +220,6 @@ const es = {
     themeLight: "Claro",
     themeDark: "Oscuro",
     themeSystem: "Como el sistema",
-  },
-  footer: {
-    source:
-      "Siguiendo el Dinero · Datos abiertos BDNS, Tribunal de Cuentas y Congreso de los Diputados",
-    caveat: "Los hechos van uno junto a otro; ninguna causa se afirma",
   },
   charts: {
     showTable: "Ver los datos en una tabla",
@@ -399,17 +250,7 @@ const es = {
     dataAsOf: "Datos a {date}",
   },
   common: {
-    backToPanel: "← Volver al panel",
-    backToFaces: "← Caras",
-    nif: "NIF",
     caveat: "Qué hay que saber",
-  },
-  blocs: {
-    derecha: "Derecha",
-    izquierda: "Izquierda",
-    nacionalista: "Nacionalista",
-    regionalista: "Regionalista",
-    otro: "Otro",
   },
   kinds: {
     ordinaria: "Financiación ordinaria",
@@ -417,71 +258,29 @@ const es = {
     otra: "Otra",
     all: "Todas",
   },
-  fundingStats: {
-    eyebrow: "Los tres cauces del dinero",
-    subsidies: "Subvenciones del Estado",
-    subsidiesNote: "Total acumulado en la BDNS · actualizado a diario",
-    donations: "Donaciones privadas 2020",
-    donationsNote: "{donors} donantes declarados",
-    electoral: "Gasto electoral 2024",
-    electoralNote: "Gasto ordinario declarado en las europeas",
-    capped: "Publicidad con tope legal",
-    cappedNote: "{amount} · LOREG arts. 55 y 58",
-    residual: "Línea residual sin desglosar",
-    residualNote: "{amount} en una sola partida",
-  },
   money: {
-    routesTitle: "Cómo llega el dinero a un partido",
-    routesIntro: "Tres cauces, cada uno con sus propias reglas en la Ley Orgánica 8/2007 de financiación de los partidos. Junto a cada uno, la cifra que publica su fuente oficial. Las tres vienen de fuentes y años distintos, así que no se suman.",
-    from: "De",
-    to: "A",
     routePartyTo: "El partido",
-    routeStateFrom: "El Estado y las administraciones",
-    routeStateTitle: "Subvenciones públicas",
     routeStateRules: [
       "Para gastos electorales",
       "Anuales, para funcionamiento",
       "De las comunidades autónomas",
       "Aportaciones de los grupos parlamentarios",
     ],
-    routeStateFigure: "registrados en la Base de Datos Nacional de Subvenciones, acumulado",
-    routeStateLink: "Ver el reparto ↓",
     routeDonorFrom: "Una persona",
-    routeDonorTitle: "Donaciones privadas",
     routeDonorRules: [
       "Sólo personas físicas, nunca empresas",
       "Hasta 50.000 € al año por persona",
       "Con nombre: ninguna anónima",
       "Nada de quien tenga un contrato público vigente",
     ],
-    routeDonorFigure: "declarados por {donors} donantes en {year} (Tribunal de Cuentas)",
-    routeDonorLink: "Ver por partido ↓",
-    routeFoundationFrom: "Una persona o una empresa",
     routeFoundationTo: "La fundación del partido",
-    routeFoundationTitle: "Donaciones a fundaciones vinculadas",
     routeFoundationRules: [
       "Las empresas sí pueden donar",
       "Sin el tope de 50.000 €",
       "Más de 120.000 €: documento público",
       "Donación de empresa: aviso al Tribunal de Cuentas en tres meses",
     ],
-    routeFoundationFigure: "de empresas en {years}; el {share} de lo que entró lo puso el propio partido (Tribunal de Cuentas)",
-    routeFoundationLink: "Ver las fundaciones →",
-    routesGap: "Esta web no tiene datos donante a donante: el informe del Tribunal de Cuentas que usa da las donaciones a los partidos agrupadas por tramos de importe, con uno o dos años de retraso. Las reglas son las del texto consolidado de la ley.",
-    routesLaw: "Ley Orgánica 8/2007 en el BOE ↗",
-    treemapTitle: "Todo lo concedido, de un vistazo",
-    treemapFinding: "{names} recibieron el {share} de lo concedido.",
-    treemapRest: "Otros {n}",
-    treemapNote: "El área de cada rectángulo es proporcional a lo concedido con los filtros actuales. Los partidos con menos del 2 % se agrupan en «Otros»; todos aparecen, uno a uno, en el reparto de debajo y en su tabla.",
     donationsFinding: "El {donorShare} de los donantes dio menos de 1.000 €, y entre todos aportaron el {amountShare} del dinero.",
-  },
-  foundationsPage: {
-    eyebrow: "El cauce que corre al revés",
-    titlePre: "Quién paga a las ",
-    titleEmph: "fundaciones",
-    titlePost: " de los partidos, y quién las gobierna",
-    standfirst:
-      "A los partidos les está prohibido aceptar dinero de empresas; a sus fundaciones vinculadas no. Pero en las cifras auditadas el dinero de empresas es la parte pequeña, y casi nueve de cada diez euros que entran los pone el propio partido. Aquí están las entidades, sus cuentas y los patronatos que las dirigen.",
   },
   foundations: {
     officeJoin:
@@ -575,187 +374,8 @@ const es = {
     peopleCoverage:
       "Patronato documentado en {documented} de {entities} entidades auditadas: {people} personas y {ties} cargos externos, cada uno con su fuente y su fecha. Donde no se localizó un patronato publicado, la ficha lo dice.",
   },
-  rights: {
-    eyebrow: "Voces de las organizaciones",
-    titlePre: "Lo que publican las ",
-    titleEmph: "entidades",
-    titlePost: ", en su propia voz",
-    intro:
-      "El resto de esta web mira al Estado: sus subvenciones, sus auditorías, sus votaciones registradas. Esta sección hace lo contrario y recoge lo que publican las propias organizaciones de derechos LGTBI, con su nombre delante de cada pieza.",
-    orgsTitle: "Publicado por las organizaciones",
-    orgsNote:
-      "Ocho organizaciones, cada una a través de su propio canal. Van primero porque son fuente directa: hablan de sí mismas y de su trabajo, no de segunda mano.",
-    mediaTitle: "Cobertura en medios",
-    mediaNote:
-      "Medios que cubren estos temas de forma continuada. Se muestran aparte para que quede claro qué es fuente directa y qué es cobertura.",
-    directoryTitle: "De dónde sale todo esto",
-    directoryNote:
-      "El registro completo de canales que lee esta sección. Se enlaza cada organización para poder ir a la fuente y no sólo a lo que publicó esta quincena.",
-    kindOrg: "Organizaciones",
-    kindMedia: "Medios",
-    empty:
-      "Ningún canal ha devuelto piezas recientes. No es una afirmación sobre la actualidad: es un fallo de lectura, y se corrige solo cuando los canales responden.",
-    droppedNote: "Canales que no respondieron en esta carga:",
-    caveat:
-      "Esta web no edita, resume ni reescribe estas piezas: muestra el titular, la fecha y el enlace al original. Las imágenes son las que publica cada canal y se sirven a través de este sitio, no directamente desde el servidor de la organización, para no exponer la IP de quien lee. El orden es por fecha, con las fuentes en el idioma de la página primero.",
-    methodLink: "Cómo se eligieron estos canales, y cuáles se descartaron ↗",
-    homeTitle: "Derechos LGTBI, en voz de las organizaciones",
-    homeCta: "Ver la sección de derechos",
-  },
-  lead: {
-    kicker: "Investigación · Gasto electoral",
-    title: "Más de la mitad del gasto electoral no está desglosado",
-    standfirst:
-      "De los {declared} que ocho formaciones declararon como gasto ordinario en las europeas del 9 de junio de 2024, {residual} —el {share}— figuran en una sola línea residual que el informe de fiscalización no desglosa. La publicidad, la única partida con tope legal, es el {ads}.",
-    link: "Leer el desglose completo",
-  },
-  portal: {
-    tickSubsidies: "Subvenciones del Estado",
-    tickSubsidiesNote: "BDNS · actualizado a diario",
-    tickDonations: "Donaciones privadas",
-    tickDonationsNote: "Ejercicio {year} · {donors} donantes",
-    tickSpending: "Gasto electoral",
-    tickSpendingNote: "Europeas de 2024 · {n} formaciones",
-    tickVotes: "Votaciones seguidas",
-    tickVotesNote: "Llamamientos nominales del Congreso",
-    tickPeople: "Cargos con retribución",
-    tickPeopleNote: "Registro de Altos Cargos, sólo activos",
-    tickLarge: "Donantes de más de 10.000 €",
-    tickLargeNote: "Entre todos aportaron {amount}",
-    opinionKicker: "Las organizaciones hablan",
-    opinionTitle: "Opinión y análisis",
-    housingKicker: "Vivienda",
-    housingTitle: "La vivienda, en las noticias",
-    housingNote:
-      "Lo último de medios de distinto signo, de las radiotelevisiones públicas y de las organizaciones de inquilinas y de afectados por la hipoteca, cada pieza con el nombre de quien la publica. Las organizaciones hablan en su propia voz; los medios, como cobertura.",
-    opinionCta: "Directorio de organizaciones",
-    bandTitle: "El pulso de los datos",
-    bandNote: "Tres registros públicos, resumidos",
-    colVote: "Votación",
-    colDate: "Fecha",
-    colResult: "Resultado",
-    bandVotesTable:
-      "Cada votación seguida, de la más reciente a la más antigua, con los votos emitidos tal como constan en el acta.",
-    colTranche: "Tramo",
-    colDonors: "Donantes",
-    colDonorShare: "% de donantes",
-    colAmount: "Importe",
-    colMoneyShare: "% del dinero",
-    bandDonorsTable:
-      "Donantes e importes declarados en {year}, sumados en todas las formaciones, por tramo del informe.",
-    colFormation: "Formación",
-    colDeclared: "Declarado",
-    colShare: "Parte del total",
-    bandSpendTable: "Gasto ordinario declarado por cada formación en las europeas de 2024.",
-    bandVotesTitle: "Los llamamientos, uno a uno",
-    bandDonorsTitle: "Muchos donantes, poco dinero",
-    bandDonorsNote:
-      "{n} personas —el {donorShare} de los donantes— aportaron {amount} en {year}: el {moneyShare} de todo el dinero privado declarado.",
-    bandSpendTitle: "Gasto electoral, europeas de 2024",
-    carried: "Aprobada",
-    rejected: "Rechazada",
-    per100Donors: "De cada 100 donantes",
-    per100Euros: "De cada 100 euros",
-    colRecordKicker: "Registro parlamentario",
-    colReportKicker: "Reportaje",
-    colReportTitle: "{donors} donantes y un solo cheque de {largest}",
-    colReportBody:
-      "El informe no publica donación por donación: agrupa lo declarado en tres tramos y da, por partido, cuántas personas hay en cada uno y cuánto suman. De ahí sale la forma del dinero privado, que es lo que importa. Un partido puede recibir lo mismo de miles de personas que de un puñado, y el total por sí solo no dice cuál de las dos cosas ha pasado. Donde un tramo alto tiene un único donante, su total es esa donación: es el único caso en que una cifra individual se puede leer del informe sin inventar nada.",
-    colReportLink: "Ver el reparto por partido",
-    photoPending: "Fotografía · pendiente de licencia",
-    eyebrow: "Portal de transparencia política",
-    titlePre: "Quién les paga, y ",
-    titleEmph: "cómo votan",
-    titlePost: ".",
-    lead:
-      "Seguimiento del dinero público y privado que reciben los partidos españoles, junto al voto registrado de sus cargos en las leyes que afectan a las personas trans y LGTBI, a la salud sexual y reproductiva, y al derecho a la vivienda.",
-    statPublic: "Dinero público a partidos",
-    statPrivate: "Donaciones privadas declaradas",
-    statPeople: "Cargos públicos en activo",
-    statVotes: "Votaciones seguidas",
-    stanceTitle: "Cómo votó cada grupo",
-    stanceNote:
-      "Voto mayoritario de cada grupo, contado a partir de los votos nominales. Se indica el sentido del voto tal cual consta en el acta, no una interpretación: en votaciones de enmiendas, un No puede significar rechazar la enmienda y no oponerse a la ley. Consulta el acta oficial y el asunto de cada votación.",
-    inFavourGroups: "Votó Sí",
-    againstGroups: "Votó No",
-    abstainGroups: "Se abstuvo",
-    newsTitle: "Derechos LGTBI, trans y vivienda en la actualidad",
-    newsNote:
-      "Publicaciones recientes de una lista fija de medios y entidades. Las marcadas como publicación de la entidad son sus propios textos, y pueden tratar tanto de derechos como de su actividad.",
-    newsSourcesLink: "Ver las fuentes",
-    exploreTitle: "Explorar",
-    exploreMoney: "El reparto del dinero público entre partidos, año a año.",
-    explorePeople: "Cada cargo en activo: sueldo, partido y voto registrado.",
-    exploreVotes: "Las votaciones seguidas, con desglose por grupo.",
-    exploreMethod: "Fuentes, límites y qué no muestra esta herramienta.",
-    linkFraming:
-      "El dinero y los votos se publican juntos para poder consultarlos, no porque uno explique al otro. Una subvención pública no determina un voto concreto.",
-  },
-  home: {
-    perPartyColour: "Financiación ordinaria, en el color del partido",
-    eyebrow: "Subvenciones estatales",
-    titlePre: "El dinero de los ",
-    titleEmph: "partidos",
-    titlePost: ", canal por canal",
-    channelTitle: "Subvenciones estatales a los partidos",
-    subtitle:
-      "Tres canales, cada uno con su fuente oficial: lo que el Estado les entrega, lo que declararon haber gastado en una campaña y lo que declararon recibir de particulares. El dinero de las fundaciones vinculadas tiene su propia sección.",
-    intro:
-      "El dinero público que el Estado entrega a cada partido, tomado en directo de la Base de Datos Nacional de Subvenciones. Filtra por año y por tipo de ayuda para ver el reparto.",
-    totalLabel: "Total concedido (selección)",
-    parties: "Partidos",
-    concessions: "Concesiones",
-    updated: "Actualizado",
-    year: "Ejercicio",
-    reset: "Reset",
-    distribution: "Reparto por partido",
-    noResults: "No hay concesiones para esta selección.",
-    filterStatus: "{parties} partidos · {grants} concesiones · {total} con los filtros actuales",
-    tableCaption:
-      "Lo concedido a cada partido con los filtros actuales, por tipo de ayuda, en euros: las cifras que dibuja cada barra.",
-    colParty: "Partido",
-    colTotal: "Total",
-    colShare: "Parte del total",
-  },
   party: {
-    switcherLabel: "Elegir formación",
-    fichaKicker: "Ficha de partido",
-    fichaIntro:
-      "Cuatro registros públicos sobre la misma formación: lo que el Estado le entrega, lo que declaró recibir de particulares, cómo votó su grupo en los llamamientos que este portal sigue y qué consta de sus cargos en el registro judicial. Ninguno explica a los demás.",
-    howItVoted: "Cómo votó el grupo",
-    sharedGroup: "En grupo compartido · {group}",
-    noRepresentation: "Sin representación",
-    stanceNote:
-      "La posición es la mayoría de las papeletas nominales del propio grupo: contada, no atribuida. Donde una formación comparte grupo con otras se dice cuál, en lugar de asignarle la mayoría de ese grupo: en el Grupo Plurinacional SUMAR, por ejemplo, atribuir su voto a Sumar y no a Izquierda Unida sería arbitrario. Y donde no tenía representación en aquella legislatura, se dice también.",
-    totalReceived: "Total recibido",
-    ofNational: "del total nacional",
-    facesTitle: "Caras del partido",
-    whereFrom: "De dónde viene",
-    ofItsFunds: "de sus fondos",
-    yearlyEvolution: "Evolución anual",
-    privateTitle: "Financiación privada",
-    donationsDeclared: "Donaciones declaradas",
-    donors: "donantes",
-    privateCaveat:
-      "Solo personas físicas (las donaciones de empresas están prohibidas). Dato anual del último informe disponible del Tribunal de Cuentas.",
-    ledgerTitle: "Registro de concesiones",
-    exercise: "Ejercicio",
-    legalBasis: "base legal (BOE) ↗",
-    inNews: "En las noticias",
     recentHeadlines: "Titulares recientes · Google News",
-  },
-  politician: {
-    partyFunding: "Financiación pública de su partido",
-    seeBreakdown: "ver desglose →",
-    caveat: "Las subvenciones públicas se conceden al partido, no a la persona.",
-    onBluesky: "En Bluesky",
-  },
-  caras: {
-    title: "Caras",
-    intro:
-      "Políticos individuales: su partido y financiación pública, su actividad en Bluesky y los titulares en los que aparecen. Los perfiles de Bluesky están verificados uno a uno.",
-    note:
-      "La lista es una muestra curada. Bluesky tiene, a día de hoy, mayor presencia de la izquierda; líderes de PP y Vox no tienen cuenta verificable allí.",
   },
   feed: {
     justNow: "hace un momento",
@@ -766,36 +386,11 @@ const es = {
     reposted: "↻ Republicado",
     fromOrg: "publicación de la entidad",
   },
-  voteFlow: {
-    readerParty: "{party} · {amount} en donaciones declaradas en 2020 · voto del grupo: {vote}",
-    readerOutcome: "{vote} · formaciones: {count} · {amount} declarados por ellas en 2020",
-    tableCaption:
-      "Las formaciones del gráfico, con lo que declararon en donaciones privadas en 2020 y cómo votó su grupo. Total declarado por ellas: {total}.",
-    colFormation: "Formación",
-    colDonations: "Donaciones declaradas, 2020",
-    colVote: "Voto del grupo",
-    title: "Dinero declarado y voto registrado, uno junto a otro",
-    sourceHead: "Donaciones privadas declaradas · 2020",
-    outcomeHead: "Voto del grupo",
-    caveat:
-      "El grosor del trazo es la cuantía declarada, no una relación causal. Los dos registros son públicos, independientes y de años distintos: nada aquí afirma que el uno explique al otro.",
-    scope:
-      "{included} formaciones, las que tienen a la vez donaciones declaradas en el informe y un grupo propio con voto registrado en este llamamiento. Fuente del dinero: {report}.",
-    excluded:
-      "Quedan fuera, por no tener grupo propio en esta legislatura o no constar en el informe:",
-  },
   donationsTable: {
-    barNote:
-      "Cada barra se compara con la del partido que más declaró —el PSOE—, no con el total nacional: a escala nacional trece de las diecisiete filas medirían menos de dos píxeles. Un importe muy pequeño se dibuja con un ancho mínimo para que se vea que no es cero.",
-    title: "Donaciones privadas declaradas, 2020",
-    caption:
-      "Una formación por fila, ordenadas por importe declarado. La barra reparte el total de cada partido entre los tres tramos del informe y está escalada contra el mayor total, no contra el total nacional.",
-    rank: "Nº",
     party: "Formación",
     byTranche: "Reparto por tramos",
     total: "Total",
     donors: "Donantes",
-    donorsWord: "donantes",
     tranchesNote:
       "Tramos del informe: menos de 1.000 €, de 1.000 a 10.000 €, más de 10.000 €.",
     trancheSmall: "Menos de 1.000 €",
@@ -805,15 +400,6 @@ const es = {
       "Las empresas no pueden donar a los partidos desde la reforma de 2015 de la LO 8/2007: sólo personas físicas, con un máximo de 50.000 € al año y sin donaciones anónimas. No existe una cifra de financiación por político, y esta web no la calcula.",
   },
   spending: {
-    barNote:
-      "Cada barra se compara con la de la formación que más declaró, así que su longitud dice cuánto gastó y sus tramos en qué. Un importe muy pequeño se dibuja con un ancho mínimo para que se vea que no es cero; la cifra exacta está en las columnas.",
-    eyebrow: "Gasto electoral · europeas de 2024",
-    sharesTotal: "Gasto ordinario declarado, en total",
-    sharesNote:
-      "Cada barra es la parte de la formación en ese total, así que juntas suman el 100 %. Un importe muy pequeño se dibuja con un ancho mínimo para que se vea que no es cero.",
-    sharesCaption:
-      "Gasto ordinario declarado por cada formación en las elecciones europeas del 9 de junio de 2024.",
-    linesTitle: "En qué se declaró gastado",
     lineAdvertising: "Publicidad exterior y en prensa y radio",
     lineAdvertisingNote:
       "Los dos únicos gastos con límite legal propio: arts. 55 y 58 de la LOREG.",
@@ -822,25 +408,6 @@ const es = {
       "«Otros gastos ordinarios». Es la mayor parte del gasto y el informe no dice en qué se fue.",
     lineFinancial: "Costes financieros y otros conceptos",
     lineFinancialNote: "Intereses liquidados y estimados de las operaciones de crédito.",
-    lineMailings: "Envíos postales, aparte del gasto ordinario",
-    lineMailingsNote:
-      "{count} envíos con derecho a subvención. No entran en el gasto ordinario ni en el límite general, así que no tienen porcentaje de esa cifra: la barra va completa para decir que el denominador es otro.",
-    title: "En qué se declaró gastado el dinero electoral",
-    intro:
-      "El Tribunal de Cuentas fiscaliza las cuentas de cada elección y desglosa el gasto declarado. Sólo dos tipos de publicidad tienen límite legal y aparecen detallados; el resto del gasto ordinario se agrupa en una única línea que el informe no desglosa.",
-    unexplained: "Sin desglosar",
-    ofDeclared: "del gasto ordinario declarado",
-    advertising: "Publicidad",
-    cappedOnly:
-      "Publicidad exterior (art. 55 LOREG) y en prensa y radio (art. 58). Son los dos únicos gastos con límite propio.",
-    mailings: "Envíos de propaganda",
-    mailingItems: "envíos con derecho a subvención",
-    declared: "Declarado",
-    formation: "Formación",
-    split: "Reparto",
-    caption:
-      "Una formación por fila, con el gasto ordinario declarado y cuánto de él corresponde a publicidad con límite legal frente a la línea residual «Otros gastos ordinarios». Los envíos de propaganda se contabilizan aparte y no entran en estas columnas.",
-    gapTitle: "Lo que el registro no dice",
     gapBody:
       "«Otros gastos ordinarios» es una sola línea sin desglose y es la mayor parte del gasto declarado. El informe no dice en qué se gastó, y la ley no obliga a detallarlo: la publicidad digital no es una categoría con límite propio, y el propio Tribunal de Cuentas ha recomendado al Gobierno que legisle para que lo sea. Estas cifras son gasto declarado y fiscalizado, no una imputación de nada a nadie.",
   },
@@ -866,132 +433,6 @@ const es = {
       "Hay además {n} retratos de personas que no figuran en el registro de altos cargos. No se descartan: el registro sólo recoge cargos en activo, así que un retrato sin fila es lo normal para quien ya no lo es.",
     note:
       "Las cuatro proporciones miden cosas distintas contra registros distintos —un retrato depende de que exista una licencia libre, un voto registrado de que la persona se siente en el Congreso—, así que no están ordenadas por porcentaje ni comparadas entre sí. Van en el orden en que se encuentran en la web.",
-  },
-  contexto: {
-    eyebrow: "El país",
-    title: "Contexto",
-    lead:
-      "Esta web publica lo que cobran los partidos y lo que cobran los cargos públicos. Ninguna de esas cifras significa nada sin una escala. Ésta es la escala, tomada del INE, que es quien la produce.",
-    framing:
-      "Aquí no se une nada. No hay línea que vaya de una tasa de pobreza a un voto, ni correlación, ni ordenación de partidos por nada calculado a partir de estos datos. Las cifras se ponen unas al lado de otras y quien lee saca sus conclusiones: una línea trazada aquí afirmaría algo que los datos no sostienen.",
-    wages: {
-      title: "Lo que se cobra en España",
-      intro:
-        "El salario bruto medio anual fue de {mean}. La mediana —la cifra que deja a la mitad de los asalariados por debajo— fue de {median}. La diferencia es la cola alta: el 10 % peor pagado no llegó a {p10} y el 10 % mejor pagado superó {p90}.",
-      lowSample: "muestra reducida",
-      sourceNote:
-        "El INE marca con un signo menos las celdas cuya muestra tiene entre 100 y 500 observaciones: no son cifras negativas, son cifras con alta variabilidad. Se conservan y se señalan; ninguna de las mostradas aquí lleva esa marca.",
-      jornada:
-        "Una advertencia que cambia cómo leer todo lo anterior: la EAES cuenta a tiempo parcial y a tiempo completo en la misma media, así que ninguna de estas cifras es «lo que paga un puesto». A jornada completa la media fue de {full}; a jornada parcial, de {part}.",
-      spread:
-        "Entre el sector mejor y el peor pagado hay un factor de {ratio}: {high} con {highValue} frente a {low} con {lowValue}.",
-    },
-    smi: {
-      title: "Toda la masa salarial, en múltiplos del SMI",
-      intro:
-        "El mismo eje para cualquier sueldo de esta web. El {underTwo} de los asalariados españoles cobra menos de dos salarios mínimos. Los tramos son los del INE, calculados sobre el SMI del propio año.",
-      sourceNote:
-        "Los tramos suman el total de asalariados. Se dibujan en filas separadas y no apilados porque el tramo superior es el 0,12 % y apilado no se vería; cada fila lleva su porcentaje exacto.",
-    },
-    poverty: {
-      title: "A cuánta gente afecta",
-      intro:
-        "Cuatro indicadores de la Encuesta de Condiciones de Vida. Cada uno es una proporción de una población, así que la parte vacía de la barra es el resto del país.",
-      rows: {
-        arope: "En riesgo de pobreza o exclusión social (AROPE)",
-        aropeChildren: "AROPE, menores de 16 años",
-        atRisk: "En riesgo de pobreza (renta del año anterior)",
-        deprivation: "Con carencia material y social severa",
-      },
-      spread:
-        "La cifra nacional no describe a ninguna comunidad en concreto: va de {high} en {highRegion} a {low} en {lowRegion}.",
-      base: "Serie {base}, indicada porque la misma tabla puede contener definiciones distintas del mismo indicador.",
-      multipleBases:
-        "La tabla contiene más de una definición ({bases}). Aquí se muestra {shown}; no se mezclan, porque miden cosas distintas con el mismo nombre.",
-      note:
-        "Estas cifras no se cruzan con ningún voto ni con ninguna financiación de esta web. Están aquí para que quien lea tenga delante las dos cosas, no para afirmar que una explica la otra.",
-    },
-  },
-  where: {
-    title: "¿Y usted, dónde vive?",
-    intro:
-      "Casi todo lo que hay en esta web se publica por comunidad autónoma. Escriba su código postal o elija su provincia y verá lo que consta de la suya.",
-    postcodeLabel: "Código postal",
-    postcodePlaceholder: "28001",
-    submit: "Ver",
-    provinceLabel: "O elija provincia",
-    provincePlaceholder: "Provincia…",
-    notFound: "Ese código postal no corresponde a ninguna provincia. Son cinco dígitos.",
-    privacy:
-      "El código postal se resuelve en su navegador: sus dos primeras cifras son el código de provincia. No se envía a ningún sitio ni se guarda.",
-    backHome: "← Portada",
-    eyebrow: "Dónde vive usted",
-    lead:
-      "{province} está en {territory}. Todo lo que sigue está medido para {territory}, no para {province}: no existen estas cifras por provincia, y dividirlas sería inventarlas.",
-    leadSame:
-      "{territory} es a la vez provincia y comunidad autónoma, así que todo lo que sigue está medido para ese mismo territorio.",
-    governmentTitle: "Quién preside",
-    president: "Presidencia",
-    party: "Partido",
-    since: "Desde",
-    governmentNote:
-      "Es quién ocupa la presidencia en la fecha de comprobación, no el resultado de las elecciones ni la composición del gobierno.",
-    noGovernment: "No consta presidencia para este territorio.",
-    investitureDecisive:
-      "El PP tenía {pp} de {seats} escaños, y la investidura salió adelante con votos de Vox: sin ellos no había mayoría. Vox tenía {vox} escaños.",
-    investitureShort:
-      "El PP tenía {pp} de {seats} escaños, menos de la mayoría absoluta, y Vox {vox}. Esta web recoge la aritmética; el acta de la votación no está verificada aquí.",
-    officeholdersTitle: "Cargos públicos de aquí",
-    officeholders:
-      "El registro de altos cargos recoge {count} cargos en {territory}. De ellos, {withSalary} publican retribución anual, y la mediana de lo publicado es {median}.",
-    officeholdersGap:
-      "{missing} de las {total} filas del registro no indican territorio, así que no entran en este recuento. No se reparten entre comunidades.",
-    noFigure: "ninguna cifra",
-    seeOfficeholders: "Ver estos cargos en el registro →",
-    wagesTitle: "Lo que se cobra aquí",
-    wages:
-      "En {territory} la mediana del salario bruto anual fue de {median}, frente a {national} en el conjunto de España. El 10 % peor pagado no llegó a {p10} y el 10 % mejor pagado superó {p90}.",
-    noWages:
-      "La encuesta salarial del INE no publica percentiles para {territory}: sus tablas por comunidad cubren las diecisiete comunidades autónomas y no las dos ciudades autónomas. No se sustituye por la cifra nacional.",
-    seeContext: "Ver los salarios de toda España →",
-    povertyTitle: "Riesgo de pobreza o exclusión",
-    national: "España",
-    povertyNote:
-      "Serie {base}. Es una proporción de la población, no un recuento, y no se cruza con nada más de esta web.",
-    noPoverty: "La Encuesta de Condiciones de Vida no publica este indicador para este territorio.",
-    hateTitle: "Delitos de odio registrados",
-    hate:
-      "En {territory} constan {total} hechos conocidos en {year}, una tasa de {rate} por cada 100.000 habitantes frente a {national} en el conjunto de España. Registrados por orientación sexual e identidad de género: {sogi}.",
-    hateNote:
-      "Son hechos conocidos por las fuerzas de seguridad, no incidencia: una tasa más alta puede reflejar más denuncia y no más delito.",
-    noHate: "El informe no localiza hechos conocidos en este territorio.",
-    seeMap: "Ver el mapa completo →",
-    closing:
-      "Nada de esta página une una cifra con otra. Que {territory} tenga una tasa determinada y que quien la preside votara de una manera son dos hechos puestos uno al lado del otro, no una explicación.",
-  },
-  search: {
-    label: "Buscar en la web",
-    placeholder: "Buscar…",
-    submit: "Buscar",
-    eyebrow: "Búsqueda",
-    title: "Buscar",
-    scope:
-      "Busca nombres y títulos: personas del registro de altos cargos con su puesto y su municipio, partidos, fundaciones vinculadas, comunidades, provincias, votaciones seguidas y secciones de la web. No busca dentro del texto de los informes, así que una palabra que sólo aparezca en un hallazgo del Tribunal de Cuentas no saldrá aquí.",
-    count: "Resultados para «{query}»: {total}",
-    more: "y {more} más",
-    tooShort: "Escriba al menos {min} letras.",
-    empty: "No hay resultados para «{query}».",
-    emptyHint:
-      "Pruebe con menos palabras, o con el apellido en lugar del nombre completo. Los acentos no importan. Que algo no salga aquí no significa que no exista: esta búsqueda sólo mira nombres y títulos.",
-    kinds: {
-      person: "Cargos públicos",
-      party: "Partidos",
-      foundation: "Fundaciones y entidades",
-      territory: "Comunidades autónomas",
-      province: "Provincias",
-      vote: "Votaciones seguidas",
-      page: "Secciones",
-    },
   },
   method: {
     title: "Metodología y límites",
@@ -1153,8 +594,6 @@ const en: Dict = {
   },
   nav: {
     panel: "Dashboard",
-    faces: "Faces",
-    salaries: "Salaries",
     people: "Politicians",
     votes: "Votes",
     methodology: "Methodology",
@@ -1163,10 +602,6 @@ const en: Dict = {
     rights: "Rights",
     map: "Map",
     foundations: "Foundations",
-    data: "Data",
-    sectionData: "Data",
-    sectionAbout: "About",
-    menu: "Menu",
     skipToContent: "Skip to content",
   },
   people: {
@@ -1345,151 +780,13 @@ const en: Dict = {
     colBallot: "Ballot",
   },
   votes: {
-    eyebrow: "Recorded divisions",
-    title: "Key votes",
-    intro:
-      "Positions recorded in roll-call votes of the Congress on specific items. Each position is a ballot actually cast and verifiable, not an opinion attributed to anyone.",
-    caveat:
-      "Each vote is labelled by type: some pass laws, others are non-legislative motions, which are not binding. Amendment votes are excluded. A deputy appears only if their vote is on record; nobody's stance is inferred from their party.",
-    searchLabel: "Search deputy",
-    searchPlaceholder: "Surname or name…",
     inFavour: "In favour",
     against: "Against",
     abstention: "Abstention",
     noVote: "Did not vote",
-    present: "Present",
-    byGroup: "By parliamentary group",
-    group: "Group",
-    byGroupCaption: "One group per row, with its ballots counted and a link to the party's funding where the group is made up of one party.",
-    distribution: "Split",
-    funding: "Funding",
-    severalParties: "Several parties",
-    groupUnknown: "Group not in the registry",
-    groupNote:
-      "A parliamentary group is not a party. Where a group is made up of one party, the last column links to that party's funding; where it is a coalition, it links to none of them, because attributing a coalition's money to one member would be false.",
-    groupSource: "Group composition ↗",
-    officialRecord: "Official record ↗",
-    lawText: "Text of the law ↗",
-    session: "Session",
-    noMatch: "No recorded votes for that search.",
-    results: "deputies",
-    kinds: {
-      ley: "Final vote on a law",
-      toma: "Leave to proceed",
-      pnl: "Non-legislative motion",
-      mocion: "Motion following an urgent interpellation",
-    },
-    nonBinding: "non-binding",
-    legislature: "Legislature",
-  },
-  salaries: {
-    title: "Public salaries",
-    intro:
-      "Pay for serving public officeholders, from the Register of Senior Officials and government transparency portals. Search by name, role, municipality or region.",
-    search: "Search",
-    searchPlaceholder: "Name, role, municipality…",
-    party: "Party",
-    all: "All",
-    role: "Role",
-    where: "Scope",
-    annual: "Gross annual",
-    people: "officeholders",
-    results: "results",
-    noResults: "No results for this search.",
-    prev: "Previous",
-    next: "Next",
-    page: "Page",
-    of: "of",
-    median: "Median",
-    sourceNote:
-      "Sources · Register of Senior Officials / transparencia.gob.es; deputies the register does not carry, from Congreso open data",
-    caveat:
-      "Pay for the post — not personal wealth or private income. Only posts marked active in the source.",
-  },
-  map: {
-    investitureTitle: "Investiture",
-    investitureDecisive:
-      "The PP held {pp} of {seats} seats and an absolute majority was {majority}. In the vote of {date} the investiture carried {for} to {against}, and {voxVotes} of those votes came from Vox: without them there was no majority.",
-    investitureShort:
-      "The PP held {pp} of {seats} seats and an absolute majority was {majority}, so it could not reach one alone; Vox’s {vox} seats would have closed the gap. The vote record is not verified here, and a second round needs only a simple majority, so nothing is claimed about who invested whom.",
-    investitureCarried: "carried",
-    investitureFailed: "rejected",
-    hatchDecisive: "Invested with Vox votes, per the record",
-    hatchShort: "PP could not reach an absolute majority alone",
-    eyebrow: "Territorial map",
-    title: "Where each party governs, and what is on record there",
-    standfirst:
-      "Hover to read a community. Click to pin it to the panel. The two layers are shown separately and neither explains the other.",
-    svgLabel: "Map of the autonomous communities",
-    layerGov: "Regional government",
-    layerGovNote:
-      "The party of whoever held each community's presidency on the date checked, with the date they took office. It is not the election result and not the composition of the government: it is who holds the presidency.",
-    layerHate: "Recorded hate crime",
-    layerHateNote:
-      "Rate of hate offences, administrative infractions and other incidents per 100,000 inhabitants, 2024. These are facts recorded by the security forces, not convictions: the figure depends on how much is reported and on how each police force records what is reported.",
-    perHundredThousand: "per 100,000",
-    panelKicker: "Territorial record",
-    rowPresident: "President",
-    rowParty: "Party",
-    rowSince: "In office since",
-    rowRecorded: "Recorded, 2024",
-    rowRate: "Rate per 100,000",
-    barSogi: "Sexual orientation and gender identity",
-    barRacism: "Racism and xenophobia",
-    barsNote:
-      "Two of the twelve motivations the report distinguishes, as a proportion of that community's recorded facts.",
-    noData: "Not on record",
-    tableCaption:
-      "One territory per row, with both map layers as figures. The order follows the active layer: by party on the government layer, by rate on the hate-crime one.",
-    tableCaptionSorted:
-      "One territory per row, with both map layers as figures. Sorted by the column you chose; click another heading to change it.",
-    sortHint: "Sort by {column}",
-    colTerritory: "Territory",
-    colRate: "Rate / 100,000",
-    sourcesTitle: "Sources",
-    tablesLabel: "tables",
-    checkedLabel: "checked",
-    limits:
-      "Recorded facts include administrative infractions and other incidents, not only offences, and they are not convictions. The two communities with their own regional police forces — the Policía Foral de Navarra and the Ertzaintza — head the rate table, which says something about how incidents are recorded and not necessarily about where more of them happen. One incident in the report is recorded in no territory at all, which is why the columns here sum to one less than the national figure.",
-    missingLayers:
-      "This section was designed with three further layers: an LGBTI rights index, the state of trans-law reform, and vote share for the formations that voted against the measures this site tracks. They are absent because there is no citable per-community source for any of the three yet. The investiture hatching is present, but it marks a dated fact — how one particular vote went — rather than who sits in a government today, which is the part that would have gone stale: Vox left three of those governments in July 2024.",
   },
   court: {
     title: "What the judicial record says",
-    eyebrow: "In the courts",
-    sourceLink: "Source",
-    statusNone: "Nothing on record",
-    noneBody:
-      "This site holds no court resolution and no electoral-board order concerning officeholders of this formation in the matters it tracks.",
-    noneNote:
-      "An absence of records is not a statement about anyone's conduct: it means only that there is no citable resolution.",
-    status: {
-      archived: "Case archived",
-      "awaiting-trial": "Awaiting trial",
-      "advertising-infringement": "Advertising infringement",
-      "complaint-archived": "Complaint archived",
-      "none-on-record": "Nothing on record",
-    },
-    records: {
-      "menas-2021": {
-        text: "Vox’s “menas” poster in the 2021 Madrid Assembly campaign. The investigating court archived the case by order and the Audiencia Provincial confirmed it: “there is no hate offence and no electoral offence”.",
-        note: "The prosecution service, PSOE, Podemos, Izquierda Unida and Progresa all appealed. This is an archiving at the instruction stage, not an acquittal: no court reached the merits.",
-      },
-      "herrero-valencia": {
-        text: "Vox’s València city councillor Cecilia Herrero has been committed to oral trial for hate offences over roughly thirty posts on X between April 2020 and April 2024. The prosecution seeks 3 years’ imprisonment, a 12-month fine at €20/day, and disqualification.",
-        note: "An order opening oral trial, not a verdict. The charge is pleaded in the alternative: 510.1 a) with 510.3, 510.5 and 510.6, or else 510.2 a) with the same subsections.",
-      },
-      "jez-madrid-2023": {
-        text: "The Junta Electoral de Zona de Madrid ordered a banner on calle Alcalá taken down “within one day”, as propaganda contracted outside the campaign period.",
-        note: "LOREG art. 53 and JEC Instrucción 3/2011. The board expressly declared itself not competent over the content and opened no sanctioning file: this is a breach of advertising timing and nothing more.",
-      },
-      "belarra-querella": {
-        text: "The Supreme Court’s criminal chamber archived Vox’s complaint against Ione Belarra over remarks at a Collado Villalba rally, holding that art. 510 CP protects social minorities and not political parties.",
-        note: "Ponente Sánchez Melgar; the appeal was rejected. The record documents a complaint against her, never conduct by her.",
-      },
-    },
-    policy:
-      "Four resolutions verified one by one, not a census: the number of records against one formation is not comparable with another’s. An archived case is labelled archived and never as an acquittal; an open case, as awaiting trial. No score or ranking is derived from any of it.",
   },
   masthead: {
     edition: "Edition no. 001",
@@ -1501,11 +798,6 @@ const en: Dict = {
     themeLight: "Light",
     themeDark: "Dark",
     themeSystem: "Match the system",
-  },
-  footer: {
-    source:
-      "Siguiendo el Dinero · Open data from the BDNS, the Court of Auditors and the Congress of Deputies",
-    caveat: "Facts are placed side by side; no cause is asserted",
   },
   charts: {
     showTable: "Show the data as a table",
@@ -1537,17 +829,7 @@ const en: Dict = {
     dataAsOf: "Data as of {date}",
   },
   common: {
-    backToPanel: "← Back to dashboard",
-    backToFaces: "← Faces",
-    nif: "Tax ID",
     caveat: "What to know",
-  },
-  blocs: {
-    derecha: "Right",
-    izquierda: "Left",
-    nacionalista: "Nationalist",
-    regionalista: "Regionalist",
-    otro: "Other",
   },
   kinds: {
     ordinaria: "Ordinary funding",
@@ -1555,71 +837,29 @@ const en: Dict = {
     otra: "Other",
     all: "All",
   },
-  fundingStats: {
-    eyebrow: "The three channels the money runs through",
-    subsidies: "State subsidies",
-    subsidiesNote: "Running total in the BDNS · updated daily",
-    donations: "Private donations, 2020",
-    donationsNote: "{donors} declared donors",
-    electoral: "Electoral spending, 2024",
-    electoralNote: "Ordinary spending declared for the European elections",
-    capped: "Advertising under a legal cap",
-    cappedNote: "{amount} · LOREG arts. 55 and 58",
-    residual: "Residual line, not broken down",
-    residualNote: "{amount} in a single item",
-  },
   money: {
-    routesTitle: "How money reaches a party",
-    routesIntro: "Three routes, each with its own rules in Organic Law 8/2007 on party financing. Beside each is the figure its official source publishes. The three come from different sources and years, so they are not added together.",
-    from: "From",
-    to: "To",
     routePartyTo: "The party",
-    routeStateFrom: "The State and other administrations",
-    routeStateTitle: "Public subsidies",
     routeStateRules: [
       "For election expenses",
       "Annual, for running costs",
       "From the autonomous communities",
       "Contributions from parliamentary groups",
     ],
-    routeStateFigure: "recorded in the National Subsidies Database (BDNS), cumulative",
-    routeStateLink: "See the breakdown ↓",
     routeDonorFrom: "An individual",
-    routeDonorTitle: "Private donations",
     routeDonorRules: [
       "Individuals only, never companies",
       "Up to €50,000 a year per person",
       "Named: none anonymous",
       "None from anyone holding a live public contract",
     ],
-    routeDonorFigure: "declared from {donors} donors in {year} (Tribunal de Cuentas)",
-    routeDonorLink: "See by party ↓",
-    routeFoundationFrom: "An individual or a company",
     routeFoundationTo: "The party's foundation",
-    routeFoundationTitle: "Donations to linked foundations",
     routeFoundationRules: [
       "Companies may donate",
       "No €50,000 cap",
       "Over €120,000: a public deed",
       "A company donation: notified to the Tribunal de Cuentas within three months",
     ],
-    routeFoundationFigure: "from companies in {years}; {share} of what came in was put in by the party itself (Tribunal de Cuentas)",
-    routeFoundationLink: "See the foundations →",
-    routesGap: "This site holds no donor-by-donor data: the Tribunal de Cuentas report it uses gives donations to parties grouped by amount, one to two years after the fact. The rules are those of the law's consolidated text.",
-    routesLaw: "Organic Law 8/2007 in the BOE ↗",
-    treemapTitle: "Everything granted, at a glance",
-    treemapFinding: "{names} received {share} of everything granted.",
-    treemapRest: "Other {n}",
-    treemapNote: "Each rectangle's area is proportional to what was granted under the current filters. Parties under 2% are grouped as “Other”; every one of them appears in the breakdown below and in its table.",
     donationsFinding: "{donorShare} of donors gave under €1,000, and together they gave {amountShare} of the money.",
-  },
-  foundationsPage: {
-    eyebrow: "The channel that runs the other way",
-    titlePre: "Who pays the parties’ ",
-    titleEmph: "foundations",
-    titlePost: ", and who governs them",
-    standfirst:
-      "Parties may accept no corporate money at all; their linked foundations may. But in the audited figures corporate money is the small part, and nearly nine in every ten euros coming in are put there by the party itself. Here are the entities, their accounts, and the boards that run them.",
   },
   foundations: {
     officeJoin:
@@ -1713,187 +953,8 @@ const en: Dict = {
     peopleCoverage:
       "A board is documented for {documented} of the {entities} audited entities: {people} people and {ties} outside roles, each with its source and date. Where no published board could be found, the dossier says so.",
   },
-  rights: {
-    eyebrow: "The organisations' own voices",
-    titlePre: "What the ",
-    titleEmph: "organisations",
-    titlePost: " publish, in their own words",
-    intro:
-      "The rest of this site looks at the state: its subsidies, its audits, its recorded votes. This section does the opposite and carries what the LGBTQ+ rights organisations publish themselves, with their name in front of every piece.",
-    orgsTitle: "Published by the organisations",
-    orgsNote:
-      "Eight organisations, each through its own channel. They come first because they are first-hand: they are writing about themselves and their own work, not relaying it.",
-    mediaTitle: "Coverage in the press",
-    mediaNote:
-      "Outlets that cover these subjects continuously. Shown separately so it stays clear what is first-hand and what is coverage.",
-    directoryTitle: "Where all of this comes from",
-    directoryNote:
-      "The full registry of channels this section reads. Each organisation is linked so you can go to the source, not only to whatever it published this fortnight.",
-    kindOrg: "Organisations",
-    kindMedia: "Press",
-    empty:
-      "No channel returned anything recent. That is not a statement about the news: it is a read failure, and it clears itself when the channels answer.",
-    droppedNote: "Channels that did not answer on this load:",
-    caveat:
-      "This site does not edit, summarise or rewrite these pieces: it shows the headline, the date and a link to the original. The images are the ones each channel publishes, served through this site rather than straight from the organisation's server, so a reader's IP address is not exposed. Order is by date, with sources in the page's language first.",
-    methodLink: "How these channels were chosen, and which were rejected \u2197",
-    homeTitle: "LGBTQ+ rights, in the organisations' own voices",
-    homeCta: "Open the rights section",
-  },
-  lead: {
-    kicker: "Investigation · Electoral spending",
-    title: "More than half of electoral spending is never broken down",
-    standfirst:
-      "Of the {declared} that eight formations declared as ordinary spending for the European elections of 9 June 2024, {residual} — {share} — sits in a single residual line the audit report does not break down. Advertising, the only item with a legal cap, is {ads}.",
-    link: "Read the full breakdown",
-  },
-  portal: {
-    tickSubsidies: "State subsidies",
-    tickSubsidiesNote: "BDNS · updated daily",
-    tickDonations: "Private donations",
-    tickDonationsNote: "{year} financial year · {donors} donors",
-    tickSpending: "Electoral spending",
-    tickSpendingNote: "2024 European elections · {n} formations",
-    tickVotes: "Divisions tracked",
-    tickVotesNote: "Recorded divisions of the Congreso",
-    tickPeople: "Paid officeholders",
-    tickPeopleNote: "Senior Appointments Register, active only",
-    tickLarge: "Donors above €10,000",
-    tickLargeNote: "Between them they gave {amount}",
-    opinionKicker: "The organisations speak",
-    opinionTitle: "Opinion and analysis",
-    housingKicker: "Housing",
-    housingTitle: "Housing, in the news",
-    housingNote:
-      "The latest from outlets across the spectrum, the public broadcasters, and tenants' and mortgage-holders' organisations, each item named with its publisher. The organisations speak in their own voice; the outlets are coverage.",
-    opinionCta: "Directory of organisations",
-    bandTitle: "The pulse of the data",
-    bandNote: "Three public registers, summarised",
-    colVote: "Division",
-    colDate: "Date",
-    colResult: "Result",
-    bandVotesTable:
-      "Every tracked division, newest first, with the ballots cast as the official record gives them.",
-    colTranche: "Band",
-    colDonors: "Donors",
-    colDonorShare: "% of donors",
-    colAmount: "Amount",
-    colMoneyShare: "% of the money",
-    bandDonorsTable:
-      "Donors and amounts declared in {year}, summed across all formations, by the report's bands.",
-    colFormation: "Formation",
-    colDeclared: "Declared",
-    colShare: "Share of total",
-    bandSpendTable: "Ordinary spending declared by each formation in the 2024 European election.",
-    bandVotesTitle: "The divisions, one by one",
-    bandDonorsTitle: "Many donors, little money",
-    bandDonorsNote:
-      "{n} people — {donorShare} of all donors — gave {amount} in {year}: {moneyShare} of every private euro declared.",
-    bandSpendTitle: "Electoral spending, 2024 European elections",
-    carried: "Carried",
-    rejected: "Rejected",
-    per100Donors: "Of every 100 donors",
-    per100Euros: "Of every 100 euros",
-    colRecordKicker: "Parliamentary record",
-    colReportKicker: "Report",
-    colReportTitle: "{donors} donors and a single cheque for {largest}",
-    colReportBody:
-      "The report does not publish donations one by one: it groups what was declared into three tranches and gives, per party, how many people are in each and what they add up to. That is where the shape of private money comes from, and the shape is what matters. A party can receive the same sum from thousands of people or from a handful, and the total alone does not say which happened. Where a top tranche holds a single donor, its total is that donation: the one case in which an individual figure can be read from the report without inventing anything.",
-    colReportLink: "See the split by party",
-    photoPending: "Photograph · awaiting licence",
-    eyebrow: "Political transparency portal",
-    titlePre: "Who pays them, and ",
-    titleEmph: "how they vote",
-    titlePost: ".",
-    lead:
-      "Tracking the public and private money Spanish parties receive, alongside the recorded votes of their officeholders on laws affecting trans and LGBTI people, sexual and reproductive health, and the right to housing.",
-    statPublic: "Public money to parties",
-    statPrivate: "Declared private donations",
-    statPeople: "Serving officeholders",
-    statVotes: "Votes tracked",
-    stanceTitle: "How each group voted",
-    stanceNote:
-      "Each group's majority ballot, counted from the named votes. It reports the ballot as recorded, not an interpretation of intent: in a vote on amendments, a No can mean rejecting the amendment rather than opposing the law. Check the official record and the subject of each vote.",
-    inFavourGroups: "Voted Yes",
-    againstGroups: "Voted No",
-    abstainGroups: "Abstained",
-    newsTitle: "LGBTI, trans rights and housing in the news",
-    newsNote:
-      "Recent posts from a fixed list of outlets and organisations. Items marked as an organisation's own post are its own writing, and may cover its activities as much as rights news.",
-    newsSourcesLink: "See the sources",
-    exploreTitle: "Explore",
-    exploreMoney: "How public money is split between parties, year by year.",
-    explorePeople: "Every serving officeholder: pay, party and recorded vote.",
-    exploreVotes: "The votes we track, broken down by group.",
-    exploreMethod: "Sources, limits, and what this tool does not show.",
-    linkFraming:
-      "Money and votes are published together so they can be looked up, not because one explains the other. A public subsidy does not determine any particular vote.",
-  },
-  home: {
-    perPartyColour: "Ordinary funding, in the party’s own colour",
-    eyebrow: "State subsidies",
-    titlePre: "Party money, ",
-    titleEmph: "channel",
-    titlePost: " by channel",
-    channelTitle: "State subsidies to the parties",
-    subtitle:
-      "Three channels, each with its own official source: what the state hands them, what they declared spending on a campaign, and what they declared receiving from individuals. The money reaching their linked foundations has a section of its own.",
-    intro:
-      "The public money the State hands each party, pulled live from the National Subsidies Database. Filter by year and aid type to see the split.",
-    totalLabel: "Total awarded (selection)",
-    parties: "Parties",
-    concessions: "Grants",
-    updated: "Updated",
-    year: "Year",
-    reset: "Reset",
-    distribution: "Breakdown by party",
-    noResults: "No grants for this selection.",
-    filterStatus: "{parties} parties · {grants} grants · {total} under the current filters",
-    tableCaption:
-      "What each party was granted under the current filters, by kind of grant, in euros: the figures each bar draws.",
-    colParty: "Party",
-    colTotal: "Total",
-    colShare: "Share of total",
-  },
   party: {
-    switcherLabel: "Choose a formation",
-    fichaKicker: "Party record",
-    fichaIntro:
-      "Four public registers on the same formation: what the state hands it, what it declared receiving from individuals, how its group voted in the divisions this site tracks, and what is on file about its officeholders in the judicial record. None of them explains the others.",
-    howItVoted: "How the group voted",
-    sharedGroup: "In a shared group · {group}",
-    noRepresentation: "Not in the chamber",
-    stanceNote:
-      "A position is the majority of the group's own recorded ballots: counted, not attributed. Where a formation shares a group with others, this names it rather than handing it that group's majority: in the Grupo Plurinacional SUMAR, attributing the vote to Sumar and not to Izquierda Unida would be arbitrary. And where it had no seats in that legislature, this says that too.",
-    totalReceived: "Total received",
-    ofNational: "of the national total",
-    facesTitle: "Faces of the party",
-    whereFrom: "Where it comes from",
-    ofItsFunds: "of its funds",
-    yearlyEvolution: "Yearly evolution",
-    privateTitle: "Private financing",
-    donationsDeclared: "Declared donations",
-    donors: "donors",
-    privateCaveat:
-      "Individuals only (company donations are banned). Annual figure from the latest available Court of Auditors report.",
-    ledgerTitle: "Grant ledger",
-    exercise: "Year",
-    legalBasis: "legal basis (BOE) ↗",
-    inNews: "In the news",
     recentHeadlines: "Recent headlines · Google News",
-  },
-  politician: {
-    partyFunding: "Public funding of their party",
-    seeBreakdown: "see breakdown →",
-    caveat: "Public subsidies are granted to the party, not the individual.",
-    onBluesky: "On Bluesky",
-  },
-  caras: {
-    title: "Faces",
-    intro:
-      "Individual politicians: their party and public funding, their Bluesky activity and the headlines they appear in. Every Bluesky profile is verified one by one.",
-    note:
-      "This is a curated sample. Bluesky today skews left; PP and Vox leaders have no verifiable account there.",
   },
   feed: {
     justNow: "just now",
@@ -1904,36 +965,11 @@ const en: Dict = {
     reposted: "↻ Reposted",
     fromOrg: "organisation's own post",
   },
-  voteFlow: {
-    readerParty: "{party} · {amount} in declared donations in 2020 · group vote: {vote}",
-    readerOutcome: "{vote} · formations: {count} · {amount} declared by them in 2020",
-    tableCaption:
-      "The formations in the chart, with what they declared in private donations in 2020 and how their group voted. Their declared total: {total}.",
-    colFormation: "Formation",
-    colDonations: "Declared donations, 2020",
-    colVote: "Group's vote",
-    title: "Declared money and recorded vote, side by side",
-    sourceHead: "Declared private donations · 2020",
-    outcomeHead: "Group’s vote",
-    caveat:
-      "The thickness of a ribbon is the amount declared, not a causal relation. The two registers are public, independent and from different years: nothing here asserts that one explains the other.",
-    scope:
-      "{included} formations — those with both declared donations in the report and a group of their own with a recorded vote in this division. Money source: {report}.",
-    excluded:
-      "Left out, for having no group of their own in this legislature or not appearing in the report:",
-  },
   donationsTable: {
-    barNote:
-      "Each bar is scaled against the party that declared most — the PSOE — and not against the national total: at national scale thirteen of the seventeen rows would be under two pixels. A very small amount is drawn at a minimum width so it reads as non-zero.",
-    title: "Declared private donations, 2020",
-    caption:
-      "One formation per row, ordered by declared amount. The bar splits each party's total across the report's three tranches and is scaled against the largest total, not against the national one.",
-    rank: "No.",
     party: "Formation",
     byTranche: "Split by tranche",
     total: "Total",
     donors: "Donors",
-    donorsWord: "donors",
     tranchesNote:
       "The report's tranches: under €1,000, €1,000–10,000, over €10,000.",
     trancheSmall: "Under €1,000",
@@ -1943,15 +979,6 @@ const en: Dict = {
       "Companies have not been able to donate to parties since the 2015 reform of LO 8/2007: natural persons only, capped at €50,000 a year, with no anonymous gifts. There is no per-politician funding figure, and this site does not compute one.",
   },
   spending: {
-    barNote:
-      "Each bar is scaled against the formation that declared most, so its length says how much was spent and its segments say on what. A very small amount is drawn at a minimum width so it reads as non-zero; the exact figure is in the columns.",
-    eyebrow: "Electoral spending · 2024 European elections",
-    sharesTotal: "Declared ordinary spending, in total",
-    sharesNote:
-      "Each bar is the formation's share of that total, so together they add up to 100%. A very small amount is drawn at a minimum width so it can be seen not to be zero.",
-    sharesCaption:
-      "Ordinary spending declared by each formation for the European elections of 9 June 2024.",
-    linesTitle: "What it was declared to have bought",
     lineAdvertising: "Outdoor, press and radio advertising",
     lineAdvertisingNote:
       "The only two kinds of spending with a cap of their own: LOREG arts. 55 and 58.",
@@ -1960,25 +987,6 @@ const en: Dict = {
       "“Otros gastos ordinarios”. It is most of the spending, and the report does not say where it went.",
     lineFinancial: "Financial costs and other items",
     lineFinancialNote: "Settled and estimated interest on credit facilities.",
-    lineMailings: "Mailings, accounted separately from ordinary spending",
-    lineMailingsNote:
-      "{count} mailings carrying a subsidy entitlement. They are outside ordinary spending and outside the general cap, so they have no share of that figure: the bar runs full width to say the denominator is a different one.",
-    title: "What the electoral money was declared to have bought",
-    intro:
-      "The Tribunal de Cuentas audits each election's accounts and itemises the declared spending. Only two kinds of advertising carry a legal cap and appear broken out; the rest of ordinary spending is grouped into a single line the report does not break down.",
-    unexplained: "Not broken down",
-    ofDeclared: "of declared ordinary spending",
-    advertising: "Advertising",
-    cappedOnly:
-      "Outdoor advertising (LOREG art. 55) and press and radio (art. 58). These are the only two expenses with a cap of their own.",
-    mailings: "Propaganda mailings",
-    mailingItems: "mailings carrying a subsidy entitlement",
-    declared: "Declared",
-    formation: "Formation",
-    split: "Split",
-    caption:
-      "One formation per row, with its declared ordinary spending and how much of it is capped advertising against the residual line “Otros gastos ordinarios”. Propaganda mailings are accounted separately and are not in these columns.",
-    gapTitle: "What the record does not say",
     gapBody:
       "“Otros gastos ordinarios” is a single line with no breakdown, and it is most of the declared spending. The report does not say what it bought, and the law does not require it to: digital advertising is not a category with its own cap, and the Tribunal de Cuentas has itself recommended that the Government legislate to make it one. These are declared and audited figures, not an imputation of anything to anyone.",
   },
@@ -2004,132 +1012,6 @@ const en: Dict = {
       "There are also {n} portraits of people who do not appear in the senior appointments register. They are not discarded: the register carries only serving officeholders, so a portrait without a row is ordinary for someone who has left.",
     note:
       "The four ratios measure different things against different registers — a portrait depends on a free licence existing, a recorded vote on the person sitting in the Congreso — so they are neither ordered by percentage nor compared with one another. They run in the order a reader meets them on the site.",
-  },
-  contexto: {
-    eyebrow: "The country",
-    title: "Context",
-    lead:
-      "This site publishes what parties are paid and what officeholders earn. Neither figure means anything without a scale. This is that scale, taken from INE, which produces it.",
-    framing:
-      "Nothing here is joined up. There is no line from a poverty rate to a vote, no correlation, no ordering of parties by anything computed from these numbers. The figures sit next to each other and the reader does the joining: a line drawn here would assert something the data cannot carry.",
-    wages: {
-      title: "What Spain earns",
-      intro:
-        "Mean gross annual earnings were {mean}. The median — the figure with half of all employees below it — was {median}. The difference is the upper tail: the lowest-paid tenth did not reach {p10}, and the highest-paid tenth cleared {p90}.",
-      lowSample: "small sample",
-      sourceNote:
-        "INE marks cells whose sample holds between 100 and 500 observations with a leading minus sign: those are not negative figures, they are figures with high variability. They are kept and marked; none shown here carries the mark.",
-      jornada:
-        "One caveat that changes how everything above should be read: EAES counts part-time and full-time workers in the same mean, so none of these figures is \u201cwhat a job pays\u201d. Full-time work averaged {full}; part-time work averaged {part}.",
-      spread:
-        "The best- and worst-paid sectors are a factor of {ratio} apart: {high} at {highValue} against {low} at {lowValue}.",
-    },
-    smi: {
-      title: "The whole payroll, in multiples of the minimum wage",
-      intro:
-        "One axis for every salary on this site. {underTwo} of Spanish employees earn less than two minimum wages. The tranches are INE's own, computed against the minimum wage of the same year.",
-      sourceNote:
-        "The tranches account for all employees. They are drawn as separate rows rather than stacked because the top tranche is 0.12 % and would be invisible in a stack; every row prints its exact percentage.",
-    },
-    poverty: {
-      title: "How many people it reaches",
-      intro:
-        "Four indicators from the Living Conditions Survey. Each is a share of a population, so the unfilled part of the bar is the rest of the country.",
-      rows: {
-        arope: "At risk of poverty or social exclusion (AROPE)",
-        aropeChildren: "AROPE, under 16s",
-        atRisk: "At risk of poverty (prior year's income)",
-        deprivation: "In severe material and social deprivation",
-      },
-      spread:
-        "The national figure describes no particular community: it runs from {high} in {highRegion} to {low} in {lowRegion}.",
-      base: "{base} series, stated because the same table can hold more than one definition of the same indicator.",
-      multipleBases:
-        "The table holds more than one definition ({bases}). {shown} is shown here; they are not merged, because they measure different things under the same name.",
-      note:
-        "None of these figures is crossed with any vote or any funding figure on this site. They are here so a reader has both in front of them, not to claim that one explains the other.",
-    },
-  },
-  where: {
-    title: "And where do you live?",
-    intro:
-      "Almost everything on this site is published by comunidad autónoma. Enter your postcode or pick your province and you will see what is on record for yours.",
-    postcodeLabel: "Postcode",
-    postcodePlaceholder: "28001",
-    submit: "Go",
-    provinceLabel: "Or pick a province",
-    provincePlaceholder: "Province…",
-    notFound: "That postcode matches no province. Spanish postcodes are five digits.",
-    privacy:
-      "The postcode is resolved in your browser: its first two digits are the province code. It is not sent anywhere and it is not stored.",
-    backHome: "← Front page",
-    eyebrow: "Where you live",
-    lead:
-      "{province} is in {territory}. Everything below is measured for {territory}, not for {province}: these figures do not exist per province, and dividing them down would be inventing them.",
-    leadSame:
-      "{territory} is both a province and a comunidad autónoma, so everything below is measured for that same territory.",
-    governmentTitle: "Who presides",
-    president: "President",
-    party: "Party",
-    since: "Since",
-    governmentNote:
-      "This is who holds the presidency on the date checked — not the election result, and not the composition of the government.",
-    noGovernment: "No presidency is on record for this territory.",
-    investitureDecisive:
-      "The PP held {pp} of {seats} seats, and the investiture carried with votes from Vox: without them there was no majority. Vox held {vox} seats.",
-    investitureShort:
-      "The PP held {pp} of {seats} seats, short of an absolute majority, and Vox held {vox}. This site records the arithmetic; the division record itself is not verified here.",
-    officeholdersTitle: "Officeholders from here",
-    officeholders:
-      "The senior appointments register carries {count} officeholders in {territory}. Of those, {withSalary} publish an annual figure, and the median of what is published is {median}.",
-    officeholdersGap:
-      "{missing} of the register's {total} rows state no territory and are not in this count. They are not shared out between communities.",
-    noFigure: "no figure",
-    seeOfficeholders: "See these officeholders in the register →",
-    wagesTitle: "What is earned here",
-    wages:
-      "In {territory} the median gross annual wage was {median}, against {national} across Spain. The lowest-paid tenth did not reach {p10} and the highest-paid tenth cleared {p90}.",
-    noWages:
-      "INE's earnings survey publishes no percentiles for {territory}: its regional tables cover the seventeen comunidades autónomas and not the two autonomous cities. The national figure is not substituted for it.",
-    seeContext: "See wages across Spain →",
-    povertyTitle: "At risk of poverty or exclusion",
-    national: "Spain",
-    povertyNote:
-      "{base} series. It is a share of a population rather than a count, and it is not crossed with anything else on this site.",
-    noPoverty: "The Living Conditions Survey publishes no figure for this territory.",
-    hateTitle: "Recorded hate crime",
-    hate:
-      "{total} offences were recorded in {territory} in {year}, a rate of {rate} per 100,000 inhabitants against {national} across Spain. Recorded under sexual orientation and gender identity: {sogi}.",
-    hateNote:
-      "These are offences known to the police, not incidence: a higher rate can reflect more reporting rather than more crime.",
-    noHate: "The report locates no recorded offence in this territory.",
-    seeMap: "See the whole map →",
-    closing:
-      "Nothing on this page joins one figure to another. That {territory} has a given rate and that whoever presides over it voted a given way are two facts placed side by side, not an explanation.",
-  },
-  search: {
-    label: "Search the site",
-    placeholder: "Search…",
-    submit: "Search",
-    eyebrow: "Search",
-    title: "Search",
-    scope:
-      "Searches names and titles: people in the senior appointments register along with their post and town, parties, linked foundations, comunidades, provinces, tracked divisions and the site's own sections. It does not search inside the text of the reports, so a word that appears only in a Tribunal de Cuentas finding will not turn up here.",
-    count: "Results for “{query}”: {total}",
-    more: "and {more} more",
-    tooShort: "Type at least {min} letters.",
-    empty: "No results for “{query}”.",
-    emptyHint:
-      "Try fewer words, or a surname rather than a full name. Accents do not matter. Something missing here does not mean it does not exist: this search looks only at names and titles.",
-    kinds: {
-      person: "Officeholders",
-      party: "Parties",
-      foundation: "Foundations and entities",
-      territory: "Comunidades autónomas",
-      province: "Provinces",
-      vote: "Tracked divisions",
-      page: "Sections",
-    },
   },
   method: {
     title: "Methodology and limits",
@@ -2289,8 +1171,6 @@ const ca: Dict = {
   },
   nav: {
     panel: "Tauler",
-    faces: "Cares",
-    salaries: "Sous",
     people: "Polítics",
     votes: "Votacions",
     methodology: "Metodologia",
@@ -2299,10 +1179,6 @@ const ca: Dict = {
     rights: "Drets",
     map: "Mapa",
     foundations: "Fundacions",
-    data: "Dades",
-    sectionData: "Dades",
-    sectionAbout: "Sobre",
-    menu: "Menú",
     skipToContent: "Salta al contingut",
   },
   people: {
@@ -2481,151 +1357,13 @@ const ca: Dict = {
     colBallot: "Vot",
   },
   votes: {
-    eyebrow: "Votacions nominals",
-    title: "Votacions clau",
-    intro:
-      "Posicions registrades en votacions nominals del Congrés sobre assumptes concrets. Cada posició és un vot realment emès i verificable, no una opinió atribuïda.",
-    caveat:
-      "Cada votació s'etiqueta segons el seu tipus: unes aproven lleis, altres són proposicions no de Llei o mocions, que no són vinculants. S'exclouen les votacions d'esmenes. Un diputat apareix només si consta el seu vot; no es dedueix la postura de ningú a partir del seu partit.",
-    searchLabel: "Cerca diputat",
-    searchPlaceholder: "Cognom o nom…",
     inFavour: "A favor",
     against: "En contra",
     abstention: "Abstenció",
     noVote: "No vota",
-    present: "Presents",
-    byGroup: "Per grup parlamentari",
-    group: "Grup",
-    byGroupCaption: "Un grup per fila, amb els seus vots comptats i l'enllaç al finançament del partit quan el grup el forma un de sol.",
-    distribution: "Repartiment",
-    funding: "Finançament",
-    severalParties: "Diversos partits",
-    groupUnknown: "Grup no identificat al registre",
-    groupNote:
-      "Un grup parlamentari no és un partit. Quan el grup el forma un sol partit, l'última columna enllaça al finançament d'aquest partit; quan el formen diversos, no s'enllaça a cap, perquè atribuir els diners d'una coalició a un dels seus membres seria fals.",
-    groupSource: "Composició dels grups ↗",
-    officialRecord: "Acta oficial ↗",
-    lawText: "Text de la llei ↗",
-    session: "Sessió",
-    noMatch: "Sense vots registrats per a aquesta cerca.",
-    results: "diputats",
-    kinds: {
-      ley: "Votació final de llei",
-      toma: "Presa en consideració",
-      pnl: "Proposició no de Llei",
-      mocion: "Moció conseqüència d'interpel·lació",
-    },
-    nonBinding: "no vinculant",
-    legislature: "Legislatura",
-  },
-  salaries: {
-    title: "Sous públics",
-    intro:
-      "Retribucions dels càrrecs públics en actiu, segons el Registre d'Alts Càrrecs i els portals de transparència. Cerca per nom, càrrec, municipi o comunitat.",
-    search: "Cerca",
-    searchPlaceholder: "Nom, càrrec, municipi…",
-    party: "Partit",
-    all: "Tots",
-    role: "Càrrec",
-    where: "Àmbit",
-    annual: "Brut anual",
-    people: "càrrecs",
-    results: "resultats",
-    noResults: "Sense resultats per a aquesta cerca.",
-    prev: "Anterior",
-    next: "Següent",
-    page: "Pàgina",
-    of: "de",
-    median: "Mediana",
-    sourceNote:
-      "Fonts · Registre d'Alts Càrrecs / transparencia.gob.es; els diputats que el registre no recull, de les dades obertes del Congrés",
-    caveat:
-      "Retribució del càrrec, no patrimoni ni ingressos privats. Només càrrecs marcats com a actius a la font.",
-  },
-  map: {
-    investitureTitle: "Investidura",
-    investitureDecisive:
-      "El PP tenia {pp} de {seats} escons i la majoria absoluta era {majority}. A la votació del {date} la investidura va sortir per {for} vots contra {against}, i {voxVotes} d’aquells vots els va posar Vox: sense ells no hi havia majoria.",
-    investitureShort:
-      "El PP tenia {pp} de {seats} escons i la majoria absoluta era {majority}, així que no hi arribava sol; els {vox} escons de Vox haurien bastat per cobrir la diferència. L’acta de la votació no està verificada aquí, i en segona volta n’hi ha prou amb la majoria simple, així que no s’afirma qui va investir ningú.",
-    investitureCarried: "aprovada",
-    investitureFailed: "rebutjada",
-    hatchDecisive: "Investidura amb vots de Vox, segons l’acta",
-    hatchShort: "El PP no arribava sol a la majoria absoluta",
-    eyebrow: "Mapa territorial",
-    title: "On manà cada partit, i què hi consta registrat",
-    standfirst:
-      "Passeu el cursor per veure la comunitat. Premeu per fixar-la al panell. Les dues capes es mostren per separat i cap no explica l'altra.",
-    svgLabel: "Mapa de les comunitats autònomes",
-    layerGov: "Govern autonòmic",
-    layerGovNote:
-      "El partit de qui presidia cada comunitat a la data de comprovació, amb la data en què va prendre possessió. No és el resultat de les eleccions ni la composició del govern: és qui ocupa la presidència.",
-    layerHate: "Delictes d'odi registrats",
-    layerHateNote:
-      "Taxa de delictes, infraccions administratives i altres incidents d'odi per cada 100.000 habitants, 2024. Són fets coneguts per les forces de seguretat, no condemnes: la xifra depèn de quant es denuncia i de com registra cada policia el que es denuncia.",
-    perHundredThousand: "per 100.000 hab.",
-    panelKicker: "Fitxa territorial",
-    rowPresident: "Presidència",
-    rowParty: "Partit",
-    rowSince: "Des de",
-    rowRecorded: "Fets coneguts 2024",
-    rowRate: "Taxa per 100.000 hab.",
-    barSogi: "Orientació sexual i identitat de gènere",
-    barRacism: "Racisme i xenofòbia",
-    barsNote:
-      "Dues de les dotze motivacions que distingeix l'informe, com a proporció dels fets coneguts d'aquella comunitat.",
-    noData: "No consta",
-    tableCaption:
-      "Un territori per fila, amb les dues capes del mapa com a xifres. L'ordre segueix la capa activa: per partit a la de govern, per taxa a la de delictes d'odi.",
-    tableCaptionSorted:
-      "Un territori per fila, amb les dues capes del mapa com a xifres. Ordenat per la columna que heu triat; premeu una altra capçalera per canviar-ho.",
-    sortHint: "Ordenar per {column}",
-    colTerritory: "Territori",
-    colRate: "Taxa / 100.000",
-    sourcesTitle: "Fonts",
-    tablesLabel: "taules",
-    checkedLabel: "comprovat el",
-    limits:
-      "Els fets coneguts inclouen infraccions administratives i altres incidents, no només delictes, i no són condemnes. Les dues comunitats amb policia autonòmica pròpia —la Policia Foral de Navarra i l'Ertzaintza— encapçalen la taula de taxes, cosa que diu alguna cosa sobre com es registra i no necessàriament sobre on passa més. Un incident de l'informe no consta en cap territori, i per això les columnes d'aquí sumen un menys que la xifra estatal.",
-    missingLayers:
-      "El disseny d'aquesta secció preveia tres capes més: un índex de drets LGTBI, l'estat de les reformes de les lleis trans i el vot a les formacions que van votar en contra de les normes que aquest portal segueix. No hi són perquè encara no hi ha una font citable per comunitat per a cap de les tres. Tampoc no hi és l'ombrejat que marcaria les investidures que van dependre de Vox: cinc presidències del PP es van investir amb els seus vots el juliol del 2023 i Vox va sortir de tres d'aquells governs el juliol del 2024, així que un ombrejat fix seria fals per a part del període que semblaria descriure.",
   },
   court: {
     title: "Què consta al registre judicial",
-    eyebrow: "Als tribunals",
-    sourceLink: "Font",
-    statusNone: "Sense resolucions",
-    noneBody:
-      "En aquest portal no consta cap resolució judicial ni acord de junta electoral referit a càrrecs d’aquesta formació en les matèries que se segueixen.",
-    noneNote:
-      "L’absència de registre no és una declaració sobre la conducta de ningú: només vol dir que no hi ha una resolució citable.",
-    status: {
-      archived: "Causa arxivada",
-      "awaiting-trial": "Pendent de judici",
-      "advertising-infringement": "Infracció de publicitat",
-      "complaint-archived": "Querella arxivada",
-      "none-on-record": "Sense resolucions",
-    },
-    records: {
-      "menas-2021": {
-        text: "El cartell dels «menas» de Vox a la campanya de l’Assemblea de Madrid del 2021. El jutjat va arxivar la causa per acte i l’Audiència Provincial ho va confirmar: «no existeix delicte d’odi ni delicte electoral».",
-        note: "Hi van recórrer la Fiscalia, el PSOE, Podem, Esquerra Unida i Progresa. És un arxivament en fase d’instrucció, no una absolució: cap tribunal no va entrar en el fons.",
-      },
-      "herrero-valencia": {
-        text: "La regidora de Vox a València Cecilia Herrero anirà a judici oral per delictes d’odi: una trentena de publicacions a X entre l’abril del 2020 i l’abril del 2024. La Fiscalia demana 3 anys de presó, multa de 12 mesos a 20 €/dia i inhabilitació.",
-        note: "Acte d’obertura de judici oral, no sentència. La qualificació és alternativa: 510.1 a) amb 510.3, 510.5 i 510.6, o bé 510.2 a) amb els mateixos apartats.",
-      },
-      "jez-madrid-2023": {
-        text: "La Junta Electoral de Zona de Madrid va ordenar retirar una lona del carrer Alcalá en «termini d’un dia», per propaganda contractada fora del període de campanya.",
-        note: "LOREG art. 53 i Instrucció 3/2011 de la JEC. La junta es va declarar expressament no competent sobre el contingut i no va obrir expedient sancionador: és una infracció de calendari publicitari, i res més.",
-      },
-      "belarra-querella": {
-        text: "La Sala Penal del Tribunal Suprem va arxivar la querella de Vox contra Ione Belarra per les seves paraules en un míting de Collado Villalba: l’art. 510 CP protegeix les minories socials, no els partits polítics.",
-        note: "Ponent Sánchez Melgar; el recurs de súplica va ser rebutjat. El registre documenta una querella contra ella, mai una conducta seva.",
-      },
-    },
-    policy:
-      "Quatre resolucions verificades una a una, no un cens: el nombre de registres d’una formació no és comparable amb el d’una altra. Una causa arxivada s’etiqueta com a arxivada i mai com a absolució; una causa oberta, com a pendent de judici. D’això no se’n deriva cap puntuació ni classificació.",
   },
   masthead: {
     edition: "Edició nº 001",
@@ -2637,11 +1375,6 @@ const ca: Dict = {
     themeLight: "Clar",
     themeDark: "Fosc",
     themeSystem: "Com el sistema",
-  },
-  footer: {
-    source:
-      "Siguiendo el Dinero · Dades obertes de la BDNS, el Tribunal de Comptes i el Congrés dels Diputats",
-    caveat: "Els fets van un al costat de l’altre; no s’afirma cap causa",
   },
   charts: {
     showTable: "Mostra les dades en una taula",
@@ -2672,17 +1405,7 @@ const ca: Dict = {
     dataAsOf: "Dades a {date}",
   },
   common: {
-    backToPanel: "← Tornar al tauler",
-    backToFaces: "← Cares",
-    nif: "NIF",
     caveat: "Què cal saber",
-  },
-  blocs: {
-    derecha: "Dreta",
-    izquierda: "Esquerra",
-    nacionalista: "Nacionalista",
-    regionalista: "Regionalista",
-    otro: "Altre",
   },
   kinds: {
     ordinaria: "Finançament ordinari",
@@ -2690,71 +1413,29 @@ const ca: Dict = {
     otra: "Altra",
     all: "Totes",
   },
-  fundingStats: {
-    eyebrow: "Els tres canals del diner",
-    subsidies: "Subvencions de l'Estat",
-    subsidiesNote: "Total acumulat a la BDNS · actualitzat diàriament",
-    donations: "Donacions privades 2020",
-    donationsNote: "{donors} donants declarats",
-    electoral: "Despesa electoral 2024",
-    electoralNote: "Despesa ordinària declarada a les europees",
-    capped: "Publicitat amb límit legal",
-    cappedNote: "{amount} · LOREG arts. 55 i 58",
-    residual: "Línia residual sense desglossar",
-    residualNote: "{amount} en una sola partida",
-  },
   money: {
-    routesTitle: "Com arriben els diners a un partit",
-    routesIntro: "Tres canals, cadascun amb les seves pròpies regles a la Llei orgànica 8/2007 de finançament dels partits. Al costat de cadascun, la xifra que publica la seva font oficial. Les tres vénen de fonts i anys diferents, així que no se sumen.",
-    from: "De",
-    to: "A",
     routePartyTo: "El partit",
-    routeStateFrom: "L'Estat i les administracions",
-    routeStateTitle: "Subvencions públiques",
     routeStateRules: [
       "Per a despeses electorals",
       "Anuals, per a funcionament",
       "De les comunitats autònomes",
       "Aportacions dels grups parlamentaris",
     ],
-    routeStateFigure: "registrats a la Base de Dades Nacional de Subvencions, acumulat",
-    routeStateLink: "Veure el repartiment ↓",
     routeDonorFrom: "Una persona",
-    routeDonorTitle: "Donacions privades",
     routeDonorRules: [
       "Només persones físiques, mai empreses",
       "Fins a 50.000 € l'any per persona",
       "Nominatives: cap d'anònima",
       "Res de qui tingui un contracte públic vigent",
     ],
-    routeDonorFigure: "declarats per {donors} donants el {year} (Tribunal de Comptes)",
-    routeDonorLink: "Veure per partit ↓",
-    routeFoundationFrom: "Una persona o una empresa",
     routeFoundationTo: "La fundació del partit",
-    routeFoundationTitle: "Donacions a fundacions vinculades",
     routeFoundationRules: [
       "Les empreses sí que poden donar",
       "Sense el límit de 50.000 €",
       "Més de 120.000 €: document públic",
       "Donació d'empresa: avís al Tribunal de Comptes en tres mesos",
     ],
-    routeFoundationFigure: "d'empreses en el període {years}; el {share} del que va entrar el va posar el mateix partit (Tribunal de Comptes)",
-    routeFoundationLink: "Veure les fundacions →",
-    routesGap: "Aquest web no té dades donant per donant: l'informe del Tribunal de Comptes que fa servir dona les donacions als partits agrupades per trams d'import, amb un o dos anys de retard. Les regles són les del text consolidat de la llei.",
-    routesLaw: "Llei orgànica 8/2007 al BOE ↗",
-    treemapTitle: "Tot el que s'ha concedit, d'un cop d'ull",
-    treemapFinding: "{names} van rebre el {share} del que s'ha concedit.",
-    treemapRest: "Altres {n}",
-    treemapNote: "L'àrea de cada rectangle és proporcional al que s'ha concedit amb els filtres actuals. Els partits amb menys del 2 % s'agrupen a «Altres»; tots apareixen, un per un, al repartiment de sota i a la seva taula.",
     donationsFinding: "El {donorShare} dels donants van donar menys de 1.000 €, i entre tots van aportar el {amountShare} dels diners.",
-  },
-  foundationsPage: {
-    eyebrow: "El canal que corre a l'inrevés",
-    titlePre: "Qui paga les ",
-    titleEmph: "fundacions",
-    titlePost: " dels partits, i qui les governa",
-    standfirst:
-      "Als partits els està prohibit acceptar diners d'empreses; a les seves fundacions vinculades no. Però en les xifres auditades el diner d'empreses és la part petita, i gairebé nou de cada deu euros que entren els posa el mateix partit. Aquí hi ha les entitats, els seus comptes i els patronats que les dirigeixen.",
   },
   foundations: {
     officeJoin:
@@ -2848,187 +1529,8 @@ const ca: Dict = {
     peopleCoverage:
       "Patronat documentat en {documented} de {entities} entitats auditades: {people} persones i {ties} càrrecs externs, cada un amb la seva font i la seva data. On no es va localitzar un patronat publicat, la fitxa ho diu.",
   },
-  rights: {
-    eyebrow: "Veus de les organitzacions",
-    titlePre: "El que publiquen les ",
-    titleEmph: "entitats",
-    titlePost: ", amb la seva pr\u00f2pia veu",
-    intro:
-      "La resta d'aquest web mira l'Estat: les seves subvencions, les seves auditories, les seves votacions registrades. Aquesta secci\u00f3 fa el contrari i recull el que publiquen les mateixes organitzacions de drets LGTBI, amb el seu nom davant de cada pe\u00e7a.",
-    orgsTitle: "Publicat per les organitzacions",
-    orgsNote:
-      "Vuit organitzacions, cada una a trav\u00e9s del seu propi canal. Van primer perqu\u00e8 s\u00f3n font directa: parlen d'elles mateixes i de la seva feina, no de segona m\u00e0.",
-    mediaTitle: "Cobertura als mitjans",
-    mediaNote:
-      "Mitjans que cobreixen aquests temes de manera continuada. Es mostren a part perqu\u00e8 quedi clar qu\u00e8 \u00e9s font directa i qu\u00e8 \u00e9s cobertura.",
-    directoryTitle: "D'on surt tot aix\u00f2",
-    directoryNote:
-      "El registre complet de canals que llegeix aquesta secci\u00f3. S'enlla\u00e7a cada organitzaci\u00f3 per poder anar a la font i no nom\u00e9s al que va publicar aquesta quinzena.",
-    kindOrg: "Organitzacions",
-    kindMedia: "Mitjans",
-    empty:
-      "Cap canal ha retornat pe\u00e7es recents. No \u00e9s una afirmaci\u00f3 sobre l'actualitat: \u00e9s una fallada de lectura, i es corregeix sola quan els canals responen.",
-    droppedNote: "Canals que no van respondre en aquesta c\u00e0rrega:",
-    caveat:
-      "Aquest web no edita, resumeix ni reescriu aquestes pe\u00e7es: mostra el titular, la data i l'enlla\u00e7 a l'original. Les imatges s\u00f3n les que publica cada canal i se serveixen a trav\u00e9s d'aquest lloc, no directament des del servidor de l'organitzaci\u00f3, per no exposar la IP de qui llegeix. L'ordre \u00e9s per data, amb les fonts en l'idioma de la p\u00e0gina primer.",
-    methodLink: "Com es van triar aquests canals, i quins es van descartar \u2197",
-    homeTitle: "Drets LGTBI, amb la veu de les organitzacions",
-    homeCta: "Veure la secci\u00f3 de drets",
-  },
-  lead: {
-    kicker: "Investigació · Despesa electoral",
-    title: "Més de la meitat de la despesa electoral no està desglossada",
-    standfirst:
-      "Dels {declared} que vuit formacions van declarar com a despesa ordinària a les europees del 9 de juny del 2024, {residual} —el {share}— figuren en una sola línia residual que l'informe de fiscalització no desglossa. La publicitat, l'única partida amb límit legal, és el {ads}.",
-    link: "Llegir el desglossament complet",
-  },
-  portal: {
-    tickSubsidies: "Subvencions de l'Estat",
-    tickSubsidiesNote: "BDNS · actualitzat diàriament",
-    tickDonations: "Donacions privades",
-    tickDonationsNote: "Exercici {year} · {donors} donants",
-    tickSpending: "Despesa electoral",
-    tickSpendingNote: "Europees del 2024 · {n} formacions",
-    tickVotes: "Votacions seguides",
-    tickVotesNote: "Votacions nominals del Congrés",
-    tickPeople: "Càrrecs amb retribució",
-    tickPeopleNote: "Registre d'Alts Càrrecs, només actius",
-    tickLarge: "Donants de més de 10.000 €",
-    tickLargeNote: "Entre tots van aportar {amount}",
-    opinionKicker: "Les organitzacions parlen",
-    opinionTitle: "Opinió i anàlisi",
-    housingKicker: "Habitatge",
-    housingTitle: "L’habitatge, a les notícies",
-    housingNote:
-      "El més recent de mitjans de diferent signe, de les ràdios i televisions públiques i de les organitzacions de llogateres i d’afectades per la hipoteca, cada peça amb el nom de qui la publica. Les organitzacions parlen amb la seva pròpia veu; els mitjans, com a cobertura.",
-    opinionCta: "Directori d'organitzacions",
-    bandTitle: "El pols de les dades",
-    bandNote: "Tres registres públics, resumits",
-    colVote: "Votació",
-    colDate: "Data",
-    colResult: "Resultat",
-    bandVotesTable:
-      "Cada votació seguida, de la més recent a la més antiga, amb els vots emesos tal com consten a l'acta.",
-    colTranche: "Tram",
-    colDonors: "Donants",
-    colDonorShare: "% de donants",
-    colAmount: "Import",
-    colMoneyShare: "% dels diners",
-    bandDonorsTable:
-      "Donants i imports declarats el {year}, sumats en totes les formacions, per tram de l'informe.",
-    colFormation: "Formació",
-    colDeclared: "Declarat",
-    colShare: "Part del total",
-    bandSpendTable: "Despesa ordinària declarada per cada formació a les europees del 2024.",
-    bandVotesTitle: "Les votacions, una a una",
-    bandDonorsTitle: "Molts donants, pocs diners",
-    bandDonorsNote:
-      "{n} persones —el {donorShare} dels donants— van aportar {amount} el {year}: el {moneyShare} de tot el diner privat declarat.",
-    bandSpendTitle: "Despesa electoral, europees del 2024",
-    carried: "Aprovada",
-    rejected: "Rebutjada",
-    per100Donors: "De cada 100 donants",
-    per100Euros: "De cada 100 euros",
-    colRecordKicker: "Registre parlamentari",
-    colReportKicker: "Reportatge",
-    colReportTitle: "{donors} donants i un sol xec de {largest}",
-    colReportBody:
-      "L'informe no publica donació per donació: agrupa el que es va declarar en tres trams i dóna, per partit, quantes persones hi ha en cada un i quant sumen. D'aquí surt la forma del diner privat, que és el que importa. Un partit pot rebre el mateix de milers de persones que d'un grapat, i el total tot sol no diu quina de les dues coses ha passat. Quan un tram alt té un únic donant, el seu total és aquella donació: l'únic cas en què una xifra individual es pot llegir de l'informe sense inventar res.",
-    colReportLink: "Veure el repartiment per partit",
-    photoPending: "Fotografia · pendent de llicència",
-    eyebrow: "Portal de transparència política",
-    titlePre: "Qui els paga, i ",
-    titleEmph: "com voten",
-    titlePost: ".",
-    lead:
-      "Seguiment dels diners públics i privats que reben els partits espanyols, juntament amb el vot registrat dels seus càrrecs en les lleis que afecten les persones trans i LGBTI, la salut sexual i reproductiva, i el dret a l'habitatge.",
-    statPublic: "Diners públics als partits",
-    statPrivate: "Donacions privades declarades",
-    statPeople: "Càrrecs públics en actiu",
-    statVotes: "Votacions seguides",
-    stanceTitle: "Com va votar cada grup",
-    stanceNote:
-      "Vot majoritari de cada grup, comptat a partir dels vots nominals. Indica el sentit del vot tal com consta a l'acta, no una interpretació: en votacions d'esmenes, un No pot significar rebutjar l'esmena i no oposar-se a la llei. Consulta l'acta oficial i l'assumpte de cada votació.",
-    inFavourGroups: "Va votar Sí",
-    againstGroups: "Va votar No",
-    abstainGroups: "Es va abstenir",
-    newsTitle: "Drets LGBTI, trans i habitatge a l'actualitat",
-    newsNote:
-      "Publicacions recents d'una llista fixa de mitjans i entitats. Les marcades com a publicació de l'entitat són els seus propis textos, i poden tractar tant de drets com de la seva activitat.",
-    newsSourcesLink: "Veure les fonts",
-    exploreTitle: "Explorar",
-    exploreMoney: "El repartiment dels diners públics entre partits, any a any.",
-    explorePeople: "Cada càrrec en actiu: sou, partit i vot registrat.",
-    exploreVotes: "Les votacions seguides, amb desglossament per grup.",
-    exploreMethod: "Fonts, límits i què no mostra aquesta eina.",
-    linkFraming:
-      "Els diners i els vots es publiquen junts per poder consultar-los, no perquè l'un expliqui l'altre. Una subvenció pública no determina un vot concret.",
-  },
-  home: {
-    perPartyColour: "Finançament ordinari, en el color del partit",
-    eyebrow: "Subvencions estatals",
-    titlePre: "El diner dels ",
-    titleEmph: "partits",
-    titlePost: ", canal per canal",
-    channelTitle: "Subvencions estatals als partits",
-    subtitle:
-      "Tres canals, cada un amb la seva font oficial: el que l’Estat els lliura, el que van declarar haver gastat en una campanya i el que van declarar rebre de particulars. El diner de les fundacions vinculades té la seva pròpia secció.",
-    intro:
-      "Els diners públics que l'Estat lliura a cada partit, extrets en directe de la Base de Dades Nacional de Subvencions. Filtra per any i per tipus d'ajut per veure el repartiment.",
-    totalLabel: "Total concedit (selecció)",
-    parties: "Partits",
-    concessions: "Concessions",
-    updated: "Actualitzat",
-    year: "Exercici",
-    reset: "Reset",
-    distribution: "Repartiment per partit",
-    noResults: "No hi ha concessions per a aquesta selecció.",
-    filterStatus: "{parties} partits · {grants} concessions · {total} amb els filtres actuals",
-    tableCaption:
-      "El que s'ha concedit a cada partit amb els filtres actuals, per tipus d'ajuda, en euros: les xifres que dibuixa cada barra.",
-    colParty: "Partit",
-    colTotal: "Total",
-    colShare: "Part del total",
-  },
   party: {
-    switcherLabel: "Triar formació",
-    fichaKicker: "Fitxa de partit",
-    fichaIntro:
-      "Quatre registres públics sobre la mateixa formació: el que l'Estat li lliura, el que va declarar rebre de particulars, com va votar el seu grup en les votacions que aquest portal segueix i què consta dels seus càrrecs al registre judicial. Cap no explica els altres.",
-    howItVoted: "Com va votar el grup",
-    sharedGroup: "En grup compartit · {group}",
-    noRepresentation: "Sense representació",
-    stanceNote:
-      "La posició és la majoria de les paperetes nominals del mateix grup: comptada, no atribuïda. Quan una formació comparteix grup amb altres es diu quin, en lloc d'assignar-li la majoria d'aquell grup: al Grup Plurinacional SUMAR, per exemple, atribuir-ne el vot a Sumar i no a Esquerra Unida seria arbitrari. I quan no tenia representació en aquella legislatura, també es diu.",
-    totalReceived: "Total rebut",
-    ofNational: "del total nacional",
-    facesTitle: "Cares del partit",
-    whereFrom: "D'on ve",
-    ofItsFunds: "dels seus fons",
-    yearlyEvolution: "Evolució anual",
-    privateTitle: "Finançament privat",
-    donationsDeclared: "Donacions declarades",
-    donors: "donants",
-    privateCaveat:
-      "Només persones físiques (les donacions d'empreses estan prohibides). Dada anual de l'últim informe disponible del Tribunal de Comptes.",
-    ledgerTitle: "Registre de concessions",
-    exercise: "Exercici",
-    legalBasis: "base legal (BOE) ↗",
-    inNews: "A les notícies",
     recentHeadlines: "Titulars recents · Google News",
-  },
-  politician: {
-    partyFunding: "Finançament públic del seu partit",
-    seeBreakdown: "veure desglossament →",
-    caveat: "Les subvencions públiques es concedeixen al partit, no a la persona.",
-    onBluesky: "A Bluesky",
-  },
-  caras: {
-    title: "Cares",
-    intro:
-      "Polítics individuals: el seu partit i finançament públic, la seva activitat a Bluesky i els titulars on apareixen. Els perfils de Bluesky estan verificats un a un.",
-    note:
-      "La llista és una mostra curada. Bluesky té, ara mateix, més presència de l'esquerra; líders del PP i Vox no hi tenen compte verificable.",
   },
   feed: {
     justNow: "ara mateix",
@@ -3039,36 +1541,11 @@ const ca: Dict = {
     reposted: "↻ Republicat",
     fromOrg: "publicació de l'entitat",
   },
-  voteFlow: {
-    readerParty: "{party} · {amount} en donacions declarades el 2020 · vot del grup: {vote}",
-    readerOutcome: "{vote} · formacions: {count} · {amount} declarats per elles el 2020",
-    tableCaption:
-      "Les formacions del gràfic, amb el que van declarar en donacions privades el 2020 i com va votar el seu grup. Total declarat per elles: {total}.",
-    colFormation: "Formació",
-    colDonations: "Donacions declarades, 2020",
-    colVote: "Vot del grup",
-    title: "Diner declarat i vot registrat, un al costat de l’altre",
-    sourceHead: "Donacions privades declarades · 2020",
-    outcomeHead: "Vot del grup",
-    caveat:
-      "El gruix del traç és la quantia declarada, no una relació causal. Els dos registres són públics, independents i d’anys diferents: res d’això afirma que l’un expliqui l’altre.",
-    scope:
-      "{included} formacions, les que tenen alhora donacions declarades a l’informe i un grup propi amb vot registrat en aquesta votació. Font del diner: {report}.",
-    excluded:
-      "En queden fora, per no tenir grup propi en aquesta legislatura o no constar a l’informe:",
-  },
   donationsTable: {
-    barNote:
-      "Cada barra es compara amb la del partit que més va declarar —el PSOE—, no amb el total estatal: a escala estatal tretze de les disset files mesurarien menys de dos píxels. Un import molt petit es dibuixa amb una amplada mínima perquè es vegi que no és zero.",
-    title: "Donacions privades declarades, 2020",
-    caption:
-      "Una formació per fila, ordenades per import declarat. La barra reparteix el total de cada partit entre els tres trams de l'informe i està escalada contra el total més alt, no contra el total estatal.",
-    rank: "Núm.",
     party: "Formació",
     byTranche: "Repartiment per trams",
     total: "Total",
     donors: "Donants",
-    donorsWord: "donants",
     tranchesNote:
       "Trams de l'informe: menys de 1.000 €, de 1.000 a 10.000 €, més de 10.000 €.",
     trancheSmall: "Menys de 1.000 €",
@@ -3078,15 +1555,6 @@ const ca: Dict = {
       "Les empreses no poden donar als partits des de la reforma del 2015 de la LO 8/2007: només persones físiques, amb un màxim de 50.000 € l'any i sense donacions anònimes. No existeix una xifra de finançament per polític, i aquesta web no la calcula.",
   },
   spending: {
-    barNote:
-      "Cada barra es compara amb la de la formació que més va declarar, així que la seva llargada diu quant va gastar i els seus trams en què. Un import molt petit es dibuixa amb una amplada mínima perquè es vegi que no és zero; la xifra exacta és a les columnes.",
-    eyebrow: "Despesa electoral · europees del 2024",
-    sharesTotal: "Despesa ordinària declarada, en total",
-    sharesNote:
-      "Cada barra és la part de la formació en aquest total, així que juntes sumen el 100 %. Un import molt petit es dibuixa amb una amplada mínima perquè es vegi que no és zero.",
-    sharesCaption:
-      "Despesa ordinària declarada per cada formació a les eleccions europees del 9 de juny de 2024.",
-    linesTitle: "En què es va declarar gastat",
     lineAdvertising: "Publicitat exterior i a premsa i ràdio",
     lineAdvertisingNote:
       "Les dues úniques despeses amb límit legal propi: arts. 55 i 58 de la LOREG.",
@@ -3095,25 +1563,6 @@ const ca: Dict = {
       "«Otros gastos ordinarios». És la major part de la despesa i l'informe no diu on va anar.",
     lineFinancial: "Costos financers i altres conceptes",
     lineFinancialNote: "Interessos liquidats i estimats de les operacions de crèdit.",
-    lineMailings: "Enviaments postals, a part de la despesa ordinària",
-    lineMailingsNote:
-      "{count} enviaments amb dret a subvenció. No entren en la despesa ordinària ni en el límit general, així que no tenen percentatge d'aquella xifra: la barra va completa per dir que el denominador és un altre.",
-    title: "En què es va declarar gastat el diner electoral",
-    intro:
-      "El Tribunal de Comptes fiscalitza els comptes de cada elecció i desglossa la despesa declarada. Només dos tipus de publicitat tenen límit legal i apareixen detallats; la resta de la despesa ordinària s'agrupa en una única línia que l'informe no desglossa.",
-    unexplained: "Sense desglossar",
-    ofDeclared: "de la despesa ordinària declarada",
-    advertising: "Publicitat",
-    cappedOnly:
-      "Publicitat exterior (art. 55 LOREG) i a premsa i ràdio (art. 58). Són les dues úniques despeses amb límit propi.",
-    mailings: "Trameses de propaganda",
-    mailingItems: "trameses amb dret a subvenció",
-    declared: "Declarat",
-    formation: "Formació",
-    split: "Repartiment",
-    caption:
-      "Una formació per fila, amb la despesa ordinària declarada i quina part correspon a publicitat amb límit legal davant la línia residual «Otros gastos ordinarios». Les trameses de propaganda es comptabilitzen a part i no entren en aquestes columnes.",
-    gapTitle: "Què no diu el registre",
     gapBody:
       "«Otros gastos ordinarios» és una sola línia sense desglossament i és la major part de la despesa declarada. L'informe no diu en què es va gastar, i la llei no obliga a detallar-ho: la publicitat digital no és una categoria amb límit propi, i el mateix Tribunal de Comptes ha recomanat al Govern que legisli perquè ho sigui. Aquestes xifres són despesa declarada i fiscalitzada, no una imputació de res a ningú.",
   },
@@ -3139,132 +1588,6 @@ const ca: Dict = {
       "Hi ha també {n} retrats de persones que no consten al registre d’alts càrrecs. No es descarten: el registre només recull càrrecs en actiu, així que un retrat sense fila és el normal per a qui ja no ho és.",
     note:
       "Les quatre proporcions mesuren coses diferents contra registres diferents —un retrat depèn que existeixi una llicència lliure, un vot registrat que la persona segui al Congrés—, així que no estan ordenades per percentatge ni comparades entre si. Van en l’ordre en què es troben a la web.",
-  },
-  contexto: {
-    eyebrow: "El país",
-    title: "Context",
-    lead:
-      "Aquest web publica el que cobren els partits i el que cobren els càrrecs públics. Cap d’aquestes xifres no significa res sense una escala. Aquesta és l’escala, presa de l’INE, que és qui la produeix.",
-    framing:
-      "Aquí no s’uneix res. No hi ha cap línia que vagi d’una taxa de pobresa a un vot, ni correlació, ni ordenació de partits per res calculat a partir d’aquestes dades. Les xifres es posen les unes al costat de les altres i qui llegeix en treu les conclusions: una línia traçada aquí afirmaria una cosa que les dades no sostenen.",
-    wages: {
-      title: "El que es cobra a Espanya",
-      intro:
-        "El salari brut mitjà anual va ser de {mean}. La mediana —la xifra que deixa la meitat dels assalariats per sota— va ser de {median}. La diferència és la cua alta: el 10 % pitjor pagat no va arribar a {p10} i el 10 % millor pagat va superar {p90}.",
-      lowSample: "mostra reduïda",
-      sourceNote:
-        "L’INE marca amb un signe menys les cel·les la mostra de les quals té entre 100 i 500 observacions: no són xifres negatives, són xifres amb alta variabilitat. Es conserven i s’assenyalen; cap de les mostrades aquí no porta aquesta marca.",
-      jornada:
-        "Un advertiment que canvia com llegir tot l’anterior: l’EAES compta la jornada parcial i la completa en la mateixa mitjana, així que cap d’aquestes xifres no és «el que paga un lloc de treball». A jornada completa la mitjana va ser de {full}; a jornada parcial, de {part}.",
-      spread:
-        "Entre el sector més ben pagat i el pitjor pagat hi ha un factor de {ratio}: {high} amb {highValue} davant de {low} amb {lowValue}.",
-    },
-    smi: {
-      title: "Tota la massa salarial, en múltiples del SMI",
-      intro:
-        "El mateix eix per a qualsevol sou d’aquest web. El {underTwo} dels assalariats espanyols cobra menys de dos salaris mínims. Els trams són els de l’INE, calculats sobre el SMI del mateix any.",
-      sourceNote:
-        "Els trams sumen el total d’assalariats. Es dibuixen en files separades i no apilats perquè el tram superior és el 0,12 % i apilat no es veuria; cada fila porta el seu percentatge exacte.",
-    },
-    poverty: {
-      title: "A quanta gent afecta",
-      intro:
-        "Quatre indicadors de l’Enquesta de Condicions de Vida. Cadascun és una proporció d’una població, així que la part buida de la barra és la resta del país.",
-      rows: {
-        arope: "En risc de pobresa o exclusió social (AROPE)",
-        aropeChildren: "AROPE, menors de 16 anys",
-        atRisk: "En risc de pobresa (renda de l’any anterior)",
-        deprivation: "Amb privació material i social severa",
-      },
-      spread:
-        "La xifra estatal no descriu cap comunitat en concret: va de {high} a {highRegion} fins a {low} a {lowRegion}.",
-      base: "Sèrie {base}, indicada perquè la mateixa taula pot contenir definicions diferents del mateix indicador.",
-      multipleBases:
-        "La taula conté més d’una definició ({bases}). Aquí es mostra {shown}; no es barregen, perquè mesuren coses diferents amb el mateix nom.",
-      note:
-        "Aquestes xifres no es creuen amb cap vot ni amb cap finançament d’aquest web. Són aquí perquè qui llegeix tingui les dues coses al davant, no per afirmar que l’una explica l’altra.",
-    },
-  },
-  where: {
-    title: "I vostè, on viu?",
-    intro:
-      "Gairebé tot el que hi ha en aquest web es publica per comunitat autònoma. Escrigui el seu codi postal o triï la seva província i veurà què consta de la seva.",
-    postcodeLabel: "Codi postal",
-    postcodePlaceholder: "08001",
-    submit: "Veure",
-    provinceLabel: "O triï província",
-    provincePlaceholder: "Província…",
-    notFound: "Aquest codi postal no correspon a cap província. En són cinc dígits.",
-    privacy:
-      "El codi postal es resol al seu navegador: les dues primeres xifres són el codi de província. No s’envia enlloc ni es desa.",
-    backHome: "← Portada",
-    eyebrow: "On viu vostè",
-    lead:
-      "{province} és a {territory}. Tot el que segueix està mesurat per a {territory}, no per a {province}: aquestes xifres no existeixen per província, i dividir-les seria inventar-les.",
-    leadSame:
-      "{territory} és alhora província i comunitat autònoma, així que tot el que segueix està mesurat per a aquest mateix territori.",
-    governmentTitle: "Qui presideix",
-    president: "Presidència",
-    party: "Partit",
-    since: "Des de",
-    governmentNote:
-      "És qui ocupa la presidència a la data de comprovació, no el resultat de les eleccions ni la composició del govern.",
-    noGovernment: "No consta presidència per a aquest territori.",
-    investitureDecisive:
-      "El PP tenia {pp} de {seats} escons, i la investidura va tirar endavant amb vots de Vox: sense ells no hi havia majoria. Vox en tenia {vox}.",
-    investitureShort:
-      "El PP tenia {pp} de {seats} escons, menys de la majoria absoluta, i Vox {vox}. Aquest web recull l’aritmètica; l’acta de la votació no està verificada aquí.",
-    officeholdersTitle: "Càrrecs públics d’aquí",
-    officeholders:
-      "El registre d’alts càrrecs recull {count} càrrecs a {territory}. D’aquests, {withSalary} publiquen retribució anual, i la mediana del que es publica és {median}.",
-    officeholdersGap:
-      "{missing} de les {total} files del registre no indiquen territori i no entren en aquest recompte. No es reparteixen entre comunitats.",
-    noFigure: "cap xifra",
-    seeOfficeholders: "Veure aquests càrrecs al registre →",
-    wagesTitle: "El que es cobra aquí",
-    wages:
-      "A {territory} la mediana del salari brut anual va ser de {median}, davant de {national} al conjunt d’Espanya. El 10 % pitjor pagat no va arribar a {p10} i el 10 % millor pagat va superar {p90}.",
-    noWages:
-      "L’enquesta salarial de l’INE no publica percentils per a {territory}: les seves taules per comunitat cobreixen les disset comunitats autònomes i no les dues ciutats autònomes. No se substitueix per la xifra estatal.",
-    seeContext: "Veure els salaris de tot Espanya →",
-    povertyTitle: "Risc de pobresa o exclusió",
-    national: "Espanya",
-    povertyNote:
-      "Sèrie {base}. És una proporció de la població, no un recompte, i no es creua amb res més d’aquest web.",
-    noPoverty: "L’Enquesta de Condicions de Vida no publica aquest indicador per a aquest territori.",
-    hateTitle: "Delictes d’odi registrats",
-    hate:
-      "A {territory} consten {total} fets coneguts el {year}, una taxa de {rate} per cada 100.000 habitants davant de {national} al conjunt d’Espanya. Registrats per orientació sexual i identitat de gènere: {sogi}.",
-    hateNote:
-      "Són fets coneguts per les forces de seguretat, no incidència: una taxa més alta pot reflectir més denúncia i no més delicte.",
-    noHate: "L’informe no localitza fets coneguts en aquest territori.",
-    seeMap: "Veure el mapa complet →",
-    closing:
-      "Res d’aquesta pàgina uneix una xifra amb una altra. Que {territory} tingui una taxa determinada i que qui la presideix votés d’una manera són dos fets posats l’un al costat de l’altre, no una explicació.",
-  },
-  search: {
-    label: "Cercar al web",
-    placeholder: "Cercar…",
-    submit: "Cercar",
-    eyebrow: "Cerca",
-    title: "Cercar",
-    scope:
-      "Cerca noms i títols: persones del registre d’alts càrrecs amb el seu lloc i el seu municipi, partits, fundacions vinculades, comunitats, províncies, votacions seguides i seccions del web. No cerca dins del text dels informes, així que una paraula que només aparegui en una troballa del Tribunal de Comptes no hi sortirà.",
-    count: "Resultats per a «{query}»: {total}",
-    more: "i {more} més",
-    tooShort: "Escrigui almenys {min} lletres.",
-    empty: "No hi ha resultats per a «{query}».",
-    emptyHint:
-      "Provi amb menys paraules, o amb el cognom en lloc del nom complet. Els accents no hi fan res. Que una cosa no hi surti no vol dir que no existeixi: aquesta cerca només mira noms i títols.",
-    kinds: {
-      person: "Càrrecs públics",
-      party: "Partits",
-      foundation: "Fundacions i entitats",
-      territory: "Comunitats autònomes",
-      province: "Províncies",
-      vote: "Votacions seguides",
-      page: "Seccions",
-    },
   },
   method: {
     title: "Metodologia i límits",

@@ -5,6 +5,34 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — Unused dictionary keys removed
+
+The follow-up named in the previous entry. `lib/i18n.ts` still carried the words of the pages and
+components the new design replaced; 125 keys that nothing reads any more were removed from all
+three dictionaries (375 entries, 1,677 lines; the file goes from 3,446 lines to 1,769).
+
+- **Whole sections removed:** `salaries`, `map`, `footer`, `blocs`, `fundingStats`,
+  `foundationsPage`, `rights`, `lead`, `portal`, `home`, `politician`, `caras`, `voteFlow`,
+  `contexto`, `where`, `search`, and `votes.kinds`, `court.status`, `court.records` (the court
+  records now take their words from `components/nuevo/court-copy.ts`).
+- **Single keys removed** from sections that stay: the old navigation entries (`nav.faces`,
+  `nav.salaries`, `nav.data`, …), most of `votes`, the old money routes and treemap in `money`, the
+  old party page's strings in `party`, the old donations table's and the old electoral-spending
+  page's strings in `donationsTable` and `spending`, and `common.backToPanel`, `backToFaces`, `nif`.
+
+How the unused keys were found: every property of the Spanish dictionary was looked up with the
+TypeScript language service's find-references, and a key counted as unused only when nothing
+outside `lib/i18n.ts` referred to it. A section that some page indexes with a computed key
+(`t.datos.tables[id]`, `t.kinds[k]`) or hands on whole to a component (`dict.masthead`) was kept
+entire, because find-references cannot see which of its keys are read that way.
+
+Verification: `npx tsc --noEmit` passes, `npm run build` succeeds, and the visible text of 63
+pages (15 section pages and a person page in each locale, plus party, person and foundation
+detail pages) is identical, character for character, between production builds of `main` and of
+this change. All 63 return 200.
+
+---
+
 ## 2026-11-05 — The new design becomes the site
 
 The redesign that ran beside the site at `/nuevo` is now the site. Every page was rebuilt in it,
