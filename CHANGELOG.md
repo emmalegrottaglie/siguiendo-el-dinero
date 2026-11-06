@@ -210,8 +210,6 @@ foundation pages return 200; all 13 old addresses redirect with 308 to the right
 string kept; 15 pages across the three languages have no horizontal scroll at 375px; no console
 errors.
 
----
-
 ## 2026-11-04 — The prototype in English and Catalan, and a people directory of its own
 
 Two of the gaps left open by the prototype (the "Left out" section of its entry below): it was in
@@ -254,9 +252,6 @@ here instead of the current directory.
 **Verified.** `npx tsc --noEmit` passes. In the browser: the front page in English, a party hub in
 Catalan at 375px, and the directory in all three languages at desktop width and 375px, with no
 horizontal scroll.
-
----
-
 ## 2026-11-04 — The parties' income in 2018 and 2019, and why the BORME is not used
 
 **2018 and 2019.** The same two tables already held for 2020 — public money by the paying
@@ -649,8 +644,6 @@ cards on `/fundaciones` are links and stay so. The front-page summaries, the div
 the small bars on party and comunidad pages have keyboard reading but no export; they summarise
 charts that have one. The light hatch inks are still literals and will need tokens when dark mode
 lands.
-
----
 
 ## 2026-10-19 — A dark theme, measured, that follows the system until the reader chooses
 
