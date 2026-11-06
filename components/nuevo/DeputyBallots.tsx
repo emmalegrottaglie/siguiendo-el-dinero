@@ -117,7 +117,7 @@ export default async function DeputyBallots({
                     return (
                       <tr key={p.key}>
                         <th scope="row" className="font-bold">
-                          {slug ? <Link href={`/${locale}/nuevo/politico/${slug}`}>{p.name}</Link> : p.name}
+                          {slug ? <Link href={`/${locale}/politico/${slug}`}>{p.name}</Link> : p.name}
                         </th>
                         {votes.map((v) => {
                           const cast = p.ballots[v.id];

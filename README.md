@@ -197,17 +197,29 @@ A healthy response reports `"storage":{"configured":"kv","writtenTo":"kv"}`.
 
 | Path | Page |
 |------|------|
-| `/[locale]` | Portal: headline figures, how each group voted, rights and housing news |
-| `/[locale]/financiacion` | Money: subsidies dashboard and the party-linked foundations layer |
-| `/[locale]/politicos` | Every officeholder and sitting deputy: search, party facets, paging |
-| `/[locale]/politicos/declaraciones` | What each sitting deputy declared to Congress, side by side, in alphabetical order |
-| `/[locale]/politico/[slug]` | One person: pay, party funding, declarations to Congress, recorded ballots, social, news |
-| `/[locale]/party/[nif]` | One party: public and private money, faces, ledger, news |
-| `/[locale]/votaciones` | Key votes: result, per-group breakdown, deputy search |
-| `/[locale]/metodologia` | Methodology, legal caveats, and the full news-source registry |
+| `/[locale]` | Front page: where the money comes from, drawn as a route map, and what the site holds |
+| `/[locale]/financiacion` | Money: state subsidies by year, private donations, and the party-linked foundations |
+| `/[locale]/partidos` | Index of the parties the site holds records for |
+| `/[locale]/partido/[nif]` | One party: public and private money by year, its foundation, its people, its recorded votes, court records, news |
+| `/[locale]/fundaciones` | Index of the party-linked foundations |
+| `/[locale]/fundacion/[slug]` | One foundation: public grants, board members, the companies and bodies that funded it |
+| `/[locale]/personas` | Every officeholder and sitting deputy, with what the site holds on each; `?kind=declarations` shows the deputies' asset declarations side by side |
+| `/[locale]/politico/[slug]` | One person: pay, declarations to Congress, recorded ballots, social posts, news |
+| `/[locale]/territorios` | The comunidades and provinces, with their recorded investiture votes |
+| `/[locale]/territorio/[provincia]` | One province: money paid there and its representatives |
+| `/[locale]/temas` | The topics, each built from the recorded votes on it |
+| `/[locale]/tema/[id]` | One topic: the votes, how each group and deputy voted, and related records |
+| `/[locale]/contexto` | Background on how party funding works in Spain |
+| `/[locale]/buscar` | Search across people, parties, foundations, places and votes |
+| `/[locale]/metodologia` | Methodology, legal caveats and sources |
+| `/[locale]/datos` | The downloadable datasets, with their columns; each CSV is served from `/[locale]/datos/[table]` |
 
-`/sueldos`, `/caras` and `/politician/[slug]` are permanent redirects to `/politicos`; the pages
-were merged. See `next.config.ts`.
+Old addresses are permanent redirects, so links already shared keep working: `/nuevo/*` (the
+redesign prototype) to the same path at the root, `/party/[nif]` to `/partido/[nif]`,
+`/donde/[provincia]` to `/territorio/[provincia]`, `/politicos` to `/personas`,
+`/politicos/declaraciones` to `/personas?kind=declarations`, `/votaciones` to `/temas`, `/mapa` to
+`/territorios`, `/derechos` to `/tema/lgtbi`, and `/sueldos`, `/caras` and `/politician/[slug]` to
+`/personas`. See `next.config.ts`.
 
 API routes: `/api/refresh` (BDNS pull, cron-protected), `/api/news`, `/api/bluesky`.
 

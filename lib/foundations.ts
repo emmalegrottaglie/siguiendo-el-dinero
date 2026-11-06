@@ -206,6 +206,18 @@ export function displayName(name: string): string {
 }
 
 /**
+ * The same entity named two ways in two exercises, read by eye: the 2021
+ * dossier spells it in Catalan, the 2022 one half in Spanish. Keyed by the
+ * folded slug of the other spelling, mapped to the slug the entity is shown
+ * under (and linked by) everywhere. Folding alone cannot join them ("comunitat" against "comunidad"), and
+ * a looser rule would risk joining two different entities.
+ */
+const ENTITY_ALIASES: Record<string, string> = {
+  "fundacion-societat-i-progres-de-la-comunitat-valenciana":
+    "fundacion-societat-y-progres-de-la-comunidad-valenciana",
+};
+
+/**
  * A URL segment for an entity.
  *
  * `lib/name-key.mjs` deliberately produces match keys rather than URL segments
@@ -213,9 +225,10 @@ export function displayName(name: string): string {
  * slug — so the slug is built here, on top of its accent folding.
  */
 export function entitySlug(name: string): string {
-  return foldText(name)
+  const slug = foldText(name)
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+  return ENTITY_ALIASES[slug] ?? slug;
 }
 
 /** One entity across every exercise the report audits it in. */
@@ -238,10 +251,9 @@ export interface Entity {
 /**
  * Group the dossiers into entities.
  *
- * The report names the same entity slightly differently between its body and
- * its annexes ("Fundación de Investigaciones Marxistas" against "Fundación
- * Investigaciones Marxistas", "Societat i Progrés" against "Societat y
- * Progrés"), so grouping folds the name rather than comparing it literally.
+ * Grouping folds the name (accents, case, punctuation) rather than comparing
+ * it literally; `entitySlug` also applies `ENTITY_ALIASES`, so the one entity
+ * whose two spellings folding does not join gets one slug everywhere.
  */
 export function entities(data: FoundationsFile): Entity[] {
   const byKey = new Map<string, Dossier[]>();

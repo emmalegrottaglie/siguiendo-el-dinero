@@ -22,7 +22,7 @@ import { getDict } from "./i18n";
  * 1.8 MB, and shipping an index of it to every visitor to get a typeahead would
  * cost every reader far more than it saves the few who search. The search page
  * is a plain form GET, so it works without JavaScript, it is linkable, and the
- * browser announces the change of context — the same shape `/politicos`
+ * browser announces the change of context — the same shape `/personas`
  * already uses.
  *
  * What it does not do, and what the page says it does not do: it matches names
@@ -199,7 +199,7 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
       score(foldText(meta.displayName), needle) ??
       score(foldText(meta.shortName), needle) ??
       score(foldText(nif), needle);
-    add("party", meta.displayName, meta.shortName, `/${locale}/party/${nif}`, rank);
+    add("party", meta.displayName, meta.shortName, `/${locale}/partido/${nif}`, rank);
   }
 
   // --- party-linked entities ---------------------------------------------
@@ -215,16 +215,16 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
 
   // --- comunidades autónomas ---------------------------------------------
   //
-  // These link to the map rather than to a local page: `/donde` is addressed by
-  // province, and sending "Cataluña" to one of its four provinces would pick a
-  // province the reader did not ask for.
+  // These link to the territory index rather than to a local page: `/territorio`
+  // is addressed by province, and sending "Cataluña" to one of its four
+  // provinces would pick a province the reader did not ask for.
   for (const t of TERRITORIES) {
     const display = shortName(t.id, t.mapName);
     const rank =
       score(foldText(display), needle) ??
       score(foldText(t.mapName), needle) ??
       score(foldText(t.registerName), needle);
-    add("territory", display, t.mapName === display ? null : t.mapName, `/${locale}/mapa`, rank);
+    add("territory", display, t.mapName === display ? null : t.mapName, `/${locale}/territorios`, rank);
   }
 
   // --- provinces ----------------------------------------------------------
@@ -234,7 +234,7 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
       "province",
       p.name,
       territory ? shortName(territory.id, territory.mapName) : null,
-      `/${locale}/donde/${p.slug}`,
+      `/${locale}/territorio/${p.slug}`,
       score(foldText(p.name), needle),
     );
   }
@@ -242,7 +242,7 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
   // --- tracked divisions --------------------------------------------------
   for (const v of votes.votes) {
     const rank = score(foldText(v.law), needle) ?? score(foldText(v.title), needle);
-    add("vote", v.law, `${v.topicLabel} · ${v.date}`, `/${locale}/votaciones`, rank);
+    add("vote", v.law, `${v.topicLabel} · ${v.date}`, `/${locale}/tema/${v.topic}#${v.id}`, rank);
   }
 
   // --- the site's own sections -------------------------------------------
@@ -255,11 +255,11 @@ export async function search(rawQuery: string, locale: string): Promise<SearchOu
     [t.nav.panel, ""],
     [t.nav.funding, "/financiacion"],
     [t.nav.foundations, "/fundaciones"],
-    [t.nav.rights, "/derechos"],
-    [t.nav.votes, "/votaciones"],
-    [t.nav.map, "/mapa"],
-    [t.nav.people, "/politicos"],
-    [t.assets.tabs.declarations, "/politicos/declaraciones"],
+    [t.nav.rights, "/tema/lgtbi"],
+    [t.nav.votes, "/temas"],
+    [t.nav.map, "/territorios"],
+    [t.nav.people, "/personas"],
+    [t.assets.tabs.declarations, "/personas?kind=declarations"],
     [t.nav.context, "/contexto"],
     [t.nav.methodology, "/metodologia"],
   ];

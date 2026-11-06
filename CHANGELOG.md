@@ -5,6 +5,91 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-05 — The new design becomes the site
+
+The redesign that ran beside the site at `/nuevo` is now the site. Every page was rebuilt in it,
+moved to the main addresses, and the old pages, components and stylesheet were removed.
+
+**The pages that were still in the old design**, rebuilt first:
+
+- **Money (`/financiacion`)**: state subsidies shown per year rather than as a running total
+  across years, 2020 donations by tranche, electoral spending by formation, and the foundations
+  layer.
+- **Foundations (`/fundaciones`, `/fundacion/[slug]`)**: who pays the party foundations and who
+  sits on their boards. A handful of entities that the sources spell in more than one way are now
+  joined by an explicit alias list (`ENTITY_ALIASES` in `lib/foundations.ts`), never by fuzzy
+  matching.
+- **The deputies' declarations side by side** became a filter of the people directory,
+  `/personas?kind=declarations`.
+- **Context (`/contexto`)**, **search (`/buscar`)**, **methodology (`/metodologia`)** and
+  **datasets (`/datos`)**. Context now has its own place in the menu.
+- **The party page** gained each year's income, 2018 to 2020, from the Court of Audit reports,
+  each year shown on its own.
+
+**Merged into other pages**, as decided on 2026-11-04:
+
+- `/votaciones` into the topics: every tracked vote sits on its topic page, with each group's
+  and each deputy's ballot.
+- `/mapa` into `/territorios`; the investiture record moved to the territories and party pages.
+- `/derechos` into the LGTBI topic: the organisations' own feeds are a section of
+  `/tema/lgtbi`. The housing news from the old front page went to `/tema/vivienda` the same
+  way.
+
+**Features carried over from the old pages**, rebuilt as new-design components in
+`components/nuevo/`:
+
+- **Person page**: the portrait with its credit; public pay with the pay distribution and where
+  the figure sits against the minimum wage; the whole declaration (filing links, IRPF, vehicles,
+  loans, observations, figures written other than in Spanish format, the RTVE check line); the
+  economic-interests filings; a ballot grid with one cell per tracked division, including the
+  divisions where no ballot is on record; Bluesky for verified handles only; news.
+- **Party page**: the court and electoral-board record, with each status named by its type, so
+  no translation can turn an archiving into an acquittal; news.
+- **Front page**: a postcode or province picker that goes straight to the province page (the
+  postcode is resolved in the browser and never sent); the court record; the largest single
+  donation, computed only where a party's over-€10,000 tranche holds exactly one donor.
+- The news blocks now say when the headlines could not be loaded, instead of disappearing, which
+  read as "no news".
+
+**Fixes found while porting**: a deputy whose Congreso page links no filing was told their
+declaration was waiting to be transcribed; a blank declared amount showed "Ilegible" instead of
+"—"; the holdings label now uses the form's own wording.
+
+**Old addresses keep working.** Permanent redirects in `next.config.ts`: `/nuevo/*` to the same
+path at the root, `/party/[nif]` to `/partido/[nif]`, `/donde/[provincia]` to
+`/territorio/[provincia]`, `/politicos` to `/personas` (query strings kept),
+`/politicos/declaraciones` to `/personas?kind=declarations`, `/votaciones` to `/temas`, `/mapa` to
+`/territorios`, `/derechos` to `/tema/lgtbi`, and `/sueldos`, `/caras`, `/politician/[slug]` to
+`/personas`.
+
+**Left out on purpose:**
+
+- **The keyboard chart reader and the image export buttons.** They belonged to the old chart
+  system. The same figures are in the folded tables under each graphic, in words.
+- **The money-to-party-to-vote flow diagram from `/votaciones`.** It was not rebuilt: the votes
+  are on the topic pages and the money on the money and party pages, each with its own source.
+- **Choropleth fills on the map.** The territories page states each figure beside its national
+  one.
+- **The ticker strip and the featured profiles** of the old front page and directory. Every
+  figure the ticker carried is on the new site, each where it is explained.
+- **"Caras del partido"**: six people picked because they have a verified Bluesky account,
+  which leaned left and gave PP and Vox none. Everyone is in the people directory instead.
+- **The left/right bloc label** on the party page: it classified stance.
+- **Entrance animations**, and the `motion` dependency with them.
+
+**Removed:** the old pages, every component in `components/` except the language and theme
+toggles, `components/chart/`, `lib/chart-export.ts`, `lib/chart-colors.ts`,
+`lib/chart-reader.ts`, `lib/motion.ts`, `lib/treemap.ts`, and the old stylesheet; `app/globals.css`
+now holds only Tailwind and the reduced-motion rule. `lib/i18n.ts` still holds keys that only the
+old components used; the new pages read some of its strings, so pruning it is a separate job.
+
+**Verified.** `npx tsc --noEmit` passes and `npm run build` succeeds. On the production build: 45
+pages (front page, both indexes, money, people, declarations, territories, topics, context,
+methodology, datasets, search and three detail pages, in es, en and ca) and 15 person, party and
+foundation pages return 200; all 13 old addresses redirect with 308 to the right place, query
+string kept; 15 pages across the three languages have no horizontal scroll at 375px; no console
+errors.
+
 ## 2026-11-04 — The prototype in English and Catalan, and a people directory of its own
 
 Two of the gaps left open by the prototype (the "Left out" section of its entry below): it was in

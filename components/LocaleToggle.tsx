@@ -32,10 +32,10 @@ export default function LocaleToggle({ current }: { current: Locale }) {
           onClick={() => change(code)}
           aria-pressed={code === current}
           title={LOCALE_LABELS[code]}
-          className={`label-mono inline-flex min-h-11 min-w-11 items-center justify-center rounded transition-colors ${
+          className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded text-[0.9rem] transition-colors ${
             code === current
-              ? "text-[var(--gold-deep)]"
-              : "text-[var(--ink-3)] hover:text-[var(--ink)]"
+              ? "font-bold text-[var(--n-ink)]"
+              : "text-[var(--n-ink-3)] hover:text-[var(--n-ink)]"
           }`}
         >
           {code.toUpperCase()}

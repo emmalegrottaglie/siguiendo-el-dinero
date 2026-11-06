@@ -3,8 +3,8 @@ import type { Locale } from "@/lib/locales";
 import { voteDateISO, type KeyVote, type VotesData } from "@/lib/votes";
 
 /**
- * Shared helpers for the prototype's topic pages (`/nuevo/temas` and
- * `/nuevo/tema/[id]`): which votes belong to a topic, in date order, and how
+ * Shared helpers for the prototype's topic pages (`/temas` and
+ * `/tema/[id]`): which votes belong to a topic, in date order, and how
  * each kind of division is named in plain words.
  */
 

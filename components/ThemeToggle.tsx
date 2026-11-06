@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
  *
  * The page follows `prefers-color-scheme` until the reader picks a theme here.
  * A pick is stored in localStorage under `theme` and written to <html> as
- * `data-theme`; "system" removes both, so the media query in app/globals.css
+ * `data-theme`; "system" removes both, so the media query in app/[locale]/site.css
  * takes over again and follows the system live. The inline script in
  * app/[locale]/layout.tsx applies a stored pick before first paint, so this
  * component only ever changes the theme in response to a click — it never has
@@ -119,8 +119,8 @@ export default function ThemeToggle({ t }: { t: ThemeToggleStrings }) {
             // not rest on colour alone.
             className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded border transition-colors ${
               pressed
-                ? "border-[var(--gold)] bg-[color-mix(in_srgb,var(--gold)_12%,transparent)] text-[var(--gold-deep)]"
-                : "border-transparent text-[var(--ink-3)] hover:text-[var(--ink)]"
+                ? "border-[var(--n-rule-strong)] bg-[var(--n-card)] text-[var(--n-ink)]"
+                : "border-transparent text-[var(--n-ink-3)] hover:text-[var(--n-ink)]"
             }`}
           >
             <svg
