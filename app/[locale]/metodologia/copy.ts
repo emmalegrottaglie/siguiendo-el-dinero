@@ -334,7 +334,7 @@ const es = {
       title: "Votaciones nominales",
       method: [
         "Cada voto procede de los datos abiertos de votaciones del Congreso de los Diputados: uno por diputado y votación, tal como lo recoge el acta. Cada votación enlaza a su acta oficial y, si es una ley, a su texto.",
-        `Cada votación se etiqueta según su tipo: votación final de ley, toma en consideración, proposición no de ley o moción consecuencia de interpelación. Las dos últimas no son vinculantes (${v.nonBinding} de las seguidas). Se excluyen las votaciones de enmiendas.`,
+        `Cada votación se etiqueta según su tipo, el que da el acta: votación de conjunto de una ley orgánica, votación de las enmiendas del Senado, votación del dictamen de la comisión, toma en consideración, proposición no de ley o moción consecuencia de interpelación. Las dos últimas no son vinculantes (${v.nonBinding} de las seguidas). No se siguen votaciones sobre enmiendas sueltas, con una excepción: de la Ley 4/2023 se sigue la votación del resto de las enmiendas del Senado, la última del Congreso sobre esa ley, porque una ley ordinaria no tiene votación de conjunto. En ella, un no rechaza los cambios del Senado, no la ley. La otra votación de ese día sobre la misma ley, sobre una sola enmienda, no se sigue.`,
         `Las votaciones se agrupan por temas (${v.topics}). Qué votaciones se siguen lo decide esta web: no son una muestra de toda la actividad del Congreso.`,
       ],
       checks: [
@@ -662,7 +662,7 @@ const en: Copy = {
       title: "Recorded divisions",
       method: [
         "Every vote comes from the Congreso de los Diputados' open data on divisions: one per deputy and division, as the record states it. Each division links to its official record and, for a law, to its text.",
-        `Each division is labelled by kind: final vote on a law, consideration, non-legislative motion or motion following an interpellation. The last two are not binding (${v.nonBinding} of those tracked). Amendment votes are excluded.`,
+        `Each division is labelled by kind, as the record gives it: the overall vote on an organic law, a vote on the Senate's amendments, a vote on a committee's text, leave to proceed, non-legislative motion or motion following an interpellation. The last two are not binding (${v.nonBinding} of those tracked). Votes on individual amendments are not tracked, with one exception: for Ley 4/2023 the site tracks the vote on the rest of the Senate's amendments, the Congreso's last vote on that law, because an ordinary law has no overall vote. In it, a No rejects the Senate's changes, not the law. The other vote that day on the same law, on a single amendment, is not tracked.`,
         `Divisions are grouped by topic (${v.topics}). Which divisions are tracked is this site's choice: they are not a sample of all the Congreso's business.`,
       ],
       checks: [
@@ -988,7 +988,7 @@ const ca: Copy = {
       title: "Votacions nominals",
       method: [
         "Cada vot prové de les dades obertes de votacions del Congrés dels Diputats: un per diputat i votació, tal com el recull l'acta. Cada votació enllaça a la seva acta oficial i, si és una llei, al seu text.",
-        `Cada votació s'etiqueta segons el seu tipus: votació final de llei, presa en consideració, proposició no de llei o moció conseqüència d'interpel·lació. Les dues últimes no són vinculants (${v.nonBinding} de les seguides). S'exclouen les votacions d'esmenes.`,
+        `Cada votació s'etiqueta segons el seu tipus, el que dona l'acta: votació de conjunt d'una llei orgànica, votació de les esmenes del Senat, votació del dictamen de la comissió, presa en consideració, proposició no de llei o moció conseqüència d'interpel·lació. Les dues últimes no són vinculants (${v.nonBinding} de les seguides). No se segueixen votacions sobre esmenes soltes, amb una excepció: de la Llei 4/2023 se segueix la votació de la resta de les esmenes del Senat, l'última del Congrés sobre aquesta llei, perquè una llei ordinària no té votació de conjunt. En aquesta votació, un no rebutja els canvis del Senat, no la llei. L'altra votació d'aquell dia sobre la mateixa llei, sobre una sola esmena, no se segueix.`,
         `Les votacions s'agrupen per temes (${v.topics}). Quines votacions se segueixen ho decideix aquest web: no són una mostra de tota l'activitat del Congrés.`,
       ],
       checks: [

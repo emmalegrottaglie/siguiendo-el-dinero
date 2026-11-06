@@ -11,7 +11,13 @@ export interface DeputyVote {
   vote: Ballot;
 }
 
-export type VoteKind = "ley" | "toma" | "pnl" | "mocion";
+/**
+ * What kind of division it was. A vote on a bill is named by its stage, as the
+ * record gives it: `conjunto` (the overall vote an organic law needs),
+ * `enmiendas` (whether to accept the Senate's amendments) or `dictamen` (the
+ * Congreso's vote on its committee's text, before the Senate).
+ */
+export type VoteKind = "conjunto" | "enmiendas" | "dictamen" | "toma" | "pnl" | "mocion";
 
 export interface KeyVote {
   id: string;
@@ -29,6 +35,9 @@ export interface KeyVote {
   date: string;
   title: string;
   expediente: string;
+  /** The part of the item put to this division, where the record splits it ("" otherwise). */
+  subgroupTitle: string;
+  subgroupText: string;
   totals: {
     presentes: number;
     afavor: number;
