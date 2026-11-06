@@ -5,6 +5,37 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — Votes are worded as ballots again, with what each ballot was on
+
+The documentation pass found that the redesign had dropped a rule the site kept for a reason.
+Positions were shown as "A favor / En contra / Abstención" next to a law's name, and on the party
+and person pages without saying what the ballot was on. The Ley 4/2023 division of 16 February
+2023 was a vote under the heading "Enmiendas del Senado", so "En contra" beside "Ley 4/2023 (Ley
+Trans)" put EH Bildu against the trans law, when its No can have been a No to the Senate's
+amendments. That is the case the old rule existed to prevent.
+
+- **Ballot language.** Positions read as cast: "Votó sí / Votó no / Se abstuvo" for a group's
+  majority and a person's ballot (party and person pages), and "Sí / No / Abstención" in legends,
+  the deputy search table and the person's ballot strip. Tallies read "191 votos sí, 60 votos no,
+  91 abstenciones". The party page's finding says "Su grupo votó sí en…". English and Catalan
+  follow ("Voted Yes", "Va votar sí"). Investiture votes keep "a favor": they are votes for a
+  candidate, and the record words them so.
+- **What the ballot was on.** `whatWasVoted()` (`components/nuevo/topics.ts`) now gives, for a vote
+  on a law, the heading the vote was taken under as well as the item ("Enmiendas del Senado:
+  Proyecto de Ley para la igualdad real y efectiva de las personas trans…"); for motions and
+  non-legislative proposals the heading only repeats the kind and is left out. It is printed, in the
+  record's Spanish and marked `lang="es"`, under the law's name on the party page, the person page's
+  table, the front page's topics and the topics index, as well as on the topic pages where it
+  already was.
+
+**Not changed, and worth a look:** the Ley 4/2023 division is classed in `data/votes.json` as a
+"Votación final de ley", and the topic page explains that kind as "the Congreso votes the text that
+will be published in the BOE". For a vote on the Senate's amendments that explanation may be
+imprecise; the classification comes from `scripts/fetch-votes.mjs` and was left as it is.
+
+**Verified** in the browser: EH Bildu's party page in es and en, a person page in ca, the front page
+in ca, the topics index in en and the LGTBI topic page in es show the new wording and the subject;
+no horizontal scroll at 375 px on any of them. `npx tsc --noEmit` passes.
 ## 2026-11-06 — Documentation brought up to date with the new design
 
 The documents still described parts of the site that the switch-over of 2026-11-05 removed: the

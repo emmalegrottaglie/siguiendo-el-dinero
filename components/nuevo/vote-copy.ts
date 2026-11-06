@@ -1,13 +1,19 @@
 import type { Locale } from "@/lib/locales";
 
-/** Strings of VoteBar, VoteLegend and DeputyBallots. */
+/**
+ * Strings of VoteBar, VoteLegend and DeputyBallots.
+ *
+ * Ballots are named as they are cast, Sí / No / Abstención, never "a favor" or
+ * "en contra": a No on a vote on the Senate's amendments is not a vote against
+ * the law, and "en contra" next to a law's name would read as one.
+ */
 const es = {
-  inFavour: "a favor",
-  against: "en contra",
+  inFavour: (n: number): string => (n === 1 ? "voto sí" : "votos sí"),
+  against: (n: number): string => (n === 1 ? "voto no" : "votos no"),
   abstention: (n: number): string => (n === 1 ? "abstención" : "abstenciones"),
   didNotVote: (n: number): string => (n === 1 ? "no votó" : "no votaron"),
-  legendFor: "A favor",
-  legendAgainst: "En contra",
+  legendFor: "Sí",
+  legendAgainst: "No",
   legendAbstention: "Abstención",
   // DeputyBallots
   searchLabel: "Apellido o nombre del diputado",
@@ -18,8 +24,8 @@ const es = {
     `${n === 1 ? "1 diputado" : `${n} diputados`} con ese nombre${capped ? " (se muestran los 40 primeros)" : ""}.`,
   caption: "Voto de cada diputado encontrado en cada votación",
   deputyCol: "Diputado, como figura en el acta",
-  ballotFor: "A favor",
-  ballotAgainst: "En contra",
+  ballotFor: "Sí",
+  ballotAgainst: "No",
   ballotAbstention: "Abstención",
   ballotNoVote: "No votó",
   notOnRecord: "No consta",
@@ -28,12 +34,12 @@ const es = {
 type Copy = typeof es;
 
 const en: Copy = {
-  inFavour: "in favour",
-  against: "against",
+  inFavour: (n) => (n === 1 ? "Yes vote" : "Yes votes"),
+  against: (n) => (n === 1 ? "No vote" : "No votes"),
   abstention: (n) => (n === 1 ? "abstention" : "abstentions"),
   didNotVote: () => "did not vote",
-  legendFor: "In favour",
-  legendAgainst: "Against",
+  legendFor: "Yes",
+  legendAgainst: "No",
   legendAbstention: "Abstention",
   searchLabel: "Surname or name of the deputy",
   searchPlaceholder: "Surname or name",
@@ -43,8 +49,8 @@ const en: Copy = {
     `${n === 1 ? "1 deputy" : `${n} deputies`} with that name${capped ? " (the first 40 are shown)" : ""}.`,
   caption: "Each deputy found, and how they voted in each division",
   deputyCol: "Deputy, as written in the record",
-  ballotFor: "In favour",
-  ballotAgainst: "Against",
+  ballotFor: "Yes",
+  ballotAgainst: "No",
   ballotAbstention: "Abstention",
   ballotNoVote: "Did not vote",
   notOnRecord: "Not on record",
@@ -52,12 +58,12 @@ const en: Copy = {
 };
 
 const ca: Copy = {
-  inFavour: "a favor",
-  against: "en contra",
+  inFavour: (n) => (n === 1 ? "vot sí" : "vots sí"),
+  against: (n) => (n === 1 ? "vot no" : "vots no"),
   abstention: (n) => (n === 1 ? "abstenció" : "abstencions"),
   didNotVote: (n) => (n === 1 ? "no va votar" : "no van votar"),
-  legendFor: "A favor",
-  legendAgainst: "En contra",
+  legendFor: "Sí",
+  legendAgainst: "No",
   legendAbstention: "Abstenció",
   searchLabel: "Cognom o nom del diputat",
   searchPlaceholder: "Cognom o nom",
@@ -67,8 +73,8 @@ const ca: Copy = {
     `${n === 1 ? "1 diputat" : `${n} diputats`} amb aquest nom${capped ? " (es mostren els 40 primers)" : ""}.`,
   caption: "Vot de cada diputat trobat en cada votació",
   deputyCol: "Diputat, tal com figura a l'acta",
-  ballotFor: "A favor",
-  ballotAgainst: "En contra",
+  ballotFor: "Sí",
+  ballotAgainst: "No",
   ballotAbstention: "Abstenció",
   ballotNoVote: "No va votar",
   notOnRecord: "No consta",

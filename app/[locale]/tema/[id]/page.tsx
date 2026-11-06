@@ -266,7 +266,7 @@ function VoteSection({
           <dl className="mt-8 grid gap-5 text-[0.95rem]">
             <div>
               <dt className="n-label">{t.whatTitle}</dt>
-              <dd className="mt-1 text-[var(--n-ink-2)]">{whatWasVoted(v)}</dd>
+              <dd lang="es" className="mt-1 text-[var(--n-ink-2)]">{whatWasVoted(v)}</dd>
             </div>
             <div>
               <dt className="n-label">{t.kindTitle}</dt>

@@ -202,8 +202,8 @@ const es = {
     colBallot: "Voto",
   },
   votes: {
-    inFavour: "A favor",
-    against: "En contra",
+    inFavour: "Sí",
+    against: "No",
     abstention: "Abstención",
     noVote: "No vota",
   },
@@ -780,8 +780,8 @@ const en: Dict = {
     colBallot: "Ballot",
   },
   votes: {
-    inFavour: "In favour",
-    against: "Against",
+    inFavour: "Yes",
+    against: "No",
     abstention: "Abstention",
     noVote: "Did not vote",
   },
@@ -1357,8 +1357,8 @@ const ca: Dict = {
     colBallot: "Vot",
   },
   votes: {
-    inFavour: "A favor",
-    against: "En contra",
+    inFavour: "Sí",
+    against: "No",
     abstention: "Abstenció",
     noVote: "No vota",
   },

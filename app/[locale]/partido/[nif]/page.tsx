@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { roleLabel } from "@/components/nuevo/roles";
-import { topicLabel } from "@/components/nuevo/topics";
+import { topicLabel, whatWasVoted } from "@/components/nuevo/topics";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAggregation } from "@/lib/data";
@@ -1292,6 +1292,7 @@ export default async function PrototypeParty({
                   <a href={vote.sourceUrl} className="text-[0.95rem]">
                     {vote.law}
                   </a>
+                  <p lang="es" className="n-meta mt-0.5">{whatWasVoted(vote)}</p>
                   <p className="n-meta mt-0.5">
                     <span className="font-bold text-[var(--n-ink)]">
                       {stance

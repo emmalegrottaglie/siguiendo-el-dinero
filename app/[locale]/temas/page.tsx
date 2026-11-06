@@ -5,7 +5,7 @@ import { getVotes } from "@/lib/votes";
 import Line from "@/components/nuevo/Line";
 import VoteBar, { VoteLegend } from "@/components/nuevo/VoteBar";
 import DeputyBallots from "@/components/nuevo/DeputyBallots";
-import { KIND_SHORT, topicLabel, voteDate, voteYear, votesOfTopic, yearSpan } from "@/components/nuevo/topics";
+import { KIND_SHORT, topicLabel, voteDate, voteYear, votesOfTopic, whatWasVoted, yearSpan } from "@/components/nuevo/topics";
 import { COPY } from "./copy";
 
 // The deputy search reads the query string.
@@ -101,6 +101,7 @@ export default async function PrototypeTopics({
                         , {voteDate(v, bcp47)}
                         {v.binding ? "" : t.noLegalEffect}
                       </span>
+                      <p lang="es" className="n-meta mt-0.5">{whatWasVoted(v)}</p>
                       <VoteBar
                         locale={locale}
                         className="mt-2"

@@ -22,9 +22,9 @@ const es = {
     other: "Otras rentas",
   } as Record<string, string>,
   ballot: {
-    Sí: "A favor",
-    No: "En contra",
-    Abstención: "Abstención",
+    Sí: "Votó sí",
+    No: "Votó no",
+    Abstención: "Se abstuvo",
   } as Record<string, string>,
   noVote: "No votó",
   noConcept: "sin concepto",
@@ -113,7 +113,7 @@ const es = {
   colTheirGroup: "Su grupo",
   noLegalEffect: ". Sin efecto legal",
   groupTally: (si: number, no: number, abst: number) =>
-    `${si} a favor, ${no} en contra, ${abst} abst.`,
+    `${si} sí, ${no} no, ${abst} abst.`,
 
   citeTitle: "Cómo citar esta ficha",
   cite: (name: string, date: string) =>
@@ -146,9 +146,9 @@ const en: Copy = {
     other: "Other income",
   },
   ballot: {
-    Sí: "In favour",
-    No: "Against",
-    Abstención: "Abstention",
+    Sí: "Voted Yes",
+    No: "Voted No",
+    Abstención: "Abstained",
   },
   noVote: "Did not vote",
   noConcept: "no description",
@@ -230,7 +230,7 @@ const en: Copy = {
   colTheirGroup: "Their group",
   noLegalEffect: ". No legal effect",
   groupTally: (si, no, abst) =>
-    `${si} in favour, ${no} against, ${abst} abst.`,
+    `${si} Yes, ${no} No, ${abst} abst.`,
 
   citeTitle: "How to cite this profile",
   cite: (name, date) => `Siguiendo el Dinero, “${name}”, consulted on ${date}.`,
@@ -260,9 +260,9 @@ const ca: Copy = {
     other: "Altres rendes",
   },
   ballot: {
-    Sí: "A favor",
-    No: "En contra",
-    Abstención: "Abstenció",
+    Sí: "Va votar sí",
+    No: "Va votar no",
+    Abstención: "Es va abstenir",
   },
   noVote: "No va votar",
   noConcept: "sense concepte",
@@ -344,7 +344,7 @@ const ca: Copy = {
   colTheirGroup: "El seu grup",
   noLegalEffect: ". Sense efecte legal",
   groupTally: (si, no, abst) =>
-    `${si} a favor, ${no} en contra, ${abst} abst.`,
+    `${si} sí, ${no} no, ${abst} abst.`,
 
   citeTitle: "Com citar aquesta fitxa",
   cite: (name, date) => `Seguint el Diner, «${name}», consultat el ${date}.`,

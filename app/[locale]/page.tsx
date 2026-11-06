@@ -20,7 +20,7 @@ import { getDeputies } from "@/lib/deputies";
 import { getSpending, spendingTotals } from "@/lib/spending";
 import { getVotes } from "@/lib/votes";
 import { euroExact, euroM, integer, percent } from "@/lib/format";
-import { KIND_SHORT, topicLabel } from "@/components/nuevo/topics";
+import { KIND_SHORT, topicLabel, whatWasVoted } from "@/components/nuevo/topics";
 import { COPY } from "./copy";
 import RouteMap from "@/components/nuevo/RouteMap";
 import ShareBar from "@/components/nuevo/ShareBar";
@@ -374,6 +374,7 @@ export default async function PrototypeHome({
                       {v.law}
                     </a>
                     <span className="n-meta">, {v.date}</span>
+                    <p lang="es" className="n-meta mt-0.5">{whatWasVoted(v)}</p>
                     <VoteBar
                       locale={locale}
                       className="mt-2"
