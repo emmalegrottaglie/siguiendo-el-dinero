@@ -300,7 +300,10 @@ const votaciones = dataset({
       v.votes.map((dv) => ({
         divisionId: v.id,
         law: v.law,
+        kind: v.kindLabel,
         title: v.title,
+        subgroupTitle: v.subgroupTitle,
+        subgroupText: v.subgroupText,
         topicLabel: v.topicLabel,
         date: v.date,
         ...dv,
@@ -310,7 +313,10 @@ const votaciones = dataset({
   columns: [
     { header: "division_id", value: (r) => r.divisionId },
     { header: "ley", value: (r) => r.law },
+    { header: "tipo", value: (r) => r.kind },
     { header: "titulo", value: (r) => r.title },
+    { header: "subgrupo_titulo", value: (r) => r.subgroupTitle },
+    { header: "subgrupo_texto", value: (r) => r.subgroupText },
     { header: "tema", value: (r) => r.topicLabel },
     { header: "fecha", value: (r) => r.date },
     { header: "diputado", value: (r) => r.deputy },

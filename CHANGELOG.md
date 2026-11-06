@@ -5,6 +5,56 @@ figures name their source; corrections and gaps are recorded alongside the work,
 
 ---
 
+## 2026-11-06 — Votes on a bill are named by their stage, as the record gives it
+
+The three votes on bills that the site tracks were all labelled "Votación final de ley", and the
+topic page explained that as "the Congreso votes the text that will be published in the BOE". The
+official records say otherwise for two of them:
+
+- **Ley 4/2023 (trans law), 16 February 2023, session 236, vote 17.** Taken under "Enmiendas del
+  Senado", as a "Votación separada de las enmiendas" on the "Resto de las enmiendas": whether to
+  accept the rest of the Senate's amendments. A Sí accepted them; a No rejected them and kept the
+  Congreso's text. An ordinary law has no overall vote, so this is the Congreso's last vote on the
+  law, but it is not a vote on the law as a whole. (Vote 16, the same day, was on a single Senate
+  amendment and is not tracked.)
+- **LO 1/2023 (abortion reform), same session, vote 13.** A "Votación de conjunto", the overall
+  vote an organic law needs. The old label fitted this one.
+- **Ley 12/2023 (housing), 27 April 2023.** A "Votación del dictamen": the Congreso's vote on its
+  committee's text, after which the bill went to the Senate. Not the last vote on the law.
+
+**What changed.**
+
+- `scripts/fetch-votes.mjs` names each of the three by its stage (`enmiendas`, `conjunto`,
+  `dictamen`) instead of `ley`, and keeps two fields of the record it had dropped,
+  `tituloSubGrupo` and `textoSubGrupo` (as `subgroupTitle` and `subgroupText`), which say which part
+  of an item a division was on. `data/votes.json` was fetched again: every tally and every roll
+  call is identical; only the kinds and the two new fields changed.
+- The topic pages, the topics index and the front page name the kind ("enmiendas del Senado",
+  "votación de conjunto de ley orgánica", "dictamen de la comisión") and explain it in all three
+  languages. The vote on the Senate's amendments is explained as: "el Congreso vota si acepta los
+  cambios que introdujo el Senado. Un sí los acepta; un no los rechaza y deja el texto que había
+  aprobado el Congreso. No es una votación sobre la ley en su conjunto."
+- What each ballot was on now includes the record's part, so Ley 4/2023 reads "Enmiendas del
+  Senado. Votación separada de las enmiendas: Resto de las enmiendas. Proyecto de Ley para la
+  igualdad real y efectiva de las personas trans…" wherever the vote is listed.
+- `/metodologia` said amendment votes are excluded, which this vote contradicted. It now names
+  the kinds as the record gives them and states the exception: Ley 4/2023 is tracked by its last
+  vote in the Congreso, on the rest of the Senate's amendments.
+- The `votaciones` download on `/datos` gains three columns: `tipo`, `subgrupo_titulo` and
+  `subgrupo_texto`.
+- `AGENTS.md`: the rule on vote kinds is rewritten, and the open question about this
+  classification is closed.
+
+The three votes keep "con efecto legal": each is a step in passing a law, unlike a non-binding
+motion.
+
+**Verified.** `npx tsc --noEmit` and `npm run build` pass. On the production build, the topic pages
+for the three votes in es, en and ca, EH Bildu's party page, the topics index, the front page, a
+person page, `/metodologia` and `/datos` return 200 and show the new wording and columns; no page
+still says "votación final de ley".
+
+---
+
 ## 2026-11-06 — Votes are worded as ballots again, with what each ballot was on
 
 The documentation pass found that the redesign had dropped a rule the site kept for a reason.

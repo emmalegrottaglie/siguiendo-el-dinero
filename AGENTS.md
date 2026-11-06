@@ -55,9 +55,19 @@ verified, the feature was cut rather than faked.
   gives the item, and for a vote on a law also the heading it was taken under. A new place that
   shows a ballot must do the same. (The redesign briefly used "a favor / en contra" without the
   subject; it was put right on 2026-11-06.)
-- **Vote kinds are labelled.** A *proposición no de Ley* or a *moción* is a non-binding position
-  statement, not the passage of a law, and the UI says so. Amendment votes are excluded from the
-  published set so the selection cannot be cherry-picked.
+- **Vote kinds are labelled, from the record.** A *proposición no de Ley* or a *moción* is a
+  non-binding position statement, not the passage of a law, and the UI says so. A vote on a bill
+  is named by the stage the record gives, never as "the vote on the law": `conjunto` (the overall
+  vote an organic law needs), `enmiendas` (whether to accept the Senate's amendments: a No rejects
+  the Senate's changes, not the law) or `dictamen` (the Congreso's vote on its committee's text,
+  before the Senate). `KIND_SHORT` and `KIND_PLAIN` in `components/nuevo/topics.ts` say what each
+  kind is in all three languages; a new kind needs both. `scripts/fetch-votes.mjs` keeps the
+  record's `tituloSubGrupo` and `textoSubGrupo` (as `subgroupTitle` and `subgroupText`), which say
+  which part of an item a division was on, and `whatWasVoted()` prints them. Votes on individual
+  amendments are not tracked, so the selection cannot be cherry-picked, with one exception: Ley
+  4/2023, an ordinary law with no overall vote, is tracked by its last vote in the Congreso, on
+  the rest of the Senate's amendments (session 236, vote 17); vote 16, on a single amendment, is
+  not tracked. `/metodologia` says so.
 - **Tally verification.** `scripts/fetch-votes.mjs` pins each published vote by
   (legislature, session, number) with the tally expected on the official record, and refuses to
   publish when they disagree — that catches grabbing the wrong ballot.
@@ -899,10 +909,6 @@ paying a permanent prefix cost to chase it would be the wrong trade.
 - **Autonomous presidencies.** Curated in `lib/governments.ts` against one secondary source, dated
   `2026-09-09`. There is no machine-readable national register of them; each community's own
   official gazette is the primary route and has not been walked.
-- **How the Ley 4/2023 division is classed.** `data/votes.json` (from `scripts/fetch-votes.mjs`)
-  classes it as a "Votación final de ley", and the topic page explains that kind as voting the text
-  that goes to the BOE. It was taken under "Enmiendas del Senado"; whether that explanation fits a
-  vote on the Senate's amendments needs a look at the record and a decision.
 - **Scrolling tables and the keyboard.** A wide table scrolls inside an `overflow-x-auto` box that
   is not made a tab stop. Firefox and recent Chromium versions make such a box focusable on their
   own; the old `ScrollBox` did it explicitly, and nothing does now.

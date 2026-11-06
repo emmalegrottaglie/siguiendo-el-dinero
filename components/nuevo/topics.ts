@@ -11,19 +11,25 @@ import { voteDateISO, type KeyVote, type VotesData } from "@/lib/votes";
 /** What kind of vote each station on a topic's line is, in a few words. */
 export const KIND_SHORT: Record<Locale, Record<string, string>> = {
   es: {
-    ley: "votación final de ley",
+    conjunto: "votación de conjunto de ley orgánica",
+    enmiendas: "enmiendas del Senado",
+    dictamen: "dictamen de la comisión",
     toma: "toma en consideración",
     pnl: "proposición no de ley",
     mocion: "moción",
   },
   en: {
-    ley: "final vote on a law",
+    conjunto: "overall vote on an organic law",
+    enmiendas: "Senate amendments",
+    dictamen: "committee's text",
     toma: "leave to proceed",
     pnl: "non-legislative motion",
     mocion: "motion",
   },
   ca: {
-    ley: "votació final de llei",
+    conjunto: "votació de conjunt de llei orgànica",
+    enmiendas: "esmenes del Senat",
+    dictamen: "dictamen de la comissió",
     toma: "presa en consideració",
     pnl: "proposició no de llei",
     mocion: "moció",
@@ -37,21 +43,36 @@ export const KIND_SHORT: Record<Locale, Record<string, string>> = {
  */
 export const KIND_PLAIN: Record<Locale, Record<string, string>> = {
   es: {
-    ley: "Votación final de una ley: el Congreso vota el texto que saldrá publicado en el BOE.",
+    conjunto:
+      "Votación de conjunto de una ley orgánica: el Congreso vota la ley orgánica entera, que necesita la mayoría absoluta de la cámara para salir adelante.",
+    enmiendas:
+      "Votación de las enmiendas del Senado: el Congreso vota si acepta los cambios que introdujo el Senado. Un sí los acepta; un no los rechaza y deja el texto que había aprobado el Congreso. No es una votación sobre la ley en su conjunto.",
+    dictamen:
+      "Votación del dictamen: el Congreso aprueba el texto que preparó su comisión, y el proyecto pasa después al Senado. No es la última votación de la ley.",
     toma: "Toma en consideración: el Congreso vota si una proposición de ley empieza a tramitarse.",
     pnl: "Proposición no de ley: el Congreso pide al Gobierno que haga algo, sin cambiar ninguna ley.",
     mocion:
       "Moción tras una interpelación: el Congreso fija una posición o pide algo al Gobierno, sin cambiar ninguna ley.",
   },
   en: {
-    ley: "Final vote on a law: the Congreso votes the text that will be published in the BOE.",
+    conjunto:
+      "Overall vote on an organic law: the Congreso votes on the whole organic law, which needs an absolute majority of the chamber to pass.",
+    enmiendas:
+      "Vote on the Senate's amendments: the Congreso votes on whether to accept the changes the Senate made. A Yes accepts them; a No rejects them and keeps the text the Congreso had passed. It is not a vote on the law as a whole.",
+    dictamen:
+      "Vote on the committee's text: the Congreso approves the text its committee prepared, and the bill then goes to the Senate. It is not the last vote on the law.",
     toma: "Leave to proceed: the Congreso votes on whether a bill put forward by members starts to be processed.",
     pnl: "Non-legislative motion: the Congreso asks the Government to do something, without changing any law.",
     mocion:
       "Motion following an interpellation: the Congreso sets a position or asks something of the Government, without changing any law.",
   },
   ca: {
-    ley: "Votació final d'una llei: el Congrés vota el text que es publicarà al BOE.",
+    conjunto:
+      "Votació de conjunt d'una llei orgànica: el Congrés vota la llei orgànica sencera, que necessita la majoria absoluta de la cambra per tirar endavant.",
+    enmiendas:
+      "Votació de les esmenes del Senat: el Congrés vota si accepta els canvis que va introduir el Senat. Un sí els accepta; un no els rebutja i deixa el text que havia aprovat el Congrés. No és una votació sobre la llei en el seu conjunt.",
+    dictamen:
+      "Votació del dictamen: el Congrés aprova el text que va preparar la seva comissió, i el projecte passa després al Senat. No és l'última votació de la llei.",
     toma: "Presa en consideració: el Congrés vota si una proposició de llei comença a tramitar-se.",
     pnl: "Proposició no de llei: el Congrés demana al Govern que faci alguna cosa, sense canviar cap llei.",
     mocion:
@@ -108,19 +129,25 @@ export function yearSpan(votes: KeyVote[], locale: Locale = "es"): string {
   return lo === hi ? `en ${lo}` : `entre ${lo} y ${hi}`;
 }
 
+/** Kinds of division on a bill, whose agenda heading says which stage it was. */
+const BILL_STAGES = new Set(["conjunto", "enmiendas", "dictamen"]);
+
 /**
  * What the ballot was on, in the record's own words and without stray
- * whitespace: the item, and for a vote on a law also the heading it was taken
- * under ("Enmiendas del Senado", "Dictámenes de Comisiones…"). The heading is
- * what tells a vote on the Senate's amendments from a vote on the whole bill:
- * on the Ley 4/2023 ballot, a No could be a No to an amendment, so the law's
- * name and a position alone would misstate it. For the other kinds the
- * heading only repeats the kind ("Proposiciones no de Ley") and is left out.
- * As recorded, so in Spanish in every locale.
+ * whitespace. For a vote on a bill, the heading it was taken under comes first
+ * ("Enmiendas del Senado"); for the other kinds the heading only repeats the
+ * kind ("Proposiciones no de Ley") and is left out. Where the record splits the
+ * item into several divisions, the part put to this one follows ("Votación
+ * separada de las enmiendas: Resto de las enmiendas"), then the item itself.
+ * On Ley 4/2023 this is what shows that the ballot was on the Senate's
+ * remaining amendments and not on the law. As recorded, so in Spanish in every
+ * locale.
  */
 export function whatWasVoted(vote: KeyVote): string {
-  const clean = (s: string) => s.replace(/\s+/g, " ").trim();
-  const item = clean(vote.expediente);
-  const heading = clean(vote.title).replace(/\.$/, "");
-  return vote.kind === "ley" && heading ? `${heading}: ${item}` : item;
+  const clean = (s: string | undefined) => (s ?? "").replace(/\s+/g, " ").trim().replace(/\.$/, "");
+  const heading = BILL_STAGES.has(vote.kind) ? clean(vote.title) : "";
+  const stage = clean(vote.subgroupTitle);
+  const part = clean(vote.subgroupText);
+  const parts = [heading, stage && part ? `${stage}: ${part}` : stage || part, clean(vote.expediente)];
+  return parts.filter(Boolean).join(". ") + ".";
 }

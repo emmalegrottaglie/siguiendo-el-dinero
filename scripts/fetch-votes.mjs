@@ -19,8 +19,15 @@ const BASE = "https://www.congreso.es";
 
 // kind matters for honesty: a "proposición no de Ley" or a "moción" is a
 // non-binding position statement, not the passage of a law. The UI labels them.
+// A vote on a bill is labelled by the stage the record gives, never as "the
+// vote on the law": the overall vote an organic law needs ("votación de
+// conjunto"), a vote on the Senate's amendments (a No there rejects the Senate's
+// changes, not the law), or the Congreso's vote on its committee's text, after
+// which the bill goes to the Senate.
 const KIND = {
-  ley: "Votación final de ley",
+  conjunto: "Votación de conjunto de ley orgánica",
+  enmiendas: "Votación de enmiendas del Senado",
+  dictamen: "Votación del dictamen de la Comisión",
   toma: "Toma en consideración",
   pnl: "Proposición no de Ley (no vinculante)",
   mocion: "Moción consecuencia de interpelación (no vinculante)",
@@ -37,7 +44,8 @@ const KEY_VOTES = [
   {
     id: "ley-trans-2023",
     topic: "lgtbi",
-    kind: "ley",
+    // "Enmiendas del Senado", separate vote on "Resto de las enmiendas".
+    kind: "enmiendas",
     label: "Ley 4/2023 (Ley Trans)",
     refUrl: "https://www.boe.es/buscar/act.php?id=BOE-A-2023-5366",
     legislature: "XIV",
@@ -49,7 +57,8 @@ const KEY_VOTES = [
   {
     id: "lo-1-2023-aborto",
     topic: "aborto",
-    kind: "ley",
+    // "Votación de conjunto" of an organic law.
+    kind: "conjunto",
     label: "LO 1/2023 (reforma del aborto)",
     refUrl: "https://www.boe.es/buscar/act.php?id=BOE-A-2023-5364",
     legislature: "XIV",
@@ -61,7 +70,8 @@ const KEY_VOTES = [
   {
     id: "ley-12-2023-vivienda",
     topic: "vivienda",
-    kind: "ley",
+    // "Votación del dictamen": the bill then went to the Senate.
+    kind: "dictamen",
     label: "Ley 12/2023 por el derecho a la vivienda",
     refUrl: "https://www.boe.es/buscar/act.php?id=BOE-A-2023-12203",
     legislature: "XIV",
@@ -206,7 +216,7 @@ for (const [key, wanted] of byDay) {
       topicLabel: TOPICS[k.topic],
       kind: k.kind,
       kindLabel: KIND[k.kind],
-      binding: k.kind === "ley" || k.kind === "toma",
+      binding: k.kind !== "pnl" && k.kind !== "mocion",
       law: k.label,
       lawUrl: k.refUrl ?? null,
       legislature: k.legislature,
@@ -215,6 +225,11 @@ for (const [key, wanted] of byDay) {
       date: info.fecha ?? k.date,
       title: info.titulo ?? "",
       expediente: info.textoExpediente ?? "",
+      // Where the division was one of several on the same item, the record
+      // says which part was put to this vote (e.g. "Votación separada de las
+      // enmiendas" / "Resto de las enmiendas").
+      subgroupTitle: info.tituloSubGrupo ?? "",
+      subgroupText: info.textoSubGrupo ?? "",
       totals: t,
       sourceUrl: BASE + link,
       votes: (data.votaciones ?? []).map((v) => ({
