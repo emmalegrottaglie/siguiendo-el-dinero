@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { roleLabel } from "@/components/nuevo/roles";
-import { KIND_SHORT, topicLabel } from "@/components/nuevo/topics";
+import { KIND_SHORT, topicLabel, whatWasVoted } from "@/components/nuevo/topics";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProfile, placeOf } from "@/lib/people";
@@ -576,6 +576,7 @@ export default async function PersonPage({
                       <tr key={r.vote.id}>
                         <td>
                           <a href={r.vote.sourceUrl}>{r.vote.law}</a>
+                          <p lang="es" className="n-meta mt-0.5">{whatWasVoted(r.vote)}</p>
                           <p className="n-meta mt-0.5">
                             {topicLabel(r.vote.topic, r.vote.topicLabel, locale)},{" "}
                             {KIND_SHORT[locale][r.vote.kind] ?? r.vote.kindLabel}, {r.vote.date}

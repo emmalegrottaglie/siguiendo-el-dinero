@@ -48,7 +48,7 @@ const es = {
     "party" | "companies" | "individuals" | "subsidies",
     { label: string; words: string }
   >,
-  stance: { si: "A favor", no: "En contra", ab: "Abstención" } as Record<
+  stance: { si: "Votó sí", no: "Votó no", ab: "Se abstuvo" } as Record<
     "si" | "no" | "ab",
     string
   >,
@@ -345,7 +345,7 @@ const es = {
   // ---- votes ----
   votesTitle: "Cómo votó su grupo",
   voteFinding: (inFavour: number, inFavourNf: string, trackedNf: string) =>
-    `Su grupo votó a favor en ${inFavour === 0 ? "ninguna" : inFavourNf} de las ${trackedNf} votaciones que sigue esta web en las que tuvo grupo propio.`,
+    `Su grupo votó sí en ${inFavour === 0 ? "ninguna" : inFavourNf} de las ${trackedNf} votaciones que sigue esta web en las que tuvo grupo propio.`,
   voteNoGroup: (short: string, trackedNf: string) =>
     `${short} no tuvo grupo parlamentario propio en ninguna de las ${trackedNf} votaciones que sigue esta web, así que no consta una posición suya como partido.`,
   noOwnPosition: (group: string) => `Sin posición propia, dentro de ${group}`,
@@ -414,7 +414,7 @@ const en: Copy = {
     },
     subsidies: { label: "Public subsidies", words: "as public subsidies" },
   },
-  stance: { si: "In favour", no: "Against", ab: "Abstention" },
+  stance: { si: "Voted Yes", no: "Voted No", ab: "Abstained" },
   privateParts: {
     memberFees: { label: "Member fees", words: "member fees" },
     officeholders: {
@@ -643,7 +643,7 @@ const en: Copy = {
     "Sources: Register of Senior Officials and the list of members of the Congress of Deputies.",
   votesTitle: "How its group voted",
   voteFinding: (inFavour, inFavourNf, trackedNf) =>
-    `Its group voted in favour in ${inFavour === 0 ? "none" : inFavourNf} of the ${trackedNf} votes this site follows in which it had its own group.`,
+    `Its group voted Yes in ${inFavour === 0 ? "none" : inFavourNf} of the ${trackedNf} votes this site follows in which it had its own group.`,
   voteNoGroup: (short, trackedNf) =>
     `${short} had no parliamentary group of its own in any of the ${trackedNf} votes this site follows, so no position of its own as a party is recorded.`,
   noOwnPosition: (group) => `No position of its own, within ${group}`,
@@ -699,7 +699,7 @@ const ca: Copy = {
       words: "en subvencions públiques",
     },
   },
-  stance: { si: "A favor", no: "En contra", ab: "Abstenció" },
+  stance: { si: "Va votar sí", no: "Va votar no", ab: "Es va abstenir" },
   privateParts: {
     memberFees: {
       label: "Quotes d’afiliats",
@@ -929,7 +929,7 @@ const ca: Copy = {
     "Fonts: Registre d’Alts Càrrecs i relació de diputats del Congrés dels Diputats.",
   votesTitle: "Com va votar el seu grup",
   voteFinding: (inFavour, inFavourNf, trackedNf) =>
-    `El seu grup va votar a favor en ${inFavour === 0 ? "cap" : inFavourNf} de les ${trackedNf} votacions que segueix aquest web en què va tenir grup propi.`,
+    `El seu grup va votar sí en ${inFavour === 0 ? "cap" : inFavourNf} de les ${trackedNf} votacions que segueix aquest web en què va tenir grup propi.`,
   voteNoGroup: (short, trackedNf) =>
     `${short} no va tenir grup parlamentari propi en cap de les ${trackedNf} votacions que segueix aquest web, de manera que no consta una posició seva com a partit.`,
   noOwnPosition: (group) => `Sense posició pròpia, dins de ${group}`,

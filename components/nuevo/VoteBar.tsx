@@ -26,10 +26,10 @@ export interface VoteCounts {
   noVota?: number;
 }
 
-/** "191 a favor, 60 en contra, 91 abstenciones", with singulars where they apply. */
+/** "191 votos sí, 60 votos no, 91 abstenciones", with singulars where they apply. */
 export function voteCountsText({ si, no, abst, noVota }: VoteCounts, locale: Locale = "es"): string {
   const t = VOTE_COPY[locale];
-  const parts = [`${si} ${t.inFavour}`, `${no} ${t.against}`, `${abst} ${t.abstention(abst)}`];
+  const parts = [`${si} ${t.inFavour(si)}`, `${no} ${t.against(no)}`, `${abst} ${t.abstention(abst)}`];
   if (noVota) parts.push(`${noVota} ${t.didNotVote(noVota)}`);
   return parts.join(", ");
 }

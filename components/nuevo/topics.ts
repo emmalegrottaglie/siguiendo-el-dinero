@@ -108,7 +108,19 @@ export function yearSpan(votes: KeyVote[], locale: Locale = "es"): string {
   return lo === hi ? `en ${lo}` : `entre ${lo} y ${hi}`;
 }
 
-/** The record's own wording of what was voted, without stray whitespace. */
+/**
+ * What the ballot was on, in the record's own words and without stray
+ * whitespace: the item, and for a vote on a law also the heading it was taken
+ * under ("Enmiendas del Senado", "Dictámenes de Comisiones…"). The heading is
+ * what tells a vote on the Senate's amendments from a vote on the whole bill:
+ * on the Ley 4/2023 ballot, a No could be a No to an amendment, so the law's
+ * name and a position alone would misstate it. For the other kinds the
+ * heading only repeats the kind ("Proposiciones no de Ley") and is left out.
+ * As recorded, so in Spanish in every locale.
+ */
 export function whatWasVoted(vote: KeyVote): string {
-  return vote.expediente.replace(/\s+/g, " ").trim();
+  const clean = (s: string) => s.replace(/\s+/g, " ").trim();
+  const item = clean(vote.expediente);
+  const heading = clean(vote.title).replace(/\.$/, "");
+  return vote.kind === "ley" && heading ? `${heading}: ${item}` : item;
 }
