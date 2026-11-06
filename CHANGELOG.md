@@ -71,6 +71,48 @@ checkout; the documents say so where they name them.
 
 ---
 
+## 2026-11-06 — Asset declarations, seventh batch: 144 published
+
+**What was read.** The next 20 first filings in Congreso's surname order, from Pedro Ignacio
+Gallardo Barrena to Marta Gracia Blanco; in the same pass, second readings of the six of them the build
+cannot check against RTVE; and then second readings of the two whose first reading did not match
+RTVE: 28 readings in all, by 14 readers. Five of the six took their seats after RTVE's August 2023
+snapshot (María Montserrat García Chavarría, Isidre Gavin i Valls, Luis Antonio Gómez Piña, Ana
+González Herdaro and Marta Gracia Blanco). The sixth, Pedro Ignacio Gallardo Barrena, is in RTVE's
+listing as "Gallardo Barrena, Pedro"; the build only pairs a deputy with an RTVE row whose name
+holds every one of the deputy's names, so it does not pair him, and his filing was checked by a
+second reading like the newcomers'.
+
+**Result: 144 published, up from 124**, 103 checked against RTVE and 41 by an independent second
+reading. None is waiting for a second reading; 205 filings are not yet transcribed. Of the 14 new
+filings the build checks against RTVE, 12 matched it on the first reading. For the other six, the
+two readings agreed on all four totals.
+
+**Where two readings agree and RTVE does not.** Three, each checked against the scan:
+
+- Pedro Ignacio Gallardo Barrena (not paired by the build, compared by hand): deposits and other
+  assets 101,921.33 € against RTVE's 101,381.33 €. The scan's two figures are a deposit balance of
+  1.982,11 and a holding in Carvajal Agrícola SL of 99.939,22, which sum to the readings' figure;
+  the 540 € difference appears nowhere on the form.
+- Cristóbal Garre Murcia (here the difference is where RTVE drew the line, not a misreading):
+  deposits and other assets 323,037 € against RTVE's 305,037 €. The
+  18,000 € difference is the one item in "Otros bienes, rentas o derechos de contenido económico no
+  declarados en apartados anteriores" ("arrendamiento vivienda en 2023", 18.000). Every item in
+  that block counts towards this total on this site, as recorded in `NEXT-STEPS.md`; RTVE left it
+  out. One of his share values is written "0'00", an apostrophe as the decimal mark; it is stored
+  as 0 and shown as written.
+- Irene Garrido Valenzuela (likewise): deposits and other assets 54,000 € against RTVE's 63,035 €. The form's
+  only deposit is a current account of 54.000. The 9,035 € difference is a pension plan she lists
+  under "Observaciones" ("PLANPENSIONES UNIVERSIDAD DE VIGO: 9.035"), together with three
+  insurance policies. RTVE counted the pension plan; this site transcribes the observations as
+  text and counts only the form's own blocks, so it is shown in her observations, not in the
+  total.
+
+**Verified.** `build:declarations`, `check:declarations`, `check:deputies`, `npx tsc --noEmit` and
+`npm run build` pass.
+
+---
+
 ## 2026-11-06 — The chosen theme survives a change of language
 
 Emma found that a reader who had picked the light theme and then switched language got the dark
