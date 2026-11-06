@@ -7,6 +7,11 @@ yet.
 
 The ordering below is by expected value, not by difficulty.
 
+The site was rebuilt in a new design on 2026-11-05 (see `CHANGELOG.md`, "The new design becomes the
+site"). Items below that were finished before then name the pages and components of the time; where
+those were replaced, the entry says what replaced them. The new design itself is described in
+`AGENTS.md`, "The design system".
+
 ---
 
 ## 1. Per-foundation detail — DONE (2026-08-31)
@@ -87,8 +92,9 @@ from the annex table *"Gráfico 5. Donaciones del ejercicio 2020 por tramos"* (p
 annexes in an 851-page-class PDF). Later exercises follow the same report series.
 
 **Procedure.** Same as item 1: identify the report, fetch once, locate the equivalently-named
-annex table, transcribe verbatim into the typed module with its own source block, and add a year
-selector to the party page rather than overwriting 2020.
+annex table, transcribe verbatim into the typed module with its own source block, and show the new
+year beside 2020 on the party page, each year on its own (as the party income years already are),
+rather than overwriting 2020 or adding the years together.
 
 **Party income by source: 2018, 2019 and 2020 DONE (2026-11-04).** The income tables (public money
 by paying administration, private money by origin) are transcribed for all three years:
@@ -132,10 +138,11 @@ tranches and the poverty indicators. Two findings worth carrying forward:
 **Step 3's remaining half is DONE (2026-09-21).** `lib/smi.ts` holds the SMI as a typed per-year
 module, 2020–2026, each entry with its Real Decreto and BOE id — 2021 carries a `note` recording
 that Real Decreto 817/2021 only took effect from 1 September, rather than presenting €965/month as
-though it applied the whole year. `lib/indicators.ts` gains `trancheFor()`, and
-`components/SmiPosition.tsx` renders the register overlay on `/politico/[slug]`: the same nine SMI
-tranches `SmiLadder` already draws on `/contexto`, with the row containing this person's multiple
-marked. Verified against Teresa Ribera: €424,236.84 ÷ €17,094 (2026 SMI) = 24.8×, in the "Más de 8
+though it applied the whole year. `lib/indicators.ts` gains `trancheFor()`, and the
+register overlay renders on `/politico/[slug]`: the same nine SMI tranches `/contexto` draws, with
+the row containing this person's multiple marked. (Since the redesign of 2026-11-05 these are
+`components/nuevo/SmiPosition.tsx` on the person page and `components/nuevo/Ladder.tsx` on
+`/contexto`.) Verified against Teresa Ribera: €424,236.84 ÷ €17,094 (2026 SMI) = 24.8×, in the "Más de 8
 SMI" tranche.
 
 Next up is step 4, the housing panel — both official empty-dwelling estimates (INE's 3.8M and the
@@ -173,8 +180,9 @@ established to design against:
   statutory deadline, and TdC sanction proposals such as non-award of the electoral subsidy.
 
 **Built.** `scripts/extract-electoral-spending.py` extracts report nº 1.628 (the 9 June 2024
-European Parliament elections, approved 26/06/2025) into `data/electoral-spending.json`, rendered by
-`components/ElectoralSpending.tsx` on `/financiacion`. Run it with
+European Parliament elections, approved 26/06/2025) into `data/electoral-spending.json`, rendered in
+the campaign-spending section of `/financiacion` (`app/[locale]/financiacion/page.tsx`; the old
+`ElectoralSpending` component was removed with the redesign) and on each party page. Run it with
 `npm run build:spending -- path/to/I1628.pdf`.
 
 **The result, across the eight formations audited:** €18,433,012.62 of declared ordinary spending,
@@ -307,5 +315,6 @@ decision.
 - **Verify before publishing.** Two claims in this project were wrong on the first pass and were
   caught by checking: a group-position label that misrepresented EH Bildu on the Ley Trans
   amendment ballot, and an over-loose account of why party foundations matter. Both are recorded
-  in `AGENTS.md`.
+  in `AGENTS.md`, along with the open question the redesign left on the first one (ballot labels
+  shown without the ballot's subject outside the topic pages; "Known gaps").
 - **A gap stated on the page is worth more than a number that might be wrong.**

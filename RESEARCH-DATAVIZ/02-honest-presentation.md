@@ -48,7 +48,7 @@ Rules we arrived at while charting a contested claim: that drone strikes on Yand
 
 ## Case study: how a viral chart went wrong
 
-In October 2026 a claim spread that the strikes had silenced Russian bots. Fact-checks (Lawfare, ZDFheute, Graphika, Cloudflare; see `docs/DROP-CLAIMS.md`) found these problems, each a rule above broken:
+In October 2026 a claim spread that the strikes had silenced Russian bots. Fact-checks (Lawfare, ZDFheute, Graphika, Cloudflare; see `docs/DROP-CLAIMS.md` in the Bot Traffic Monitor repository) found these problems, each a rule above broken:
 
 | What happened | Rule broken |
 |---|---|

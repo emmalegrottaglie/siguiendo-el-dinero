@@ -16,7 +16,7 @@ Notes from building the Bot Traffic Monitor (October 2026): how to label charts,
 
 - **Sources were read, not guessed.** Each external claim links to a page that was opened and read. Points resting on sources that could not be read are marked *unverified*.
 - **Decisions were made on real data.** Where a value was chosen (smoothing, colour bins), the numbers that decided it are given, so another project can redo the test on its own data rather than copy the value.
-- **This repo's own docs hold the full detail:** `docs/CHART-LABELS.md` (the labelling research), `docs/CHARTS.md` (chart specs and decisions), `docs/DATA.md` (data rules and the fix log), `docs/DROP-CLAIMS.md` (the case study of a misread chart).
+- **The Bot Traffic Monitor repository's own docs hold the full detail:** `docs/CHART-LABELS.md` (the labelling research), `docs/CHARTS.md` (chart specs and decisions), `docs/DATA.md` (data rules and the fix log), `docs/DROP-CLAIMS.md` (the case study of a misread chart). Those files are in that repository, not in this one; this folder was copied here as written.
 
 ## Using this in another repo
 
@@ -26,4 +26,6 @@ Copy the folder. If the other project uses Claude Code, point to it from that re
 Charts must follow RESEARCH-DATAVIZ/05-checklist.md. Background and sources are in the same folder.
 ```
 
-The folder is called `RESEARCH-DATAVIZ` rather than `RESEARCH` because this repo already has a `research/` Python package, and Windows treats the two names as the same folder.
+The folder is called `RESEARCH-DATAVIZ` rather than `RESEARCH` because the Bot Traffic Monitor repository already has a `research/` Python package, and Windows treats the two names as the same folder. The name suits this repository too, whose own `research/` folder holds the research notes behind its data.
+
+**In this repository** the checklist is referred to from `AGENTS.md` ("Graphics: what each one draws, and what it must carry"). Section 5 of `03-chart-recipes.md` was added here, about this site; the chart components it names belonged to the site's first design and were removed on 2026-11-05.

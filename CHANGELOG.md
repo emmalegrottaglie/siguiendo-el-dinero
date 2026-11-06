@@ -36,6 +36,93 @@ imprecise; the classification comes from `scripts/fetch-votes.mjs` and was left 
 **Verified** in the browser: EH Bildu's party page in es and en, a person page in ca, the front page
 in ca, the topics index in en and the LGTBI topic page in es show the new wording and the subject;
 no horizontal scroll at 375 px on any of them. `npx tsc --noEmit` passes.
+## 2026-11-06 — Documentation brought up to date with the new design
+
+The documents still described parts of the site that the switch-over of 2026-11-05 removed: the
+old chart components, the old stylesheet's tokens and classes, and pages that now redirect. This
+change touches documentation only; no code changed.
+
+- **`AGENTS.md`.** The design-system section, marked "Superseded in part" since the switch-over,
+  is rewritten to describe the system that exists: the route-map motif and its route classes
+  (`n-state`, `n-donors`, `n-foundations`, `n-companies`, `n-topic`, `n-neutral`), filled or solid
+  for on record and hollow or dashed for not on record, always also said in words (with the one
+  different use, the route map's dashed "not money" links, named); the two typefaces and their
+  jobs; every `n-` class; how a page is built (title, plain intro, one computed finding per
+  section, the figures in words or a table, the source on the page); missing figures as "—" and
+  tiny shares as "menos del 1 %"; the table pattern (own scroll box, hidden caption, scoped
+  headers); the `copy.ts` translation pattern; accessibility at 375px, focus, reduced motion and
+  both themes. The old "Every bar goes through one primitive" and "Charts" sections are replaced by
+  a short "Graphics" section listing the components that draw figures and the rules they share,
+  and saying what was left out at the switch-over. Rules whose component is gone but whose reason
+  holds were kept and pointed at what now carries them (the cascade-layer trap now applies to
+  `site.css`, which is unlayered; the localised-percentage trap; measured contrast in both
+  themes; party colours never adjusted and never on text). The map section is rewritten for
+  `/territorios`, where the map encodes nothing and the investiture record is drawn by
+  `InvestitureRecord`. The library table loses `lib/chart-colors.ts` and gains thirteen modules it
+  never listed; the client-component boundary, the news-registry description (now read on the
+  topic pages, not on a front-page panel), the sanity checks and the known gaps are brought up to
+  date. The "Superseded in part" note is gone.
+- **A rule that the redesign changed, recorded rather than smoothed over.** The first version of
+  the site labelled ballots "votó Sí / votó No / se abstuvo" and showed each ballot's subject,
+  because the Ley 4/2023 ballot was on the Senate's amendments and an unqualified "en contra" put
+  EH Bildu against the trans law. The new design uses "a favor / en contra / abstención", and only
+  the topic pages print the ballot's subject; the person page, the party page and the front page
+  do not. `AGENTS.md` now says so under the honesty rules and lists it as a known gap needing a
+  decision; no code was changed here.
+- **`README.md`.** The stack no longer lists `motion`; the key-files table names the frame, the
+  stylesheet, the copy files and the new components instead of five removed ones; the
+  descriptions of `/contexto`, `/territorios`, `/territorio/[provincia]` and `/tema/[id]` match the
+  pages; `/api/news-image` is listed; the internationalisation notes describe the `copy.ts`
+  pattern; the documentation map says what state each plan is in.
+- **`NEXT-STEPS.md`.** A note at the top says entries finished before the switch-over name the
+  components of the time; the removed `components/SmiPosition.tsx` and
+  `components/ElectoralSpending.tsx` and the `SmiLadder` chart are pointed at what replaced them.
+- **`PLAN-VISUAL.md`.** Marked at the top as finished and then overtaken by the redesign, with
+  where to read about what replaced it and which of its findings still apply. Each removed file it
+  names is marked as removed; the audit itself is unchanged.
+- **`PLAN-CONTEXT-LAYER.md`.** The status line said "nothing built"; it now says steps 1 to 3 are
+  built and where. The pointers to `StanceByGroup`, the `motion` dependency and the old news parser
+  are marked as of their time.
+- **`RESEARCH-DATAVIZ/`.** The README pointed at `docs/` files as "this repo's own docs"; they are
+  the Bot Traffic Monitor repository's, and it now says so (as does the one pointer in
+  `02-honest-presentation.md`). The pointer to `components/chart/Finding.tsx` and the treemap in
+  `03-chart-recipes.md` are marked as removed, with what carries them now.
+
+**Left as it was, on purpose:** the findings in `research/` and `RESEARCH-DATAVIZ/` (they are
+records; their remaining pointers are still correct), `scripts/declaration-transcription.md` (it
+names nothing the redesign removed), the past entries of this changelog (history stays history),
+and `CLAUDE.md`.
+
+**Checked mechanically:** every backticked repository path in the documents above was tested for
+existence with a script. Of 288 paths, 269 exist. The 19 that do not are each marked in the text as
+removed on 2026-11-05 (in `PLAN-VISUAL.md`, `AGENTS.md`'s "do not reintroduce" line and
+`03-chart-recipes.md`) or as belonging to the Bot Traffic Monitor repository (the `docs/` files in
+`RESEARCH-DATAVIZ/`). Paths under `data/_*` are local caches, gitignored, and absent from a clean
+checkout; the documents say so where they name them.
+## 2026-11-06 — The foundations page says where the parties' own money comes from
+
+Emma read the finding at the top of `/fundaciones` ("in 2022, 89 % of what was contributed to the
+34 audited entities came from the parties themselves") and asked the question it leaves open:
+where do the parties get that money? The front page and the party pages already answered it from
+the party-accounts report; the foundations page, where the question arises, did not.
+
+The page now has a section, "De dónde sacan los partidos lo que aportan", after the year-by-year
+figures, and a link to it under the finding at the top. It shows:
+
+- a finding computed from `lib/party-income.ts`: in 2020 the 25 audited parties had 233.6 M€ of
+  ordinary income, and 72 % was public money; then, in a sentence, the private part's largest
+  sources (their own officeholders' contributions, member fees, donations);
+- two bars with every part named in words: all ordinary income by source, and the public money by
+  who pays it (regional parliaments, the State, local bodies, regional governments, the Cortes);
+- what the figures cannot say. A party pays out of its income as a whole, so neither report shows
+  how much of what it gave its entities was public money and how much private. The foundation
+  figures are for 2021 and 2022 and the income is for 2020: different years and not always the
+  same parties, so nothing is added or subtracted, and the page says the parties' income for 2021
+  and 2022 is not on the site yet;
+- a link to the party index's income section, and the source (Informe nº 1.573, annexes IV and V).
+
+All three languages. Verified in the browser in es, en and ca, at 375 px (no horizontal scroll) and
+in both themes; `npx tsc --noEmit` passes.
 
 ---
 
