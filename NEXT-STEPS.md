@@ -210,15 +210,15 @@ sourced proceedings, with status and outcome stated, are the defensible form.
 transcribed and checked, so each profile shows what the deputy declared rather than only a link to
 the scan.
 
-**Where it stands (2026-11-04).** 124 of the 349 filings are published: 91 checked against RTVE and
-33 by a second reading. None is waiting for a second reading. The method, the checks and what they
+**Where it stands (2026-11-06).** 144 of the 349 filings are published: 103 checked against RTVE
+and 41 by a second reading. None is waiting for a second reading. The method, the checks and what they
 do not cover are in `AGENTS.md` ("The deputies' declarations are transcribed, and nothing is
 published unchecked"); the reader instructions are in `scripts/declaration-transcription.md`.
 
-Remaining: 225 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
+Remaining: 205 filings not yet read. `npm run build:declarations` lists them as `not-transcribed`,
 and `data/_declaraciones/<cod>.pdf` holds each scan (`npm run build:deputies` downloads them again
 if the cache is gone). The batches take them in Congreso's surname order; the next starts after
-Carmen Fúnez de Gregorio.
+Marta Gracia Blanco.
 
 **Procedure.** The second batch settled the settings: a little under one point of the five-hour
 usage window per reading, against two per declaration in the pilot. Run the rest in batches of
